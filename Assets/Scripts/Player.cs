@@ -7,14 +7,14 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float speed = 100f;
+    [SerializeField] private float speed;
     [SerializeField] private int lives = 5;
     [SerializeField] private float jumpForce = 0.01f;
 
     private Rigidbody2D _rb;
     private SpriteRenderer _sprite;
     private float _moveInput;
-    private bool _faceOrientationRight = true;
+    public bool faceOrientationRight = true;
     
     private Animator _animator;
     private string _currentAnimation;
@@ -28,10 +28,10 @@ public class Player : MonoBehaviour
 
     void Flip()
     {
-        if (_moveInput > 0 && !_faceOrientationRight || _moveInput < 0 && _faceOrientationRight)
+        if (_moveInput > 0 && !faceOrientationRight || _moveInput < 0 && faceOrientationRight)
         {
             transform.localScale *= new Vector2(-1, 1);
-            _faceOrientationRight = !_faceOrientationRight;
+            faceOrientationRight = !faceOrientationRight;
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,12 +10,13 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private int lives = 5;
-    [SerializeField] private float jumpForce = 0.01f;
+    [SerializeField] private float jumpForce = 10f;
 
     private Rigidbody2D _rb;
     private SpriteRenderer _sprite;
     private float _moveInput;
     public bool faceOrientationRight = true;
+    private bool _isGround = true;
     
     private Animator _animator;
     private string _currentAnimation;
@@ -24,6 +26,12 @@ public class Player : MonoBehaviour
         _moveInput = Input.GetAxis("Horizontal");
         ChangeAnimation(_moveInput != 0 ? "Move_anim" : "Idle_anim");
         _rb.velocity = new Vector2(_moveInput * speed, _rb.velocity.y);
+    }
+
+    void Jump()
+    {
+        if (!_isGround)
+            _rb.AddForce(new Vector2(0, jumpForce*100), ForceMode2D.Impulse);
     }
 
     void Flip()
@@ -53,7 +61,15 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var hit = Physics2D.Raycast(_rb.position, Vector2.down, 0.1f, LayerMask.GetMask("Ground"));
+
+        _isGround = !hit.collider.IsUnityNull();
+        
         Move();
         Flip();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
     }
 }

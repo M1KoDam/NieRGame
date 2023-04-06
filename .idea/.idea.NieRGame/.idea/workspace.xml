@@ -2,30 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="91b079e7-242c-471a-b622-632de013ef22" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_5.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_6.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_7.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_8.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_8.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Animations/Pod.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerCamera.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerCamera.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserSettings/Search.settings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Move_anim.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Move_anim.anim" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_1.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_1.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_2.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_2.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_3.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_3.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_4.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Movement/2B_Movement_4.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Player.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Player.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NieRGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NieRGame/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Pod.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Pod.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -118,6 +99,8 @@
       <workItem from="1680737338195" duration="1195000" />
       <workItem from="1680774058602" duration="26000" />
       <workItem from="1680774116489" duration="65000" />
+      <workItem from="1680774220803" duration="3478000" />
+      <workItem from="1680787938440" duration="1137000" />
     </task>
     <servers />
   </component>

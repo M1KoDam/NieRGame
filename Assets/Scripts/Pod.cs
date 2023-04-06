@@ -7,21 +7,14 @@ using UnityEngine.Serialization;
 public class Pod : MonoBehaviour
 {
     public Player player;
-    private float maxDistance = 5;
-    private float speed = 10f;
-    
+    public float maxDistance = 5;
+    public float speed = 10f;
+
     public bool faceOrientationRight = true;
     
     private Rigidbody2D _rb;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-    }
 
-    // Update is called once per frame
-    void Update()
+    void MoveToPlayer()
     {
         _rb.velocity = new Vector2(0, 0.2f);
         var heading = transform.position - player.transform.position;
@@ -35,5 +28,23 @@ public class Pod : MonoBehaviour
                 faceOrientationRight = !faceOrientationRight;
             }
         }
+    }
+
+    void RestoreDirection()
+    {
+        _rb.MoveRotation(0);
+    }
+    
+    // Start is called before the first frame update
+    void Start()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        RestoreDirection();
+        MoveToPlayer();
     }
 }

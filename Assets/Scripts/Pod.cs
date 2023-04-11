@@ -1,61 +1,45 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using DefaultNamespace;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
-using Quaternion = UnityEngine.Quaternion;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = System.Numerics.Vector3;
 
 public class Pod : MonoBehaviour
 {
     public Player player;
-    public float maxDistance = 5;
-    public float speed = 10f;
     private Camera camera;
     private Vector2 mouseVector;
+    public float maxDistance = 0.1f;
+    public float speed = 5;
+    public float brakeSpeed = 3f;
 
     public Side faceOrientation = Side.Right;
-    
+
+    // public Side faceOrientation => _rb.velocity.x > 0 ? Side.Right : Side.Left;
+    private Vector3 VectorToPlayer => TargetPosition - transform.position;
+
+    private Vector3 TargetPosition => faceOrientation == Side.Right
+        ? player.transform.position + new Vector3(2, 3.5f, 0)
+        : player.transform.position + new Vector3(-2, 3.5f, 0);
+
+    private float DistanceToPlayer => VectorToPlayer.magnitude;
+
     private Rigidbody2D _rb;
+    private Side _faceOrientation;
 
     //FixedUpdate
     void MoveToPlayer(bool isShooting)
     {
-        float velocityY = 0;
-        float velocityX = 0;
-        var heading = transform.position - player.transform.position;
-        var distance = heading.magnitude;
-        if (Math.Abs(transform.position.y - player.transform.position.y - 10) > 0.1f)
-        {
-            velocityY = -((heading.y-3)/distance) * speed;
-        }
-        if (distance > maxDistance)
-        {
-            velocityX = -(heading/distance).x * speed;
-            if (player.faceOrientation != faceOrientation && isShooting == false)
-            {
-                if (faceOrientation is Side.Left)
-                    transform.localScale = new Vector2(1, 1);
-                else
-                    transform.localScale = new Vector2(-1, 1);
-                faceOrientation = faceOrientation == Side.Right ? Side.Left : Side.Right;
-            }
-        }
+        _rb.velocity = VectorToPlayer.normalized * (speed * (float)Math.Log(DistanceToPlayer));
+    }
 
-        _rb.velocity = new Vector2(velocityX, velocityY + 0.2f);
+    private void Brake()
+    {
+        _rb.velocity /= brakeSpeed;
     }
 
     void RestoreDirection()
     {
         _rb.MoveRotation(0);
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,50 +58,48 @@ public class Pod : MonoBehaviour
         }
         else
         {
-            if (faceOrientation is Side.Left) transform.localScale = new Vector2(-1, 1);
+            transform.localScale = faceOrientation == Side.Right
+                ? new Vector2(1, 1)
+                : new Vector2(-1, 1);
             RestoreDirection();
         }
-        MoveToPlayer(isShooting);
-        Debug.Log(faceOrientation);
+        if (DistanceToPlayer > maxDistance)
+            MoveToPlayer(isShooting);
+        else
+            Brake();
     }
 
     void LookAtMouse()
     {
         var angle = GetAngle();
-        Vector2 localScale = Vector2.one;
-        if (angle > 90 || angle < -90)
+        var localScale = Vector2.one;
+        if (angle > 90 || angle < - 90)
             localScale.y = -1f;
         else
             localScale.y = 1f;
-        
+
         transform.localScale = localScale;
         _rb.MoveRotation(angle);
-        if (angle is >= 0 and <= 90 or > -90 and < 0)
+        if ((0 <= angle && angle <= 90) || (-90 < angle && angle < 0))
             faceOrientation = Side.Right;
-        if (angle is > 90 and <= 180 or >= -180 and <= -90)
+        if ((90 < angle && angle <= 180) || (-180 <= angle && angle <= -90))
             faceOrientation = Side.Left;
+        
         Debug.Log(angle);
     }
 
     private float GetAngle()
     {
         mouseVector = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        Vector2 rightVector = new Vector2(1, 0);
-        var scalarComposition = rightVector.x * mouseVector.x + rightVector.y * mouseVector.y;
+        var rightVector = Vector2.right;
+        var scalarComposition = mouseVector.x + rightVector.y * mouseVector.y;
         var modulesComposition = rightVector.magnitude * mouseVector.magnitude;
         var division = scalarComposition / modulesComposition;
-        var angle = Mathf.Acos(division) * Mathf.Rad2Deg * (int)GetSide();
+        var angle = Mathf.Acos(division) * Mathf.Rad2Deg * (mouseVector.y <= 1 ? -1 : 1);
         return angle;
     }
-
-    Side GetSide()
-    {
-        Side side = Side.Right;
-        if (mouseVector.y <= Vector2.right.y)
-            side = Side.Left;
-        return side;
-    }
     
+
     private void OnDrawGizmos()
     {
         if (transform is not null)
@@ -127,5 +109,4 @@ public class Pod : MonoBehaviour
             Gizmos.DrawLine(transform.position, camera.ScreenToWorldPoint(Input.mousePosition));
         }
     }
-    
 }

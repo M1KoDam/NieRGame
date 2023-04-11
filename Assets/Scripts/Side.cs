@@ -1,8 +1,5 @@
-namespace DefaultNamespace
+public enum Side
 {
-    public enum Side
-    {
-        Left = -1,
-        Right = 1
-    }
+    Left = -1,
+    Right = 1
 }

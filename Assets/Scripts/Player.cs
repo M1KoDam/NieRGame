@@ -1,13 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -20,7 +11,6 @@ public class Player : MonoBehaviour
     private float _moveInput;
     public bool faceOrientationRight = true;
     private bool _onFoot = true;
-    private bool _canShoot = true;
 
     private Animator _animator;
     private string _currentAnimation;
@@ -36,11 +26,6 @@ public class Player : MonoBehaviour
     {
         _rb.AddForce(new Vector2(0, jumpForce*100), ForceMode2D.Impulse);
         _onFoot = false;
-    }
-
-    void Shoot()
-    {
-        
     }
 
     void Flip()
@@ -74,12 +59,10 @@ public class Player : MonoBehaviour
         Move();
         Flip();
         if (Input.GetKeyDown(KeyCode.Space) && _onFoot)
-        {
             Jump();
-        }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {

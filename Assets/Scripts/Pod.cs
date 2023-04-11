@@ -1,18 +1,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class Pod : MonoBehaviour
 {
     public Player player;
+    public Bullet bullet;
     public float maxDistance = 5;
     public float speed = 10f;
 
     public bool faceOrientationRight = true;
+
+    [SerializeField] private Transform shootingPosition;
     
+    private GameObject _pod;
     private Rigidbody2D _rb;
+
+    private bool _canShoot = true;
 
     void MoveToPlayer()
     {
@@ -46,5 +53,14 @@ public class Pod : MonoBehaviour
     {
         RestoreDirection();
         MoveToPlayer();
+        
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _canShoot)
+            Shoot();
+    }
+
+    private void Shoot()
+    {
+        var bul = Instantiate(bullet, shootingPosition.position, transform.rotation);
+        Destroy(bul, 5f);
     }
 }

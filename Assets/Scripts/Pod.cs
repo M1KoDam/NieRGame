@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using DefaultNamespace;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -15,17 +17,15 @@ public class Pod : MonoBehaviour
     public Player player;
     public float maxDistance = 5;
     public float speed = 10f;
-    public float maxSpeedDelta = 1f;
     private Camera camera;
-    public float offset;
     private Vector2 mouseVector;
 
-    public bool faceOrientationRight = true;
+    public Side faceOrientation = Side.Right;
     
     private Rigidbody2D _rb;
 
     //FixedUpdate
-    void MoveToPlayer()
+    void MoveToPlayer(bool isShooting)
     {
         float velocityY = 0;
         float velocityX = 0;
@@ -38,32 +38,21 @@ public class Pod : MonoBehaviour
         if (distance > maxDistance)
         {
             velocityX = -(heading/distance).x * speed;
-            if (player.faceOrientationRight != faceOrientationRight)
+            if (player.faceOrientation != faceOrientation && isShooting == false)
             {
-                transform.localScale *= new Vector2(-1, 1);
-                faceOrientationRight = !faceOrientationRight;
+                if (faceOrientation is Side.Left)
+                    transform.localScale = new Vector2(1, 1);
+                else
+                    transform.localScale = new Vector2(-1, 1);
+                faceOrientation = faceOrientation == Side.Right ? Side.Left : Side.Right;
             }
         }
-        /**
-        var velocityXSign = velocityX < 0 ? -1 : 1;
-        var velocityYSign = velocityY < 0 ? -1 : 1;
-
-        //if (distance <= maxDistance + 1  && distance >= maxDistance)
-        //{
-            //velocityX = 1f * velocityXSign;
-            //velocityY = 1f * velocityYSign;
-            //velocityX = _rb.velocity.x - velocityX > maxSpeedDelta ? maxSpeedDelta * velocityXSign : velocityX;
-            //velocityY = _rb.velocity.y - velocityY > maxSpeedDelta ? maxSpeedDelta * velocityYSign : velocityY;
-       // }
-       */
 
         _rb.velocity = new Vector2(velocityX, velocityY + 0.2f);
-        Debug.Log(_rb.velocity);
     }
 
     void RestoreDirection()
     {
-        //transform.localScale = Vector2.one;
         _rb.MoveRotation(0);
     }
     
@@ -77,36 +66,48 @@ public class Pod : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var isShooting = false;
         if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isShooting = true;
             LookAtMouse();
+        }
         else
+        {
+            if (faceOrientation is Side.Left) transform.localScale = new Vector2(-1, 1);
             RestoreDirection();
-        MoveToPlayer();
-    }
-    
-    private enum Side
-    {
-        Left = -1,
-        Right = 1
+        }
+        MoveToPlayer(isShooting);
+        Debug.Log(faceOrientation);
     }
 
     void LookAtMouse()
     {
-        Debug.Log(Input.mousePosition);
+        var angle = GetAngle();
+        Vector2 localScale = Vector2.one;
+        if (angle > 90 || angle < -90)
+            localScale.y = -1f;
+        else
+            localScale.y = 1f;
+        
+        transform.localScale = localScale;
+        _rb.MoveRotation(angle);
+        if (angle is >= 0 and <= 90 or > -90 and < 0)
+            faceOrientation = Side.Right;
+        if (angle is > 90 and <= 180 or >= -180 and <= -90)
+            faceOrientation = Side.Left;
+        Debug.Log(angle);
+    }
+
+    private float GetAngle()
+    {
         mouseVector = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         Vector2 rightVector = new Vector2(1, 0);
         var scalarComposition = rightVector.x * mouseVector.x + rightVector.y * mouseVector.y;
         var modulesComposition = rightVector.magnitude * mouseVector.magnitude;
         var division = scalarComposition / modulesComposition;
         var angle = Mathf.Acos(division) * Mathf.Rad2Deg * (int)GetSide();
-        Vector2 localScale = Vector2.one;
-        if (angle > 90 || angle < -90)
-            localScale.y = -1f;
-        else
-            localScale.y = 1f;
-        transform.localScale = localScale;
-        _rb.MoveRotation(angle);
-        //transform.rotation = quaternion.Euler(0, 0, angle);
+        return angle;
     }
 
     Side GetSide()
@@ -121,9 +122,6 @@ public class Pod : MonoBehaviour
     {
         if (transform is not null)
         {
-            
-            //Vector2 mouseVector = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            //Vector2 currentVector = (Vector2)transform.position - Vector2.left;
             Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + 100, transform.position.y));
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, camera.ScreenToWorldPoint(Input.mousePosition));

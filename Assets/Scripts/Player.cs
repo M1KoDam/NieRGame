@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using DefaultNamespace;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -15,7 +16,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private SpriteRenderer _sprite;
     private float _moveInput;
-    public bool faceOrientationRight = true;
+    public Side faceOrientation = Side.Right;
     private bool _isGround = true;
     
     private Animator _animator;
@@ -36,10 +37,10 @@ public class Player : MonoBehaviour
 
     void Flip()
     {
-        if (_moveInput > 0 && !faceOrientationRight || _moveInput < 0 && faceOrientationRight)
+        if (_moveInput > 0 && faceOrientation == Side.Left || _moveInput < 0 && faceOrientation == Side.Right)
         {
             transform.localScale *= new Vector2(-1, 1);
-            faceOrientationRight = !faceOrientationRight;
+            faceOrientation = faceOrientation == Side.Right ? Side.Left : Side.Right;
         }
     }
 

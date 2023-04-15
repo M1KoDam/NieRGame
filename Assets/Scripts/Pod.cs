@@ -1,112 +1,102 @@
-using System;
 using UnityEngine;
+
 
 public class Pod : MonoBehaviour
 {
     public Player player;
-    private Camera camera;
-    private Vector2 mouseVector;
-    public float maxDistance = 0.1f;
-    public float speed = 5;
-    public float brakeSpeed = 3f;
-
-    public Side faceOrientation = Side.Right;
-
-    // public Side faceOrientation => _rb.velocity.x > 0 ? Side.Right : Side.Left;
-    private Vector3 VectorToPlayer => TargetPosition - transform.position;
-
-    private Vector3 TargetPosition => faceOrientation == Side.Right
-        ? player.transform.position + new Vector3(2, 3.5f, 0)
-        : player.transform.position + new Vector3(-2, 3.5f, 0);
-
-    private float DistanceToPlayer => VectorToPlayer.magnitude;
 
     private Rigidbody2D _rb;
-    private Side _faceOrientation;
+    private Camera _camera;
 
-    //FixedUpdate
-    void MoveToPlayer(bool isShooting)
-    {
-        _rb.velocity = VectorToPlayer.normalized * (speed * (float)Math.Log(DistanceToPlayer));
-    }
+    private static readonly Vector3 RightPosition = new(2, 3.5f, 0);
+    private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
 
-    private void Brake()
-    {
-        _rb.velocity /= brakeSpeed;
-    }
+    private static readonly Vector3 RightLocalScale = new(1, 1);
+    private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
-    void RestoreDirection()
-    {
-        _rb.MoveRotation(0);
-    }
+    private const float BrakingSpeed = 3;
+    private const float Speed = 5;
+    private const float MaxDistance = 2.35f;
 
-    // Start is called before the first frame update
-    void Start()
+    private Vector3 _velocity;
+    private float _angle;
+    private bool _isScoping;
+
+    private Side FaceOrientation
+        => _isScoping
+            ? -90 <= _angle && _angle <= 90
+                ? Side.Right
+                : Side.Left
+            : _velocity.x > 0
+                ? Side.Right
+                : Side.Left;
+
+    private Vector3 PodToPlayer => TargetPosition - _rb.transform.position;
+    private float DistanceToPlayer => PodToPlayer.magnitude;
+    private Vector2 PodToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
+
+    private Vector3 TargetPosition => FaceOrientation == Side.Right
+        ? player.transform.position + RightPosition
+        : player.transform.position + LeftPosition;
+
+    private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        camera = Camera.main;
+        _camera = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        var isShooting = false;
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            isShooting = true;
+            _isScoping = true;
             LookAtMouse();
         }
         else
         {
-            transform.localScale = faceOrientation == Side.Right
-                ? new Vector2(1, 1)
-                : new Vector2(-1, 1);
-            RestoreDirection();
+            _isScoping = false;
+            LookUpwards();
         }
-        if (DistanceToPlayer > maxDistance)
-            MoveToPlayer(isShooting);
+
+        if (DistanceToPlayer > MaxDistance)
+            MoveToPlayer();
         else
             Brake();
     }
 
-    void LookAtMouse()
+    private void Update()
     {
-        var angle = GetAngle();
-        var localScale = Vector2.one;
-        if (angle > 90 || angle < - 90)
-            localScale.y = -1f;
-        else
-            localScale.y = 1f;
+        transform.localScale = FaceOrientation == Side.Right
+            ? RightLocalScale
+            : LeftLocalScale;
 
-        transform.localScale = localScale;
-        _rb.MoveRotation(angle);
-        if ((0 <= angle && angle <= 90) || (-90 < angle && angle < 0))
-            faceOrientation = Side.Right;
-        if ((90 < angle && angle <= 180) || (-180 <= angle && angle <= -90))
-            faceOrientation = Side.Left;
-        
-        Debug.Log(angle);
+        _rb.MoveRotation(_angle);
+        _rb.velocity = _velocity;
     }
 
-    private float GetAngle()
+    private void LookAtMouse()
     {
-        mouseVector = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        var rightVector = Vector2.right;
-        var scalarComposition = mouseVector.x + rightVector.y * mouseVector.y;
-        var modulesComposition = rightVector.magnitude * mouseVector.magnitude;
-        var division = scalarComposition / modulesComposition;
-        var angle = Mathf.Acos(division) * Mathf.Rad2Deg * (mouseVector.y <= 1 ? -1 : 1);
-        return angle;
+        var angle = -Vector2.SignedAngle(PodToMouse, Vector2.right);
+        if (-90 <= angle && angle <= 90)
+            _angle = angle;
+        else if (angle > 90)
+            _angle = angle + 180;
+        else if (angle < -90)
+            _angle = angle - 180;
     }
-    
 
-    private void OnDrawGizmos()
+    private void LookUpwards()
     {
-        if (transform is not null)
-        {
-            Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + 100, transform.position.y));
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, camera.ScreenToWorldPoint(Input.mousePosition));
-        }
+        _angle = 0;
+    }
+
+    private void MoveToPlayer()
+    {
+        _velocity = PodToPlayer.normalized * (Speed * Mathf.Log(DistanceToPlayer));
+    }
+
+    private void Brake()
+    {
+        _velocity /= BrakingSpeed;
     }
 }

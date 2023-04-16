@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -15,7 +10,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private SpriteRenderer _sprite;
     private float _moveInput;
-    public bool faceOrientationRight = true;
+    public Side faceOrientation = Side.Right;
     private bool _isGround = true;
     
     private Animator _animator;

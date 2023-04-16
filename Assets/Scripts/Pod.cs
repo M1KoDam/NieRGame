@@ -1,9 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 
 public class Pod : MonoBehaviour
 {
     public Player player;
+    public Bullet bullet;
 
     private Rigidbody2D _rb;
     private Camera _camera;
@@ -11,6 +13,13 @@ public class Pod : MonoBehaviour
     private static readonly Vector3 RightPosition = new(2, 3.5f, 0);
     private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
     private static readonly Vector3 ShootingPosition = new(0, 3.5f, 0);
+
+    private Vector3 BulletPosition => FaceOrientation == Side.Right
+        ? transform.position + RightShootingOffset
+        : transform.position + LeftShootingOffset;
+
+    private static readonly Vector3 RightShootingOffset = new(1, 0, 0);
+    private static readonly Vector3 LeftShootingOffset = new(-1, 0, 0);
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
@@ -54,6 +63,7 @@ public class Pod : MonoBehaviour
         {
             _isScoping = true;
             LookAtMouse();
+            Shoot();
         }
         else
         {
@@ -65,6 +75,12 @@ public class Pod : MonoBehaviour
             MoveToPlayer();
         else
             Brake();
+    }
+
+    private void Shoot()
+    {
+        var bul = Instantiate(bullet, BulletPosition, transform.rotation);
+        Destroy(bul, 5f);
     }
 
     private void Update()

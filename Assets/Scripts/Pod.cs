@@ -10,13 +10,14 @@ public class Pod : MonoBehaviour
 
     private static readonly Vector3 RightPosition = new(2, 3.5f, 0);
     private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
+    private static readonly Vector3 ShootingPosition = new(0, 3.5f, 0);
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
     private const float BrakingSpeed = 3;
     private const float Speed = 5;
-    private const float MaxDistance = 2.35f;
+    private const float MaxDistance = 0.1f;
 
     private Vector3 _velocity;
     private float _angle;
@@ -35,9 +36,11 @@ public class Pod : MonoBehaviour
     private float DistanceToPlayer => PodToPlayer.magnitude;
     private Vector2 PodToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
 
-    private Vector3 TargetPosition => FaceOrientation == Side.Right
-        ? player.transform.position + RightPosition
-        : player.transform.position + LeftPosition;
+    private Vector3 TargetPosition => _isScoping
+        ? player.transform.position + ShootingPosition
+        : FaceOrientation == Side.Right
+            ? player.transform.position + RightPosition
+            : player.transform.position + LeftPosition;
 
     private void Start()
     {

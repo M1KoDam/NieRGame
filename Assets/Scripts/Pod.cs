@@ -14,12 +14,7 @@ public class Pod : MonoBehaviour
     private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
     private static readonly Vector3 ShootingPosition = new(0, 3.5f, 0);
 
-    private Vector3 BulletPosition => FaceOrientation == Side.Right
-        ? transform.position + RightShootingOffset
-        : transform.position + LeftShootingOffset;
-
-    private static readonly Vector3 RightShootingOffset = new(1, 0, 0);
-    private static readonly Vector3 LeftShootingOffset = new(-1, 0, 0);
+    private Vector3 BulletPosition => (Vector2)transform.position + PodToMouse.normalized;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
@@ -45,11 +40,12 @@ public class Pod : MonoBehaviour
     private float DistanceToPlayer => PodToPlayer.magnitude;
     private Vector2 PodToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
 
-    private Vector3 TargetPosition => _isScoping
-        ? player.transform.position + ShootingPosition
-        : FaceOrientation == Side.Right
-            ? player.transform.position + RightPosition
-            : player.transform.position + LeftPosition;
+    private Vector3 TargetPosition
+        => _isScoping
+            ? player.transform.position + ShootingPosition
+            : FaceOrientation == Side.Right
+                ? player.transform.position + RightPosition
+                : player.transform.position + LeftPosition;
 
     private void Start()
     {
@@ -80,7 +76,7 @@ public class Pod : MonoBehaviour
     private void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
-        Destroy(bul, 5f);
+        Destroy(bul.gameObject, 5f);
     }
 
     private void Update()

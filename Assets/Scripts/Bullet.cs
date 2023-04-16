@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Rigidbody2D _rb;
+    private Camera _camera;
+    
+    private Vector2 BulletToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
+    
+    private void Start()
     {
-        
-    }
+        _rb = GetComponent<Rigidbody2D>();
+        _camera = Camera.main;
 
-    // Update is called once per frame
-    void Update()
+        Accelerate();
+    }
+    
+    private void Accelerate()
     {
-        
+        _rb.velocity = 50 * BulletToMouse.normalized;
     }
 }

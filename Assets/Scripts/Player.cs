@@ -1,70 +1,84 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float speed;
-    [SerializeField] private int lives = 5;
-    [SerializeField] private float jumpForce = 10f;
-
     private Rigidbody2D _rb;
-    private SpriteRenderer _sprite;
-    private float _moveInput;
-    public Side faceOrientation = Side.Right;
-    private bool _isGround = true;
-    
     private Animator _animator;
+
+    private bool _onFoot = true;
     private string _currentAnimation;
 
-    void Move()
-    {
-        _moveInput = Input.GetAxis("Horizontal");
-        ChangeAnimation(_moveInput != 0 ? "Move_anim" : "Idle_anim");
-        _rb.velocity = new Vector2(_moveInput * speed, _rb.velocity.y);
-    }
+    private const float Speed = 10;
+    private const float JumpForce = 1200;
 
-    void Jump()
-    {
-        if (!_isGround)
-            _rb.AddForce(new Vector2(0, jumpForce*100), ForceMode2D.Impulse);
-    }
+    private static readonly Vector3 RightLocalScale = new(1, 1);
+    private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
-    void Flip()
-    {
-        if (_moveInput > 0 && faceOrientation == Side.Left || _moveInput < 0 && faceOrientation == Side.Right)
-        {
-            transform.localScale *= new Vector2(-1, 1);
-            faceOrientation = faceOrientation == Side.Right ? Side.Left : Side.Right;
-        }
-    }
+    private static float MovementAxis => Input.GetAxis("Horizontal");
+    private Side _faceOrientation;
 
-    void ChangeAnimation(string animation)
-    {
-        if (_currentAnimation == animation) return;
-        _animator.Play(animation);
-        _currentAnimation = animation;
-    }
-    
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _sprite = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        var hit = Physics2D.Raycast(_rb.position, Vector2.down, 0.1f, LayerMask.GetMask("Ground"));
-
-        _isGround = !hit.collider.IsUnityNull();
-        
-        Move();
-        Flip();
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (MovementAxis != 0)
         {
+            _faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
+            Move();
+        }
+        
+        else
+        {
+            Stay();
+        }
+
+        Flip();
+
+        if (_onFoot && Input.GetKeyDown(KeyCode.Space))
             Jump();
+    }
+
+    private void Move()
+    {
+        ChangeAnimation("Move_anim");
+        _rb.velocity = new Vector2(MovementAxis * Speed, _rb.velocity.y);
+    }
+
+    private void Stay()
+    {
+        ChangeAnimation("Idle_anim");
+    }
+
+    private void Flip()
+    {
+        transform.localScale = _faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
+    }
+
+    private void Jump()
+    {
+        _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+        _onFoot = false;
+    }
+
+    private void ChangeAnimation(string anim)
+    {
+        if (_currentAnimation == anim)
+            return;
+
+        _currentAnimation = anim;
+        _animator.Play(anim);
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            _onFoot = true;
         }
     }
 }

@@ -1,66 +1,105 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 public class Pod : MonoBehaviour
 {
     public Player player;
-    public Bullet bullet;
-    public float maxDistance = 5;
-    public float speed = 10f;
 
-    public bool faceOrientationRight = true;
-
-    [SerializeField] private Transform shootingPosition;
-    
-    private GameObject _pod;
     private Rigidbody2D _rb;
+    private Camera _camera;
 
-    private bool _canShoot = true;
+    private static readonly Vector3 RightPosition = new(2, 3.5f, 0);
+    private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
+    private static readonly Vector3 ShootingPosition = new(0, 3.5f, 0);
 
-    void MoveToPlayer()
-    {
-        _rb.velocity = new Vector2(0, 0.2f);
-        var heading = transform.position - player.transform.position;
-        var distance = heading.magnitude;
-        if (distance > maxDistance)
-        {
-            _rb.velocity = new Vector2(-(heading/distance).x * speed, _rb.velocity.y);
-            if (player.faceOrientationRight != faceOrientationRight)
-            {
-                transform.localScale *= new Vector2(-1, 1);
-                faceOrientationRight = !faceOrientationRight;
-            }
-        }
-    }
+    private static readonly Vector3 RightLocalScale = new(1, 1);
+    private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
-    void RestoreDirection()
-    {
-        _rb.MoveRotation(0);
-    }
-    
-    // Start is called before the first frame update
-    void Start()
+    private const float BrakingSpeed = 3;
+    private const float Speed = 5;
+    private const float MaxDistance = 0.1f;
+
+    private Vector3 _velocity;
+    private float _angle;
+    private bool _isScoping;
+
+    private Side FaceOrientation
+        => _isScoping
+            ? -90 <= _angle && _angle <= 90
+                ? Side.Right
+                : Side.Left
+            : _velocity.x > 0
+                ? Side.Right
+                : Side.Left;
+
+    private Vector3 PodToPlayer => TargetPosition - _rb.transform.position;
+    private float DistanceToPlayer => PodToPlayer.magnitude;
+    private Vector2 PodToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
+
+    private Vector3 TargetPosition => _isScoping
+        ? player.transform.position + ShootingPosition
+        : FaceOrientation == Side.Right
+            ? player.transform.position + RightPosition
+            : player.transform.position + LeftPosition;
+
+    private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _camera = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        RestoreDirection();
-        MoveToPlayer();
-        
-        if (Input.GetKeyDown(KeyCode.LeftShift) && _canShoot)
-            Shoot();
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _isScoping = true;
+            LookAtMouse();
+        }
+        else
+        {
+            _isScoping = false;
+            LookUpwards();
+        }
+
+        if (DistanceToPlayer > MaxDistance)
+            MoveToPlayer();
+        else
+            Brake();
     }
 
-    private void Shoot()
+    private void Update()
     {
-        var bul = Instantiate(bullet, shootingPosition.position, transform.rotation);
-        Destroy(bul, 5f);
+        transform.localScale = FaceOrientation == Side.Right
+            ? RightLocalScale
+            : LeftLocalScale;
+
+        _rb.MoveRotation(_angle);
+        _rb.velocity = _velocity;
+    }
+
+    private void LookAtMouse()
+    {
+        var angle = -Vector2.SignedAngle(PodToMouse, Vector2.right);
+        if (-90 <= angle && angle <= 90)
+            _angle = angle;
+        else if (angle > 90)
+            _angle = angle + 180;
+        else if (angle < -90)
+            _angle = angle - 180;
+    }
+
+    private void LookUpwards()
+    {
+        _angle = 0;
+    }
+
+    private void MoveToPlayer()
+    {
+        _velocity = PodToPlayer.normalized * (Speed * Mathf.Log(DistanceToPlayer));
+    }
+
+    private void Brake()
+    {
+        _velocity /= BrakingSpeed;
     }
 }

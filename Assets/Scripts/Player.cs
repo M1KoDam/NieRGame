@@ -1,4 +1,10 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -10,8 +16,8 @@ public class Player : MonoBehaviour
     private SpriteRenderer _sprite;
     private float _moveInput;
     public bool faceOrientationRight = true;
-    private bool _onFoot = true;
-
+    private bool _isGround = true;
+    
     private Animator _animator;
     private string _currentAnimation;
 
@@ -24,16 +30,16 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        _rb.AddForce(new Vector2(0, jumpForce*100), ForceMode2D.Impulse);
-        _onFoot = false;
+        if (!_isGround)
+            _rb.AddForce(new Vector2(0, jumpForce*100), ForceMode2D.Impulse);
     }
 
     void Flip()
     {
-        if (_moveInput > 0 && !faceOrientationRight || _moveInput < 0 && faceOrientationRight)
+        if (_moveInput > 0 && faceOrientation == Side.Left || _moveInput < 0 && faceOrientation == Side.Right)
         {
             transform.localScale *= new Vector2(-1, 1);
-            faceOrientationRight = !faceOrientationRight;
+            faceOrientation = faceOrientation == Side.Right ? Side.Left : Side.Right;
         }
     }
 
@@ -50,23 +56,20 @@ public class Player : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _sprite = GetComponent<SpriteRenderer>();
-        GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        var hit = Physics2D.Raycast(_rb.position, Vector2.down, 0.1f, LayerMask.GetMask("Ground"));
+
+        _isGround = !hit.collider.IsUnityNull();
+        
         Move();
         Flip();
-        if (Input.GetKeyDown(KeyCode.Space) && _onFoot)
-            Jump();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            _onFoot = true;
+            Jump();
         }
     }
 }

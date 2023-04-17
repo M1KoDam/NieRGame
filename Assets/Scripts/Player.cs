@@ -1,13 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -22,18 +14,25 @@ public class Player : MonoBehaviour
     private bool _onFoot = true;
     private bool _canShoot = true;
 
+    [SerializeField] private AnimationCurve animationCurve;
+    
     private Animator _animator;
     private string _currentAnimation;
 
     void Move()
     {
         _moveInput = Input.GetAxis("Horizontal");
-        ChangeAnimation(_moveInput != 0 ? "Move_anim" : "Idle_anim");
+        if (_moveInput != 0 && _onFoot && Math.Abs(_rb.velocity.y) < 0.1) 
+            ChangeAnimation("Move_anim");
+        else if (_onFoot && _moveInput == 0 && Math.Abs(_rb.velocity.y) < 0.1)
+            ChangeAnimation("Idle_anim");
+
         _rb.velocity = new Vector2(_moveInput * speed, _rb.velocity.y);
     }
 
     void Jump()
     {
+        ChangeAnimation("Jump_anim");
         _rb.AddForce(new Vector2(0, jumpForce*100), ForceMode2D.Impulse);
         _onFoot = false;
     }
@@ -67,16 +66,16 @@ public class Player : MonoBehaviour
         _sprite = GetComponent<SpriteRenderer>();
         GetComponent<Collider2D>();
     }
-
+    
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        Move();
-        Flip();
         if (Input.GetKeyDown(KeyCode.Space) && _onFoot)
         {
             Jump();
         }
+        Move();
+        Flip();
     }
 
     private void OnCollisionStay2D(Collision2D collision)

@@ -1,84 +1,80 @@
-using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float speed;
-    [SerializeField] private int lives = 5;
-    [SerializeField] private float jumpForce = 10f;
-
     private Rigidbody2D _rb;
-    private SpriteRenderer _sprite;
-    private float _moveInput;
-    public bool faceOrientationRight = true;
-    private bool _onFoot = true;
-    private bool _canShoot = true;
-
-    [SerializeField] private AnimationCurve animationCurve;
-    
     private Animator _animator;
+
+    private bool _onFoot = true;
     private string _currentAnimation;
 
-    void Move()
-    {
-        _moveInput = Input.GetAxis("Horizontal");
-        if (_moveInput != 0 && _onFoot && Math.Abs(_rb.velocity.y) < 0.1) 
-            ChangeAnimation("Move_anim");
-        else if (_onFoot && _moveInput == 0 && Math.Abs(_rb.velocity.y) < 0.1)
-            ChangeAnimation("Idle_anim");
+    private const float Speed = 10;
+    private const float JumpForce = 1200;
 
-        _rb.velocity = new Vector2(_moveInput * speed, _rb.velocity.y);
-    }
+    private static readonly Vector3 RightLocalScale = new(1, 1);
+    private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
-    void Jump()
-    {
-        ChangeAnimation("Jump_anim");
-        _rb.AddForce(new Vector2(0, jumpForce*100), ForceMode2D.Impulse);
-        _onFoot = false;
-    }
+    private static float MovementAxis => Input.GetAxis("Horizontal");
+    private Side _faceOrientation;
 
-    void Shoot()
-    {
-        
-    }
-
-    void Flip()
-    {
-        if (_moveInput > 0 && !faceOrientationRight || _moveInput < 0 && faceOrientationRight)
-        {
-            transform.localScale *= new Vector2(-1, 1);
-            faceOrientationRight = !faceOrientationRight;
-        }
-    }
-
-    void ChangeAnimation(string animation)
-    {
-        if (_currentAnimation == animation) return;
-        _animator.Play(animation);
-        _currentAnimation = animation;
-    }
-    
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _sprite = GetComponent<SpriteRenderer>();
-        GetComponent<Collider2D>();
-    }
-    
-    // Update is called once per frame
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && _onFoot)
-        {
-            Jump();
-        }
-        Move();
-        Flip();
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void Update()
+    {
+        if (MovementAxis != 0)
+        {
+            _faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
+            Move();
+        }
+        
+        else
+        {
+            Stay();
+        }
+
+        Flip();
+
+        if (_onFoot && Input.GetKeyDown(KeyCode.Space))
+            Jump();
+    }
+
+    private void Move()
+    {
+        ChangeAnimation("Move_anim");
+        _rb.velocity = new Vector2(MovementAxis * Speed, _rb.velocity.y);
+    }
+
+    private void Stay()
+    {
+        ChangeAnimation("Idle_anim");
+    }
+
+    private void Flip()
+    {
+        transform.localScale = _faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
+    }
+
+    private void Jump()
+    {
+        _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+        _onFoot = false;
+    }
+
+    private void ChangeAnimation(string anim)
+    {
+        if (_currentAnimation == anim)
+            return;
+
+        _currentAnimation = anim;
+        _animator.Play(anim);
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {

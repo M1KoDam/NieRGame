@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -26,7 +28,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (MovementAxis != 0)
+        if (Input.GetMouseButtonDown(0))
+        {
+            ChangeAnimation("Attack_anim");
+        }
+        else if (MovementAxis != 0)
         {
             _faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
             Move();
@@ -34,11 +40,13 @@ public class Player : MonoBehaviour
         else if (_currentAnimation == "2B_Fall_End_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
         {
         }
+        else if (_currentAnimation == "Attack_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+        {
+        }
         else if (_currentAnimation == "Fall_anim" && _onFoot)
         {
             ChangeAnimation("2B_Fall_End_anim");
         }
-
         else if (_onFoot)
         {
             Stay();

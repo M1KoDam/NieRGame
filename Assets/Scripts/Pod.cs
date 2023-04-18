@@ -12,19 +12,20 @@ public class Pod : MonoBehaviour
     private static readonly Vector3 RightPosition = new(2, 3.5f, 0);
     private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
     private static readonly Vector3 ShootingPosition = new(0, 3.5f, 0);
-
-    private Vector3 BulletPosition => (Vector2)transform.position + PodToMouse.normalized;
-
+    
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
     private const float BrakingSpeed = 3;
     private const float Speed = 5;
     private const float MaxDistance = 0.1f;
+    private const float FireRate = 10;
 
     private Vector3 _velocity;
     private float _angle;
     private bool _isScoping;
+    private bool _canShoot;
+    private float _fireTimer;
 
     private Side FaceOrientation
         => _isScoping
@@ -35,6 +36,8 @@ public class Pod : MonoBehaviour
                 ? Side.Right
                 : Side.Left;
 
+    private static float FireDelay => 1 / FireRate;
+    private Vector3 BulletPosition => (Vector2)transform.position + PodToMouse.normalized;
     private Vector3 PodToPlayer => TargetPosition - _rb.transform.position;
     private float DistanceToPlayer => PodToPlayer.magnitude;
     private Vector2 PodToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
@@ -54,28 +57,56 @@ public class Pod : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            _isScoping = true;
-            LookAtMouse();
-            Shoot();
-        }
-        else
-        {
-            _isScoping = false;
-            LookUpwards();
-        }
+        HandleShooting();
+        HandleMovement();
+    }
 
+    private void HandleMovement()
+    {
         if (DistanceToPlayer > MaxDistance)
             MoveToPlayer();
         else
             Brake();
     }
 
+    private void HandleShooting()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _isScoping = true;
+            LookAtMouse();
+
+            if (_canShoot)
+                Shoot();
+        }
+        else
+        {
+            _isScoping = false;
+            LookUpwards();
+        }
+        
+        HandleFireRate();
+    }
+
+    private void HandleFireRate()
+    {
+        if (_fireTimer < FireDelay)
+        {
+            _fireTimer += Time.fixedDeltaTime;
+        }
+        else
+        {
+            _canShoot = true;
+            _fireTimer = 0;
+        }
+    }
+
     private void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         Destroy(bul.gameObject, 5f);
+
+        _canShoot = false;
     }
 
     private void Update()
@@ -91,6 +122,7 @@ public class Pod : MonoBehaviour
     private void LookAtMouse()
     {
         var angle = -Vector2.SignedAngle(PodToMouse, Vector2.right);
+        
         if (-90 <= angle && angle <= 90)
             _angle = angle;
         else if (angle > 90)

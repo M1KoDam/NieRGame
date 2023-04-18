@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Bullet : MonoBehaviour
 {
     private Rigidbody2D _rb;
     private Camera _camera;
+    public int bulletSpeed;
     
     private Vector2 BulletToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
     
@@ -17,6 +19,6 @@ public class Bullet : MonoBehaviour
     
     private void Accelerate()
     {
-        _rb.velocity = 50 * BulletToMouse.normalized;
+        _rb.velocity = bulletSpeed * BulletToMouse.normalized;
     }
 }

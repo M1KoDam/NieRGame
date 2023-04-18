@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class Player : MonoBehaviour
     private bool _onFoot = true;
     private string _currentAnimation;
 
-    private const float Speed = 10;
+    public float speed = 10;
     private const float JumpForce = 1200;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
@@ -30,13 +31,26 @@ public class Player : MonoBehaviour
             _faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
             Move();
         }
-        
-        else
+        else if (_currentAnimation == "2B_Fall_End_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+        {
+        }
+        else if (_currentAnimation == "Fall_anim" && _onFoot)
+        {
+            ChangeAnimation("2B_Fall_End_anim");
+        }
+
+        else if (_onFoot)
         {
             Stay();
         }
 
         Flip();
+
+        if (!_onFoot && _rb.velocity.y < -5)
+        {
+            ChangeAnimation("Fall_anim");
+        }
+            
 
         if (_onFoot && Input.GetKeyDown(KeyCode.Space))
             Jump();
@@ -44,8 +58,9 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        ChangeAnimation("Move_anim");
-        _rb.velocity = new Vector2(MovementAxis * Speed, _rb.velocity.y);
+        if (_onFoot)
+            ChangeAnimation("Move_anim");
+        _rb.velocity = new Vector2(MovementAxis * speed, _rb.velocity.y);
     }
 
     private void Stay()
@@ -60,6 +75,7 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
+        ChangeAnimation("Jump_anim");
         _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
         _onFoot = false;
     }

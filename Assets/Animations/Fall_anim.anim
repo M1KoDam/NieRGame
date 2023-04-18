@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Jump_anim
+  m_Name: Fall_anim
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,19 +20,7 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 21300000, guid: b6165b181b5fb68479499e61eea13fc2, type: 3}
-    - time: 0.083333336
-      value: {fileID: 21300000, guid: fc6a8cada7a4e0b419e27f932b52a618, type: 3}
-    - time: 0.15
-      value: {fileID: 21300000, guid: 3f5dc466b54699d49831fad60648f148, type: 3}
-    - time: 0.38333333
-      value: {fileID: 21300000, guid: e4c7e7362f2e7804f8877b16411adbed, type: 3}
-    - time: 0.46666667
-      value: {fileID: 21300000, guid: 90d0e980b74cfc74ca4d59f105b25c69, type: 3}
-    - time: 0.5833333
-      value: {fileID: 21300000, guid: a11d16372d20b44439ed47e5fad73ae6, type: 3}
-    - time: 0.6666667
-      value: {fileID: 21300000, guid: a78e06d6c61769444b63b11fb11f8864, type: 3}
+      value: {fileID: 21300000, guid: f643f5b1415c2444bb869d229aae2a03, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -52,19 +40,13 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 21300000, guid: b6165b181b5fb68479499e61eea13fc2, type: 3}
-    - {fileID: 21300000, guid: fc6a8cada7a4e0b419e27f932b52a618, type: 3}
-    - {fileID: 21300000, guid: 3f5dc466b54699d49831fad60648f148, type: 3}
-    - {fileID: 21300000, guid: e4c7e7362f2e7804f8877b16411adbed, type: 3}
-    - {fileID: 21300000, guid: 90d0e980b74cfc74ca4d59f105b25c69, type: 3}
-    - {fileID: 21300000, guid: a11d16372d20b44439ed47e5fad73ae6, type: 3}
-    - {fileID: 21300000, guid: a78e06d6c61769444b63b11fb11f8864, type: 3}
+    - {fileID: 21300000, guid: f643f5b1415c2444bb869d229aae2a03, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.68333334
+    m_StopTime: 0.016666668
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

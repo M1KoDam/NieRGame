@@ -14,8 +14,9 @@ public class SmallFlyer : MonoBehaviour
     public float waitTime;
     private float _time;
 
+    private const float BrakingSpeed = 3;
     private const float PatrolSpeed = 3;
-    private const float AttackSpeed = 5;
+    private const float ChaseSpeed = 5;
 
     private Vector2 _velocity;
     private float _angle;
@@ -55,7 +56,7 @@ public class SmallFlyer : MonoBehaviour
 
     }
 
-// Start is called before the first frame update
+    // Start is called before the first frame update
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -65,13 +66,14 @@ public class SmallFlyer : MonoBehaviour
     private void Wait()
     {
         _velocity = new Vector2(0, 0.2f);
-        /*
+    }
+
+    private void RestoreAngle()
+    {
         if (_angle != 0)
             _angle /= 2;
         if (_angle < 1f)
             _angle = 0;
-            */
-            
     }
 
     // Update is called once per frame
@@ -116,33 +118,44 @@ public class SmallFlyer : MonoBehaviour
             {
                 _time -= Time.deltaTime;
                 Wait();
+                Brake();
             }
         }
 
         else
             GoToSpot();
+        
+        RestoreAngle();
     }
 
     private void Chasing()
     {
         GoToPlayer();
+        RestoreAngle();
     }
 
     private void Attacking()
     {
         Wait();
+        LookAtPlayer();
         Shoot();
     }
-    
+
     private void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         Destroy(bul.gameObject, 5f);
     }
 
+    private void LookAtPlayer()
+    {
+        var strongVector = FaceOrientation == Side.Left ? Vector2.left : Vector2.right;
+        _angle = -Vector2.SignedAngle(SmallFlyerToPlayer, strongVector);
+    }
+
     private void GoToPlayer()
     {
-        _velocity = SmallFlyerToPlayer.normalized * AttackSpeed;
+        _velocity = SmallFlyerToPlayer.normalized * ChaseSpeed;
     }
 
     private void ChangeSpotId()
@@ -158,7 +171,10 @@ public class SmallFlyer : MonoBehaviour
     private void GoToSpot()
     { 
         _velocity = SmallFlyerToSpot.normalized * PatrolSpeed;
-        //var strongVector = FaceOrientation == Side.Left ? Vector2.left : Vector2.right;
-        //_angle = -Vector2.SignedAngle(SmallFlyerToTarget, strongVector);
+    }
+    
+    private void Brake()
+    {
+        _velocity /= BrakingSpeed;
     }
 }

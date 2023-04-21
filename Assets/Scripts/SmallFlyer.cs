@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -25,9 +26,9 @@ public class SmallFlyer : MonoBehaviour
             : Side.Left;
 
     private State GetState 
-        => SmallFlyerToPlayer.magnitude > 5 && SmallFlyerToPlayer.magnitude < 10 
+        => SmallFlyerToPlayer.magnitude > 10 && SmallFlyerToPlayer.magnitude < 20 
             ? State.Chase
-            : SmallFlyerToPlayer.magnitude < 5
+            : SmallFlyerToPlayer.magnitude <= 10
                 ? State.Attack
                 : State.Patrol;
 
@@ -36,6 +37,7 @@ public class SmallFlyer : MonoBehaviour
 
     private Vector2 SmallFlyerToSpot => moveSpot[curId].transform.position - _rb.transform.position;
     private Vector2 SmallFlyerToPlayer => player.transform.position - _rb.transform.position;
+    private Vector2 BulletPosition => (Vector2)_rb.transform.position + SmallFlyerToPlayer.normalized;
 
     private bool _swayDown;
     private int _swayCount;
@@ -88,11 +90,20 @@ public class SmallFlyer : MonoBehaviour
         _swayCount += 1;
         var state = GetState;
         Debug.Log(state);
-        if (state == State.Chase)
-            Chasing();
-        else if (state == State.Patrol) 
-            Patrolling();
-        ;
+        switch (state)
+        {
+            case State.Chase:
+                Chasing();
+                break;
+            case State.Patrol:
+                Patrolling();
+                break;
+            case State.Attack:
+                Attacking();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
     
     private void Patrolling()
@@ -115,6 +126,18 @@ public class SmallFlyer : MonoBehaviour
     private void Chasing()
     {
         GoToPlayer();
+    }
+
+    private void Attacking()
+    {
+        Wait();
+        Shoot();
+    }
+    
+    private void Shoot()
+    {
+        var bul = Instantiate(bullet, BulletPosition, transform.rotation);
+        Destroy(bul.gameObject, 5f);
     }
 
     private void GoToPlayer()

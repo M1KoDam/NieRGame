@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private string _currentAnimation;
 
     public float speed = 10;
-    private const float JumpForce = 1200;
+    public float JumpForce = 1200;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
@@ -101,6 +101,10 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
+        {
+            _onFoot = true;
+        }
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             _onFoot = true;
         }

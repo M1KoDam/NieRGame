@@ -13,6 +13,7 @@ public class SmallFlyer : MonoBehaviour
 
     public float waitTime;
     private float _time;
+    private bool _isScoping;
 
     private const float BrakingSpeed = 3;
     private const float PatrolSpeed = 3;
@@ -20,11 +21,18 @@ public class SmallFlyer : MonoBehaviour
 
     private Vector2 _velocity;
     private float _angle;
+    
+    private static readonly Vector2 LeftShootingPosition = new(8, 3f);
+    private static readonly Vector2 RightShootingPosition = new(-8, 3f);
 
     private Side FaceOrientation
-        => _velocity.x > 0
-            ? Side.Right
-            : Side.Left;
+        => _isScoping
+            ? -90 <= _angle && _angle <= 90
+                ? Side.Left
+                : Side.Right
+            : _velocity.x > 0
+                ? Side.Right
+                : Side.Left;
 
     private State GetState 
         => SmallFlyerToPlayer.magnitude > 10 && SmallFlyerToPlayer.magnitude < 20 
@@ -39,6 +47,10 @@ public class SmallFlyer : MonoBehaviour
     private Vector2 SmallFlyerToSpot => moveSpot[curId].transform.position - _rb.transform.position;
     private Vector2 SmallFlyerToPlayer => player.transform.position - _rb.transform.position;
     private Vector2 BulletPosition => (Vector2)_rb.transform.position + SmallFlyerToPlayer.normalized;
+
+    private Vector2 ShootingPosition => FaceOrientation is Side.Left
+        ? (Vector2)player.transform.position + LeftShootingPosition
+        : (Vector2)player.transform.position + RightShootingPosition;
 
     private bool _swayDown;
     private int _swayCount;
@@ -91,7 +103,7 @@ public class SmallFlyer : MonoBehaviour
     {
         _swayCount += 1;
         var state = GetState;
-        Debug.Log(state);
+        Debug.Log(SmallFlyerToPlayer.magnitude);
         switch (state)
         {
             case State.Chase:
@@ -110,6 +122,7 @@ public class SmallFlyer : MonoBehaviour
     
     private void Patrolling()
     {
+        _isScoping = false;
         if (SmallFlyerToSpot.magnitude < 1f)
         {
             if (_time <= 0)
@@ -130,15 +143,25 @@ public class SmallFlyer : MonoBehaviour
 
     private void Chasing()
     {
+        _isScoping = false;
         GoToPlayer();
         RestoreAngle();
     }
 
     private void Attacking()
     {
-        Wait();
-        LookAtPlayer();
-        Shoot();
+        _isScoping = true;
+        GoToShootingPosition();
+        //LookAtPlayer();
+        //Shoot();
+    }
+
+    private void GoToShootingPosition()
+    {
+        if (((Vector2)_rb.transform.position - ShootingPosition).magnitude < 2f)
+            Brake();
+        else 
+            _velocity = ShootingPosition.normalized * ChaseSpeed;
     }
 
     private void Shoot()
@@ -149,8 +172,17 @@ public class SmallFlyer : MonoBehaviour
 
     private void LookAtPlayer()
     {
-        var strongVector = FaceOrientation == Side.Left ? Vector2.left : Vector2.right;
-        _angle = -Vector2.SignedAngle(SmallFlyerToPlayer, strongVector);
+        //var strongVector = FaceOrientation == Side.Left ? Vector2.left : Vector2.right;
+        var angle = -Vector2.SignedAngle(SmallFlyerToPlayer, Vector2.right);
+        Debug.Log(angle);
+        /*
+        if (-90 <= angle && angle <= 90)
+            _angle = angle;
+        else if (angle > 90)
+            _angle = angle + 180;
+        else if (angle < -90)
+            _angle = angle - 180;
+            */
     }
 
     private void GoToPlayer()

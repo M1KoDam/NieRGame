@@ -1,8 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SmallFlyer : MonoBehaviour
 {
     private Rigidbody2D _rb;
+    public Player player;
+    public Bullet bullet;
 
     public Transform[] moveSpot;
     public int curId;
@@ -11,6 +14,8 @@ public class SmallFlyer : MonoBehaviour
     private float _time;
 
     private const float PatrolSpeed = 3;
+    private const float AttackSpeed = 5;
+
     private Vector2 _velocity;
     private float _angle;
 
@@ -19,10 +24,18 @@ public class SmallFlyer : MonoBehaviour
             ? Side.Right
             : Side.Left;
 
+    private State GetState 
+        => SmallFlyerToPlayer.magnitude > 5 && SmallFlyerToPlayer.magnitude < 10 
+            ? State.Chase
+            : SmallFlyerToPlayer.magnitude < 5
+                ? State.Attack
+                : State.Patrol;
+
     private static readonly Vector2 RightLocalScale = new(-1, 1);
     private static readonly Vector2 LeftLocalScale = new(1, 1);
 
-    private Vector2 SmallFlyerToTarget => moveSpot[curId].transform.position - _rb.transform.position;
+    private Vector2 SmallFlyerToSpot => moveSpot[curId].transform.position - _rb.transform.position;
+    private Vector2 SmallFlyerToPlayer => player.transform.position - _rb.transform.position;
 
     private bool _swayDown;
     private int _swayCount;
@@ -73,12 +86,18 @@ public class SmallFlyer : MonoBehaviour
     private void FixedUpdate()
     {
         _swayCount += 1;
-        Patrolling();
+        var state = GetState;
+        Debug.Log(state);
+        if (state == State.Chase)
+            Chasing();
+        else if (state == State.Patrol) 
+            Patrolling();
+        ;
     }
-
+    
     private void Patrolling()
     {
-        if (SmallFlyerToTarget.magnitude < 1f)
+        if (SmallFlyerToSpot.magnitude < 1f)
         {
             if (_time <= 0)
                 ChangeSpotId();
@@ -93,6 +112,16 @@ public class SmallFlyer : MonoBehaviour
             GoToSpot();
     }
 
+    private void Chasing()
+    {
+        GoToPlayer();
+    }
+
+    private void GoToPlayer()
+    {
+        _velocity = SmallFlyerToPlayer.normalized * AttackSpeed;
+    }
+
     private void ChangeSpotId()
     {
         curId++;
@@ -105,7 +134,7 @@ public class SmallFlyer : MonoBehaviour
 
     private void GoToSpot()
     { 
-        _velocity = SmallFlyerToTarget.normalized * PatrolSpeed;
+        _velocity = SmallFlyerToSpot.normalized * PatrolSpeed;
         //var strongVector = FaceOrientation == Side.Left ? Vector2.left : Vector2.right;
         //_angle = -Vector2.SignedAngle(SmallFlyerToTarget, strongVector);
     }

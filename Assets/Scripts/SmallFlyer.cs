@@ -9,7 +9,8 @@ public class SmallFlyer : MonoBehaviour
     public Bullet bullet;
 
     public Transform[] moveSpot;
-    public int curId;
+    private int curId;
+    private bool reverseGettingId; 
 
     public float waitTime;
     private float _time;
@@ -189,10 +190,13 @@ public class SmallFlyer : MonoBehaviour
 
     private void ChangeSpotId()
     {
-        curId++;
-        
-        if (curId >= moveSpot.Length)
-            curId = 0;
+        curId = reverseGettingId ? curId - 1 : curId + 1;
+
+        if (curId >= moveSpot.Length || curId < 0)
+        {
+            reverseGettingId = !reverseGettingId;
+            curId = reverseGettingId ? moveSpot.Length - 1 : 0;
+        }
 
         _time = waitTime;
     }

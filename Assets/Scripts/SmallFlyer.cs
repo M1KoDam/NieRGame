@@ -10,7 +10,8 @@ public class SmallFlyer : MonoBehaviour
 
     public Transform[] moveSpot;
     private int curId;
-    private bool reverseGettingId; 
+    private bool reverseGettingId;
+    private bool _canShoot;
 
     public float waitTime;
     private float _time;
@@ -19,10 +20,11 @@ public class SmallFlyer : MonoBehaviour
     private const float BrakingSpeed = 2;
     private const float PatrolSpeed = 3;
     private const float ChaseSpeed = 5;
+    private const float FireRate = 10;
 
     private Vector2 _velocity;
     private float _angle;
-    
+
     private static readonly Vector2 LeftOrientationShootingPosition = new(9, 4f);
     private static readonly Vector2 RightOrientationShootingPosition = new(-9, 4f);
 
@@ -35,8 +37,8 @@ public class SmallFlyer : MonoBehaviour
                 ? Side.Left
                 : Side.Right;
 
-    private State GetState 
-        => SmallFlyerToPlayer.magnitude > 15 && SmallFlyerToPlayer.magnitude < 25 
+    private State GetState
+        => SmallFlyerToPlayer.magnitude > 15 && SmallFlyerToPlayer.magnitude < 25
             ? State.Chase
             : SmallFlyerToPlayer.magnitude <= 15
                 ? State.Attack
@@ -45,6 +47,7 @@ public class SmallFlyer : MonoBehaviour
     private static readonly Vector2 RightLocalScale = new(-1, 1);
     private static readonly Vector2 LeftLocalScale = new(1, 1);
 
+    private static float FireDelay => 1 / FireRate;
     private Vector2 SmallFlyerToSpot => moveSpot[curId].transform.position - _rb.transform.position;
     private Vector2 SmallFlyerToPlayer => player.transform.position - _rb.transform.position;
     private Vector2 BulletPosition => (Vector2)_rb.transform.position + SmallFlyerToPlayer.normalized;
@@ -52,11 +55,11 @@ public class SmallFlyer : MonoBehaviour
     private Vector2 ShootingPositionToPlayer => FaceOrientation is Side.Left
         ? SmallFlyerToPlayer + LeftOrientationShootingPosition
         : SmallFlyerToPlayer + RightOrientationShootingPosition;
-    
-    
+
 
     private bool _swayDown;
     private int _swayCount;
+    private float _fireTimer;
 
     private Vector2 Sway()
     {
@@ -65,10 +68,9 @@ public class SmallFlyer : MonoBehaviour
             _swayCount = 0;
             _swayDown = !_swayDown;
         }
-        
+
         if (_swayCount < 30) return Vector2.zero;
         return _swayDown ? new Vector2(0, -0.5f) : new Vector2(0, 0.5f);
-
     }
 
     // Start is called before the first frame update
@@ -77,7 +79,7 @@ public class SmallFlyer : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _time = waitTime;
     }
-    
+
     private void Wait()
     {
         _velocity = new Vector2(0, 0.2f);
@@ -97,14 +99,16 @@ public class SmallFlyer : MonoBehaviour
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
             : LeftLocalScale;
-        
+
         _rb.MoveRotation(_angle);
         _rb.velocity = _velocity + Sway();
     }
 
     private void FixedUpdate()
     {
-        _swayCount += 1;
+        _swayCount += 1;  
+        HandleFireRate();
+        
         var state = GetState;
         switch (state)
         {
@@ -120,8 +124,9 @@ public class SmallFlyer : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        
     }
-    
+
     private void Patrolling()
     {
         _isScoping = false;
@@ -139,7 +144,7 @@ public class SmallFlyer : MonoBehaviour
 
         else
             GoToSpot();
-        
+
         RestoreAngle();
     }
 
@@ -155,21 +160,38 @@ public class SmallFlyer : MonoBehaviour
         _isScoping = true;
         GoToShootingPosition();
         LookAtPlayer();
-        Shoot();
+        if (_canShoot)
+            Shoot();
     }
 
     private void GoToShootingPosition()
     {
         if (ShootingPositionToPlayer.magnitude < 2f)
             Brake();
-        else 
+        else
             _velocity = ShootingPositionToPlayer.normalized * ChaseSpeed;
     }
 
     private void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
+        bul.GetComponent<Rigidbody2D>().velocity = SmallFlyerToPlayer.normalized * bul.bulletSpeed;
         Destroy(bul.gameObject, 5f);
+
+        _canShoot = false;
+    }
+    
+    private void HandleFireRate()
+    {
+        if (_fireTimer < FireDelay)
+        {
+            _fireTimer += Time.fixedDeltaTime;
+        }
+        else
+        {
+            _canShoot = true;
+            _fireTimer = 0;
+        }
     }
 
     private void LookAtPlayer()
@@ -202,10 +224,10 @@ public class SmallFlyer : MonoBehaviour
     }
 
     private void GoToSpot()
-    { 
+    {
         _velocity = SmallFlyerToSpot.normalized * PatrolSpeed;
     }
-    
+
     private void Brake()
     {
         _velocity /= BrakingSpeed;

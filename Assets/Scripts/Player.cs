@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -8,11 +9,15 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator _animator;
 
+    private GameObject _lightSword;
+    private GameObject _heavySword;
+
     private bool _onFoot = true;
+    private bool _attackInAir = false;
     private string _currentAnimation;
 
     public float speed = 10;
-    public float JumpForce = 1200;
+    public float jumpForce = 1200;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
@@ -24,13 +29,29 @@ public class Player : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _lightSword = transform.Find("Light_Sword").GameObject();
+        _heavySword = transform.Find("Heavy_Sword").GameObject();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        _lightSword.SetActive(true);
+        _heavySword.SetActive(true);
+        if (Input.GetMouseButtonDown(0) && _onFoot)
         {
             ChangeAnimation("Attack_anim");
+        }
+        else if (Input.GetMouseButtonDown(0) && _attackInAir)
+        {
+            ChangeAnimation("Attack_in_air_anim");
+            _rb.velocity = new Vector2(0, 0.25f);
+            _attackInAir = false;
+            _lightSword.SetActive(false);
+        }
+        else if (_currentAnimation == "Attack_in_air_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.6)
+        {
+            _lightSword.SetActive(false);
+            _rb.velocity = new Vector2(0, 0.25f);
         }
         else if (MovementAxis != 0)
         {
@@ -42,6 +63,7 @@ public class Player : MonoBehaviour
         }
         else if (_currentAnimation == "Attack_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
         {
+            _lightSword.SetActive(false);
         }
         else if (_currentAnimation == "Fall_anim" && _onFoot)
         {
@@ -84,7 +106,7 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         ChangeAnimation("Jump_anim");
-        _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         _onFoot = false;
     }
 
@@ -96,17 +118,22 @@ public class Player : MonoBehaviour
         _currentAnimation = anim;
         _animator.Play(anim);
     }
-
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") 
+            || collision.gameObject.CompareTag("Enemy"))
+        {
+            _onFoot = true;
+            _attackInAir = true;
+        }
+    }
+    
+    private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            _onFoot = true;
-        }
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            _onFoot = true;
+            _onFoot = false;
         }
     }
 }

@@ -35,79 +35,138 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        _lightSword.SetActive(true);
-        _heavySword.SetActive(true);
+        if (Attack()) return;
+        if (Jump()) return;
+        if (Move()) return;
+        if (Fall()) return;
+        Idle();
+    }
+
+    #region Attack
+
+    private bool Attack()
+    {
         if (Input.GetMouseButtonDown(0) && _onFoot)
         {
+            if (_currentAnimation == "Attack_anim" && CheckAnimTime(0.8f))
+            {
+                ChangeAnimation("Attack_anim2");
+            }
             ChangeAnimation("Attack_anim");
+            return true;
         }
-        else if (Input.GetMouseButtonDown(0) && _attackInAir)
+        if (Input.GetMouseButtonDown(0) && _attackInAir && !_onFoot)
         {
             ChangeAnimation("Attack_in_air_anim");
             _rb.velocity = new Vector2(0, 0.25f);
             _attackInAir = false;
             _lightSword.SetActive(false);
+            return true;
         }
-        else if (_currentAnimation == "Attack_in_air_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.6)
+        if (_currentAnimation is "Attack_anim" or "Attack_anim2" or "Attack_in_air_anim" && CheckForAnimComplete())
         {
             _lightSword.SetActive(false);
-            _rb.velocity = new Vector2(0, 0.25f);
+            if (_currentAnimation == "Attack_in_air_anim")
+                _rb.velocity = new Vector2(0, 0.25f);
+            return true;
         }
-        else if (MovementAxis != 0)
+
+        _lightSword.SetActive(true);
+        _heavySword.SetActive(true);
+        return false;
+    }
+
+    #endregion
+
+    #region Move
+
+    private bool Move()
+    {
+        if (MovementAxis != 0)
         {
             _faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
-            Move();
-        }
-        else if (_currentAnimation == "2B_Fall_End_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
-        {
-        }
-        else if (_currentAnimation == "Attack_anim" && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
-        {
-            _lightSword.SetActive(false);
-        }
-        else if (_currentAnimation == "Fall_anim" && _onFoot)
-        {
-            ChangeAnimation("2B_Fall_End_anim");
-        }
-        else if (_onFoot)
-        {
-            Stay();
+            if (_onFoot)
+                ChangeAnimation("Move_anim");
+            _rb.velocity = new Vector2(MovementAxis * speed, _rb.velocity.y);
+            Flip();
+            return true;
         }
 
-        Flip();
+        return false;
+    }
 
+    #endregion
+
+    #region Jump
+
+    private bool Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && _onFoot)
+        {
+            ChangeAnimation("Jump_anim");
+            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _onFoot = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
+
+    #region Fall
+
+    private bool Fall()
+    {
         if (!_onFoot && _rb.velocity.y < -5)
         {
             ChangeAnimation("Fall_anim");
+            return false;
         }
-            
+        if (_currentAnimation == "Fall_anim" && _onFoot)
+        {
+            ChangeAnimation("2B_Fall_End_anim");
+            return true;
+        }
+        if (_currentAnimation == "2B_Fall_End_anim" && CheckForAnimComplete())
+        {
+            return true;
+        }
 
-        if (_onFoot && Input.GetKeyDown(KeyCode.Space))
-            Jump();
+        return false;
     }
 
-    private void Move()
+    #endregion
+    
+    #region Idle
+
+    private bool Idle()
     {
         if (_onFoot)
-            ChangeAnimation("Move_anim");
-        _rb.velocity = new Vector2(MovementAxis * speed, _rb.velocity.y);
+        {
+            ChangeAnimation("Idle_anim");
+            return true;
+        }
+
+        return false;
     }
 
-    private void Stay()
+    #endregion
+    
+    
+    private bool CheckForAnimComplete()
     {
-        ChangeAnimation("Idle_anim");
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1;
+    }
+    
+    private bool CheckAnimTime(float time)
+    {
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > time;
     }
 
     private void Flip()
     {
         transform.localScale = _faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
-    }
-
-    private void Jump()
-    {
-        ChangeAnimation("Jump_anim");
-        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        _onFoot = false;
     }
 
     private void ChangeAnimation(string anim)
@@ -121,8 +180,7 @@ public class Player : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground") 
-            || collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
             _onFoot = true;
             _attackInAir = true;

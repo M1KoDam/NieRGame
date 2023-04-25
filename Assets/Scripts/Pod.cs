@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 
@@ -104,6 +105,7 @@ public class Pod : MonoBehaviour
     private void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
+        bul.GetComponent<Rigidbody2D>().velocity = PodToMouse.normalized * bul.bulletSpeed;
         Destroy(bul.gameObject, 5f);
 
         _canShoot = false;

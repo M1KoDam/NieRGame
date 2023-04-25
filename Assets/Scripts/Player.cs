@@ -154,9 +154,9 @@ public class Player : MonoBehaviour
     #endregion
     
     
-    private bool CheckForAnimComplete()
+    private bool CheckForAnimComplete(float time = 1)
     {
-        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1;
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < time;
     }
     
     private bool CheckAnimTime(float time)

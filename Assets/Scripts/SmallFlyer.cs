@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SmallFlyer : MonoBehaviour
@@ -7,6 +6,7 @@ public class SmallFlyer : MonoBehaviour
     private Rigidbody2D _rb;
     public Player player;
     public Bullet bullet;
+    public SmallFlyerGun gun;
 
     public Transform[] moveSpot;
     private int curId;
@@ -50,7 +50,7 @@ public class SmallFlyer : MonoBehaviour
     private static float FireDelay => 1 / FireRate;
     private Vector2 SmallFlyerToSpot => moveSpot[curId].transform.position - _rb.transform.position;
     private Vector2 SmallFlyerToPlayer => player.transform.position - _rb.transform.position;
-    private Vector2 BulletPosition => (Vector2)_rb.transform.position + SmallFlyerToPlayer.normalized;
+    private Vector2 BulletPosition => gun.transform.position;
 
     private Vector2 ShootingPositionToPlayer => FaceOrientation is Side.Left
         ? SmallFlyerToPlayer + LeftOrientationShootingPosition

@@ -8,13 +8,16 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D _rb;
     private Animator _animator;
-
-    private GameObject _lightSword;
-    private GameObject _heavySword;
+    private string _currentAnimation;
+    
+    public LightSword lightSword;
+    public HeavySword heavySword;
 
     private bool _onFoot = true;
-    private bool _attackInAir = false;
-    private string _currentAnimation;
+    private bool _attack = true;
+    private bool _doubleJump = true;
+    private bool _attackInAir;
+    private bool _fallAttack;
 
     public float speed = 10;
     public float jumpForce = 1200;
@@ -29,50 +32,132 @@ public class Player : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _lightSword = transform.Find("Light_Sword").GameObject();
-        _heavySword = transform.Find("Heavy_Sword").GameObject();
     }
 
     private void Update()
     {
-        if (Attack()) return;
+        if (heavySword.inHands && _currentAnimation is not "Fall_Attack_End_anim") heavySword.ReturnSword();
+        if (lightSword.inHands) lightSword.ReturnSword();
+        
+        if (HeavyAttack())
+        {
+            heavySword.DrawSword();
+            return;
+        }
+        
+        if (LightAttack())
+        {
+            lightSword.DrawSword();
+            return;
+        }
+
         if (Jump()) return;
         if (Move()) return;
         if (Fall()) return;
         Idle();
     }
+    
+    #region HeavyAttack
 
-    #region Attack
+    private bool HeavyAttack()
+    {
+        if (Input.GetMouseButtonDown(1) && _fallAttack && !_onFoot)
+        {
+            ChangeAnimation("Fall_Attack_anim");
+            _rb.velocity = new Vector2(0, 0.25f);
+            _fallAttack = false;
+            return true;
+        }
+        if (_currentAnimation == "Fall_Attack_anim")
+        {
+            if (AnimPlaying())
+            {
+                _rb.velocity = new Vector2(0, 0.25f);
+            }
+            if (_rb.velocity.y < 0)
+            {
+                ChangeAnimation("Fall_Attack_Falling_anim");
+                _rb.velocity = new Vector2(0, -15);
+            }
+            return true;
+        }
+        if (_currentAnimation == "Fall_Attack_Falling_anim" && _onFoot)
+        {
+            ChangeAnimation("Fall_Attack_End_anim");
+            return true;
+        }
+        
+        if (_currentAnimation is "Fall_Attack_Falling_anim" or "Fall_Attack_End_anim")
+        {
+            return _currentAnimation is not "Fall_Attack_End_anim" || !CheckAnimTime(0.5f);
+        }
 
-    private bool Attack()
+        return false;
+    }
+    
+    #endregion
+
+    #region LightAttack
+
+    private bool LightAttack()
     {
         if (Input.GetMouseButtonDown(0) && _onFoot)
         {
-            if (_currentAnimation == "Attack_anim" && CheckAnimTime(0.8f))
+            if (_currentAnimation == "Attack_anim" && CheckAnimTime(0.5f))
             {
                 ChangeAnimation("Attack_anim2");
+                //_rb.position = new Vector2(_rb.position.x + 1 * (int)_faceOrientation, _rb.position.y);
+                _rb.velocity = new Vector2(7 * (int)_faceOrientation, _rb.velocity.y);
+                return true;
             }
-            ChangeAnimation("Attack_anim");
-            return true;
+            if (_currentAnimation == "Attack_anim2" && CheckAnimTime(0.5f))
+            {
+                ChangeAnimation("Attack_anim3");
+                _rb.velocity = new Vector2(7 * (int)_faceOrientation, _rb.velocity.y);
+                return true;
+            }
+            if (_attack)
+            {
+                _attack = false;
+                Invoke(nameof(WaitForAttack), 1);
+                if (_rb.velocity.x > 20)
+                    _rb.velocity = new Vector2(10 * (int)_faceOrientation, _rb.velocity.y);
+                ChangeAnimation("Attack_anim");
+                return true;
+            }
         }
         if (Input.GetMouseButtonDown(0) && _attackInAir && !_onFoot)
         {
             ChangeAnimation("Attack_in_air_anim");
-            _rb.velocity = new Vector2(0, 0.25f);
+            _rb.velocity = new Vector2(0, 0.5f);
             _attackInAir = false;
-            _lightSword.SetActive(false);
             return true;
         }
-        if (_currentAnimation is "Attack_anim" or "Attack_anim2" or "Attack_in_air_anim" && CheckForAnimComplete())
+        if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim" && CheckAnimTime(0.5f))
         {
-            _lightSword.SetActive(false);
-            if (_currentAnimation == "Attack_in_air_anim")
-                _rb.velocity = new Vector2(0, 0.25f);
+            ChangeAnimation("Attack_in_air_anim2");
+            //_rb.position = new Vector2(_rb.position.x + 1 * (int)_faceOrientation, _rb.position.y);
+            _rb.velocity = new Vector2(4 * (int)_faceOrientation, 0.5f);
             return true;
         }
-
-        _lightSword.SetActive(true);
-        _heavySword.SetActive(true);
+        if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim2" && CheckAnimTime(0.5f))
+        {
+            ChangeAnimation("Attack_in_air_anim3");
+            //_rb.position = new Vector2(_rb.position.x + 1 * (int)_faceOrientation, _rb.position.y);
+            _rb.velocity = new Vector2(4 * (int)_faceOrientation, 0.5f);
+            return true;
+        }
+        if (_currentAnimation is "Attack_anim" or "Attack_anim2" or "Attack_anim3" && AnimPlaying())
+        {
+            return true;
+        }
+        if (_currentAnimation is "Attack_in_air_anim" or "Attack_in_air_anim2" or "Attack_in_air_anim3" &&
+            AnimPlaying())
+        {
+            _rb.velocity = new Vector2(_rb.velocity.x, 0.5f);
+            return true;
+        }
+        
         return false;
     }
 
@@ -85,11 +170,13 @@ public class Player : MonoBehaviour
         if (MovementAxis != 0)
         {
             _faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
-            if (_onFoot)
-                ChangeAnimation("Move_anim");
             _rb.velocity = new Vector2(MovementAxis * speed, _rb.velocity.y);
             Flip();
-            return true;
+            if (_onFoot)
+            {
+                ChangeAnimation("Move_anim");
+                return true;
+            }
         }
 
         return false;
@@ -101,11 +188,19 @@ public class Player : MonoBehaviour
 
     private bool Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _onFoot)
+        if (Input.GetKeyDown(KeyCode.Space) && _onFoot )
         {
             ChangeAnimation("Jump_anim");
+            _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _onFoot = false;
+            return true;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && _doubleJump && _currentAnimation is "Jump_anim" && CheckAnimTime(0.5f))
+        {
+            _doubleJump = false;
+            _rb.velocity = new Vector2(_rb.velocity.x, 0);
+            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             return true;
         }
 
@@ -118,7 +213,7 @@ public class Player : MonoBehaviour
 
     private bool Fall()
     {
-        if (!_onFoot && _rb.velocity.y < -5)
+        if (!_onFoot && (_rb.velocity.y < -5 || _currentAnimation == "Attack_in_air_anim"))
         {
             ChangeAnimation("Fall_anim");
             return false;
@@ -128,7 +223,7 @@ public class Player : MonoBehaviour
             ChangeAnimation("2B_Fall_End_anim");
             return true;
         }
-        if (_currentAnimation == "2B_Fall_End_anim" && CheckForAnimComplete())
+        if (_currentAnimation == "2B_Fall_End_anim" && AnimPlaying())
         {
             return true;
         }
@@ -144,6 +239,8 @@ public class Player : MonoBehaviour
     {
         if (_onFoot)
         {
+            if (_currentAnimation is "Fall_Attack_End_anim" && !AnimCompleted())
+                return true;
             ChangeAnimation("Idle_anim");
             return true;
         }
@@ -152,21 +249,32 @@ public class Player : MonoBehaviour
     }
 
     #endregion
+
+    private void Flip()
+    {
+        transform.localScale = _faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
+    }
     
+    private void WaitForAttack()
+    {
+        _attack = true;
+    }
+
+    #region Animation
     
-    private bool CheckForAnimComplete(float time = 1)
+    private bool AnimPlaying(float time = 1)
     {
         return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < time;
+    }
+    
+    private bool AnimCompleted()
+    {
+        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.01f;
     }
     
     private bool CheckAnimTime(float time)
     {
         return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > time;
-    }
-
-    private void Flip()
-    {
-        transform.localScale = _faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
     }
 
     private void ChangeAnimation(string anim)
@@ -178,12 +286,17 @@ public class Player : MonoBehaviour
         _animator.Play(anim);
     }
     
+    #endregion
+
+    #region Collision
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             _onFoot = true;
             _attackInAir = true;
+            _fallAttack = true;
+            _doubleJump = true;
         }
     }
     
@@ -194,4 +307,5 @@ public class Player : MonoBehaviour
             _onFoot = false;
         }
     }
+    #endregion
 }

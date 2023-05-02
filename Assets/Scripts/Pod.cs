@@ -1,11 +1,13 @@
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Search;
 
 
 public class Pod : MonoBehaviour
 {
     public Player player;
     public Bullet bullet;
+    public PodGun gun;
 
     private Rigidbody2D _rb;
     private Camera _camera;
@@ -13,10 +15,10 @@ public class Pod : MonoBehaviour
     private static readonly Vector3 RightPosition = new(2, 3.5f, 0);
     private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
     private static readonly Vector3 ShootingPosition = new(0, 3.5f, 0);
-    
+
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
-
+    
     private const float BrakingSpeed = 3;
     private const float Speed = 5;
     private const float MaxDistance = 0.1f;
@@ -38,7 +40,7 @@ public class Pod : MonoBehaviour
                 : Side.Left;
 
     private static float FireDelay => 1 / FireRate;
-    private Vector3 BulletPosition => (Vector2)transform.position + PodToMouse.normalized;
+    private Vector3 BulletPosition => gun.transform.position;
     private Vector3 PodToPlayer => TargetPosition - _rb.transform.position;
     private float DistanceToPlayer => PodToPlayer.magnitude;
     private Vector2 PodToMouse => (_camera.ScreenToWorldPoint(Input.mousePosition) - _rb.transform.position);
@@ -85,7 +87,7 @@ public class Pod : MonoBehaviour
             _isScoping = false;
             LookUpwards();
         }
-        
+
         HandleFireRate();
     }
 
@@ -124,7 +126,7 @@ public class Pod : MonoBehaviour
     private void LookAtMouse()
     {
         var angle = -Vector2.SignedAngle(PodToMouse, Vector2.right);
-        
+
         if (-90 <= angle && angle <= 90)
             _angle = angle;
         else if (angle > 90)

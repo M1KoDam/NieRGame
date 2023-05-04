@@ -131,7 +131,7 @@ public class Player : MonoBehaviour
                 return true;
             }
         }
-        if (Input.GetMouseButtonDown(0) && _attackInAir && !_onFoot)
+        if (Input.GetMouseButtonDown(0) && _attackInAir && !_onFoot && _attack)
         {
             ChangeAnimation("Attack_in_air_anim");
             _rb.velocity = new Vector2(0, 0.5f);

@@ -1,34 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SpinningSword : MonoBehaviour
 {
-    public Player Player;
+    [SerializeField] private Player player;
+    [SerializeField] private float time = 1.5f;
+    private Vector3 DistanceToPlayer => player.transform.position - _rb.transform.position;
+
     private Rigidbody2D _rb;
-    private Animator _animator;
 
     // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-        _animator.Play("Spinning_Sword_anim");
-        _rb.velocity = new Vector2(10, 0.25f);
-        InvokeRepeating("DecreaseVelocity", 0, 0.1f);
+        Destroy();
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    void FixedUpdate()
     {
-        if (Vector2.Distance(Player.transform.position, transform.position) < 1)
+        if (Math.Abs(player.transform.position.x - transform.position.x) < 1f)
         {
-            Destroy(gameObject);
+            Destroy();
         }
+        _rb.velocity += new Vector2(DistanceToPlayer.x / (time*10), 0.2f + DistanceToPlayer.y / (time*10));
     }
 
-    void DecreaseVelocity()
+    public void Create()
     {
-        _rb.velocity = new Vector2(_rb.velocity.x - 1f, 0.25f);
+        gameObject.SetActive(true);
+        transform.position = player.transform.position + new Vector3(3*(int)player.faceOrientation, 0,0 );
+        _rb.velocity = new Vector2(20*(int)player.faceOrientation, 0.2f);
+    }
+
+    public void Destroy()
+    {
+        gameObject.SetActive(false);
     }
 }

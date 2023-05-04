@@ -21,7 +21,6 @@ public class HeavySword : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(_currentAnimation);
         _animator.Play(_currentAnimation);
         if (_currentAnimation == "Return_Heavy_Sword_anim" && AnimCompleted())
             _currentAnimation = "Heavy_Sword_anim";

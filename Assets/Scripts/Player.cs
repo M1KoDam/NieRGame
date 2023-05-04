@@ -1,8 +1,6 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -10,8 +8,9 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private string _currentAnimation;
     
-    public LightSword lightSword;
-    public HeavySword heavySword;
+    [SerializeField] private LightSword lightSword;
+    [SerializeField] private HeavySword heavySword;
+    [SerializeField] private SpinningSword spinningSword;
 
     private bool _onFoot = true;
     private bool _attack = true;
@@ -19,19 +18,21 @@ public class Player : MonoBehaviour
     private bool _attackInAir;
     private bool _fallAttack;
 
-    public float speed = 10;
-    public float jumpForce = 1200;
+    [SerializeField] private float health = 10;
+    [SerializeField] private float speed = 10;
+    [SerializeField] private float jumpForce = 1200;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
     private static float MovementAxis => Input.GetAxis("Horizontal");
-    private Side _faceOrientation;
+    public Side faceOrientation;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        faceOrientation = Side.Right;
     }
 
     private void Update()
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
         
         if (HeavyAttack())
         {
+            spinningSword.Destroy();
             heavySword.DrawSword();
             return;
         }
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour
             lightSword.DrawSword();
             return;
         }
+        spinningSword.Destroy();
 
         if (Jump()) return;
         if (Move()) return;
@@ -105,23 +108,25 @@ public class Player : MonoBehaviour
         {
             if (_currentAnimation == "Attack_anim" && CheckAnimTime(0.5f))
             {
+                ChangeAttack(1);
                 ChangeAnimation("Attack_anim2");
-                //_rb.position = new Vector2(_rb.position.x + 1 * (int)_faceOrientation, _rb.position.y);
-                _rb.velocity = new Vector2(7 * (int)_faceOrientation, _rb.velocity.y);
+                _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
                 return true;
             }
             if (_currentAnimation == "Attack_anim2" && CheckAnimTime(0.5f))
             {
+                ChangeAttack(2);
                 ChangeAnimation("Attack_anim3");
-                _rb.velocity = new Vector2(7 * (int)_faceOrientation, _rb.velocity.y);
+                _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
+                spinningSword.Create();
                 return true;
             }
             if (_attack)
             {
                 _attack = false;
-                Invoke(nameof(WaitForAttack), 1);
+                ChangeAttack(1);
                 if (_rb.velocity.x > 20)
-                    _rb.velocity = new Vector2(10 * (int)_faceOrientation, _rb.velocity.y);
+                    _rb.velocity = new Vector2(10 * (int)faceOrientation, _rb.velocity.y);
                 ChangeAnimation("Attack_anim");
                 return true;
             }
@@ -136,15 +141,14 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim" && CheckAnimTime(0.5f))
         {
             ChangeAnimation("Attack_in_air_anim2");
-            //_rb.position = new Vector2(_rb.position.x + 1 * (int)_faceOrientation, _rb.position.y);
-            _rb.velocity = new Vector2(4 * (int)_faceOrientation, 0.5f);
+            _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
             return true;
         }
         if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim2" && CheckAnimTime(0.5f))
         {
             ChangeAnimation("Attack_in_air_anim3");
-            //_rb.position = new Vector2(_rb.position.x + 1 * (int)_faceOrientation, _rb.position.y);
-            _rb.velocity = new Vector2(4 * (int)_faceOrientation, 0.5f);
+            _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
+            spinningSword.Create();
             return true;
         }
         if (_currentAnimation is "Attack_anim" or "Attack_anim2" or "Attack_anim3" && AnimPlaying())
@@ -169,7 +173,7 @@ public class Player : MonoBehaviour
     {
         if (MovementAxis != 0)
         {
-            _faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
+            faceOrientation = MovementAxis > 0 ? Side.Right : Side.Left;
             _rb.velocity = new Vector2(MovementAxis * speed, _rb.velocity.y);
             Flip();
             if (_onFoot)
@@ -252,9 +256,15 @@ public class Player : MonoBehaviour
 
     private void Flip()
     {
-        transform.localScale = _faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
+        transform.localScale = faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
     }
-    
+
+    private void ChangeAttack(float delayTime)
+    {
+        CancelInvoke(nameof(WaitForAttack));
+        Invoke(nameof(WaitForAttack), delayTime);
+    }
+
     private void WaitForAttack()
     {
         _attack = true;
@@ -289,6 +299,7 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Collision
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))

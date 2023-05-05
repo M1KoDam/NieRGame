@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SmallFlyer : MonoBehaviour
 {
@@ -23,7 +24,8 @@ public class SmallFlyer : MonoBehaviour
     private const float BrakingSpeed = 2;
     private const float PatrolSpeed = 3;
     private const float ChaseSpeed = 5;
-    private const float FireRate = 1;
+    [SerializeField] private float fireRate;
+    [SerializeField] private float damage;
 
     private Vector2 _velocity;
     private float _angle;
@@ -52,7 +54,7 @@ public class SmallFlyer : MonoBehaviour
     private static readonly Vector2 RightLocalScale = new(-1, 1);
     private static readonly Vector2 LeftLocalScale = new(1, 1);
 
-    private static float FireDelay => 1 / FireRate;
+    private float FireDelay => 1 / fireRate;
     private Vector2 SmallFlyerToSpot => moveSpot[curId].transform.position - _rb.transform.position;
     private Vector2 SmallFlyerToPlayer => player.transform.position - _rb.transform.position;
     private Vector2 BulletPosition => gun.transform.position;

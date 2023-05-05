@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private SpinningSword spinningSword;
     
     [SerializeField] private Transform attack1Collider;
-    [SerializeField] private LayerMask Enemies;
+    [SerializeField] private LayerMask enemies;
 
     private bool _onFoot = true;
     private bool _attack = true;
@@ -21,11 +21,11 @@ public class Player : MonoBehaviour
     private bool _attackInAir;
     private bool _fallAttack;
 
-    [SerializeField] private float health = 10;
+    [SerializeField] private int health;
     [SerializeField] private float speed = 10;
     [SerializeField] private float jumpForce = 1200;
     [SerializeField] private float attackRange;
-    [SerializeField] private float damage = 20;
+    [SerializeField] private int damage = 20;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
@@ -272,16 +272,16 @@ public class Player : MonoBehaviour
     
     private void Damage()
     {
-        var hitedEnemies = Physics2D.OverlapCircleAll(attack1Collider.position, attackRange, Enemies);
+        var hitedEnemies = Physics2D.OverlapCircleAll(attack1Collider.position, attackRange, enemies);
         foreach (var enemy in hitedEnemies)
         {
-            enemy.GetComponent<SmallFlyer>().GetDamage(10);
+            enemy.GetComponent<SmallFlyer>().GetDamage(damage);
         }
     }
 
-    public void GetDamage(int damage)
+    public void GetDamage(int inputDamage)
     {
-        health -= damage;
+        health -= inputDamage;
     }
 
     private void Flip()

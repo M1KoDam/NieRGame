@@ -19,11 +19,12 @@ public class EnemyBullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
-            Physics.IgnoreCollision(collision.collider.GetComponent<Collider>(), GetComponent<Collider>());
+            Physics2D.IgnoreCollision(collision.collider, collision.otherCollider, true);
+    
         if (collision.gameObject.CompareTag("Player"))
-        {
             collision.gameObject.GetComponent<Player>().GetDamage(damage);
-        }
-        Destroy(gameObject);
+
+        if (!collision.gameObject.CompareTag("Enemy"))
+            Destroy(gameObject);
     }
 }

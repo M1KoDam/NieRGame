@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     [SerializeField] private LightSword lightSword;
     [SerializeField] private HeavySword heavySword;
     [SerializeField] private SpinningSword spinningSword;
+    
+    [SerializeField] private Transform attack1Collider;
+    [SerializeField] private LayerMask Enemies;
 
     private bool _onFoot = true;
     private bool _attack = true;
@@ -21,6 +24,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float health = 10;
     [SerializeField] private float speed = 10;
     [SerializeField] private float jumpForce = 1200;
+    [SerializeField] private float attackRange;
+    [SerializeField] private float damage = 20;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
@@ -32,11 +37,13 @@ public class Player : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        faceOrientation = Side.Right;
     }
 
     private void Update()
     {
+        if (health <= 0)
+            Die();
+        
         if (heavySword.inHands && _currentAnimation is not "Fall_Attack_End_anim") heavySword.ReturnSword();
         if (lightSword.inHands) lightSword.ReturnSword();
         
@@ -108,6 +115,7 @@ public class Player : MonoBehaviour
         {
             if (_currentAnimation == "Attack_anim" && CheckAnimTime(0.5f))
             {
+                Damage();
                 ChangeAttack(1);
                 ChangeAnimation("Attack_anim2");
                 _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
@@ -123,6 +131,7 @@ public class Player : MonoBehaviour
             }
             if (_attack)
             {
+                Damage();
                 _attack = false;
                 ChangeAttack(1);
                 if (_rb.velocity.x > 20)
@@ -133,6 +142,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && _attackInAir && !_onFoot && _attack)
         {
+            Damage();
             ChangeAnimation("Attack_in_air_anim");
             _rb.velocity = new Vector2(0, 0.5f);
             _attackInAir = false;
@@ -140,6 +150,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim" && CheckAnimTime(0.5f))
         {
+            Damage();
             ChangeAnimation("Attack_in_air_anim2");
             _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
             return true;
@@ -254,6 +265,25 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    void Die()
+    {
+        gameObject.SetActive(false);
+    }
+    
+    private void Damage()
+    {
+        var hitedEnemies = Physics2D.OverlapCircleAll(attack1Collider.position, attackRange, Enemies);
+        foreach (var enemy in hitedEnemies)
+        {
+            enemy.GetComponent<SmallFlyer>().GetDamage(10);
+        }
+    }
+
+    public void GetDamage(int damage)
+    {
+        health -= damage;
+    }
+
     private void Flip()
     {
         transform.localScale = faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
@@ -319,4 +349,9 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(attack1Collider.position, attackRange);
+    }
 }

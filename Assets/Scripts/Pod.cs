@@ -7,7 +7,7 @@ public class Pod : MonoBehaviour
 {
     public Player player;
     public Bullet bullet;
-    public PodGun gun;
+    public Transform gun;
 
     private Rigidbody2D _rb;
     private Camera _camera;

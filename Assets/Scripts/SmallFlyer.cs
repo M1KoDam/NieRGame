@@ -5,8 +5,9 @@ public class SmallFlyer : MonoBehaviour
 {
     private Rigidbody2D _rb;
     public Player player;
-    public Bullet bullet;
-    public SmallFlyerGun gun;
+    public EnemyBullet bullet;
+    public Transform gun;
+    [SerializeField] private int hp;
 
     public Transform[] moveSpot;
     private int curId;
@@ -14,13 +15,15 @@ public class SmallFlyer : MonoBehaviour
     private bool _canShoot;
 
     public float waitTime;
-    private float _time;
+    private float _curWaitTime;
+    public float destructionTime;
+    private float _curDestructionTime;
     private bool _isScoping;
 
     private const float BrakingSpeed = 2;
     private const float PatrolSpeed = 3;
     private const float ChaseSpeed = 5;
-    private const float FireRate = 10;
+    private const float FireRate = 1;
 
     private Vector2 _velocity;
     private float _angle;
@@ -38,11 +41,13 @@ public class SmallFlyer : MonoBehaviour
                 : Side.Right;
 
     private State GetState
-        => SmallFlyerToPlayer.magnitude > 15 && SmallFlyerToPlayer.magnitude < 25
-            ? State.Chase
-            : SmallFlyerToPlayer.magnitude <= 15
-                ? State.Attack
-                : State.Patrol;
+        =>  hp <= 0 
+            ? State.Dead 
+            : SmallFlyerToPlayer.magnitude > 15 && SmallFlyerToPlayer.magnitude < 25
+                ? State.Chase
+                : SmallFlyerToPlayer.magnitude <= 15
+                    ? State.Attack
+                    : State.Patrol;
 
     private static readonly Vector2 RightLocalScale = new(-1, 1);
     private static readonly Vector2 LeftLocalScale = new(1, 1);
@@ -77,7 +82,8 @@ public class SmallFlyer : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _time = waitTime;
+        _curWaitTime = waitTime;
+        _curDestructionTime = destructionTime;
     }
 
     private void Wait()
@@ -96,6 +102,9 @@ public class SmallFlyer : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (GetState == State.Dead)
+            return;
+        
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
             : LeftLocalScale;
@@ -121,22 +130,25 @@ public class SmallFlyer : MonoBehaviour
             case State.Attack:
                 Attacking();
                 break;
+            case State.Dead:
+                Die();
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
         
     }
 
-    private void Patrolling()
+private void Patrolling()
     {
         _isScoping = false;
         if (SmallFlyerToSpot.magnitude < 1f)
         {
-            if (_time <= 0)
+            if (_curWaitTime <= 0)
                 ChangeSpotId();
             else
             {
-                _time -= Time.deltaTime;
+                _curWaitTime -= Time.deltaTime;
                 Wait();
                 Brake();
             }
@@ -220,7 +232,7 @@ public class SmallFlyer : MonoBehaviour
             curId = reverseGettingId ? moveSpot.Length - 1 : 0;
         }
 
-        _time = waitTime;
+        _curWaitTime = waitTime;
     }
 
     private void GoToSpot()
@@ -231,5 +243,18 @@ public class SmallFlyer : MonoBehaviour
     private void Brake()
     {
         _velocity /= BrakingSpeed;
+    }
+
+    private void Die()
+    {
+        if (_curDestructionTime <= 0)
+            Destroy(gameObject);
+        else
+            _curDestructionTime -= Time.deltaTime;
+    }
+    
+    public void GetDamage(int damage)
+    {
+        hp -= damage;
     }
 }

@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -8,30 +11,48 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private string _currentAnimation;
     
+    [Header("Swords")]
     [SerializeField] private LightSword lightSword;
     [SerializeField] private HeavySword heavySword;
     [SerializeField] private SpinningSword spinningSword;
     
+    [Header("References")]
     [SerializeField] private Transform attack1Collider;
+    [SerializeField] private Transform attack2Collider;
+    [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask enemies;
+    [SerializeField] private LayerMask enemyBullet;
 
+    [Header("Step Climb Settings")]
+    [SerializeField] private GameObject stayRayUpper;
+    [SerializeField] private GameObject stayRayLower;
+    [SerializeField] private float stepHeight;
+    [SerializeField] private float stepLenght;
+    
     private bool _onFoot = true;
     private bool _attack = true;
     private bool _doubleJump = true;
     private bool _attackInAir;
     private bool _fallAttack;
 
+    [Header("Health Settings")]
     [SerializeField] private int health;
-    [SerializeField] private float speed = 10;
+    [SerializeField] private int maxHealth;
+    
+    [Header("Other Settings")]
+    [SerializeField] private float speed = 12;
     [SerializeField] private float jumpForce = 1200;
-    [SerializeField] private float attackRange;
-    [SerializeField] private int damage = 20;
+    [SerializeField] private float lightAttackRange;
+    [SerializeField] private float heavyAttackRange;
+    [SerializeField] private Vector2 fallAttackRange;
+    [SerializeField] private int lightAttackDamage = 20;
+    [SerializeField] private int heavyAttackDamage = 60;
+    [SerializeField] private Side faceOrientation;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
     private static float MovementAxis => Input.GetAxis("Horizontal");
-    public Side faceOrientation;
 
     private void Start()
     {
@@ -41,6 +62,13 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        StepClimb();
+
+        if (_currentAnimation is "Get_Damaged_in_air_anim" && AnimPlaying())
+        {
+            return;
+        }
+        
         if (health <= 0)
             Die();
         
@@ -53,6 +81,7 @@ public class Player : MonoBehaviour
             heavySword.DrawSword();
             return;
         }
+        CancelInvoke(nameof(HeavyDamage));
         
         if (LightAttack())
         {
@@ -73,6 +102,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1) && _fallAttack && !_onFoot)
         {
+            Damage(heavyAttackRange, heavyAttackDamage);
             ChangeAnimation("Fall_Attack_anim");
             _rb.velocity = new Vector2(0, 0.25f);
             _fallAttack = false;
@@ -84,8 +114,9 @@ public class Player : MonoBehaviour
             {
                 _rb.velocity = new Vector2(0, 0.25f);
             }
-            if (_rb.velocity.y < 0)
+            else if (_rb.velocity.y < 0)
             {
+                InvokeRepeating(nameof(HeavyDamage), 0, 0.2f);
                 ChangeAnimation("Fall_Attack_Falling_anim");
                 _rb.velocity = new Vector2(0, -15);
             }
@@ -115,7 +146,7 @@ public class Player : MonoBehaviour
         {
             if (_currentAnimation == "Attack_anim" && CheckAnimTime(0.5f))
             {
-                Damage();
+                Damage(lightAttackRange, lightAttackDamage);
                 ChangeAttack(1);
                 ChangeAnimation("Attack_anim2");
                 _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
@@ -131,7 +162,7 @@ public class Player : MonoBehaviour
             }
             if (_attack)
             {
-                Damage();
+                Damage(lightAttackRange, lightAttackDamage);
                 _attack = false;
                 ChangeAttack(1);
                 if (_rb.velocity.x > 20)
@@ -140,28 +171,34 @@ public class Player : MonoBehaviour
                 return true;
             }
         }
-        if (Input.GetMouseButtonDown(0) && _attackInAir && !_onFoot && _attack)
+
+        if (Input.GetMouseButtonDown(0) && !_onFoot)
         {
-            Damage();
-            ChangeAnimation("Attack_in_air_anim");
-            _rb.velocity = new Vector2(0, 0.5f);
-            _attackInAir = false;
-            return true;
+            if (_attackInAir && _attack)
+            {
+                Damage(lightAttackRange, lightAttackDamage);
+                ChangeAnimation("Attack_in_air_anim");
+                _rb.velocity = new Vector2(0, 0.5f);
+                _attackInAir = false;
+                return true;
+            }
+
+            if (Input.GetMouseButtonDown(0) && _currentAnimation is "Attack_in_air_anim" && CheckAnimTime(0.5f))
+            {
+                Damage(lightAttackRange, lightAttackDamage);
+                ChangeAnimation("Attack_in_air_anim2");
+                _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
+                return true;
+            }
+            if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim2" && CheckAnimTime(0.5f))
+            {
+                ChangeAnimation("Attack_in_air_anim3");
+                _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
+                spinningSword.Create();
+                return true;
+            }
         }
-        if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim" && CheckAnimTime(0.5f))
-        {
-            Damage();
-            ChangeAnimation("Attack_in_air_anim2");
-            _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
-            return true;
-        }
-        if (Input.GetMouseButtonDown(0) && _currentAnimation == "Attack_in_air_anim2" && CheckAnimTime(0.5f))
-        {
-            ChangeAnimation("Attack_in_air_anim3");
-            _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
-            spinningSword.Create();
-            return true;
-        }
+        
         if (_currentAnimation is "Attack_anim" or "Attack_anim2" or "Attack_anim3" && AnimPlaying())
         {
             return true;
@@ -265,28 +302,73 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    void Die()
+    private void Die()
     {
         gameObject.SetActive(false);
     }
-    
-    private void Damage()
+
+    private void StepClimb()
     {
-        var hitedEnemies = Physics2D.OverlapCircleAll(attack1Collider.position, attackRange, enemies);
-        foreach (var enemy in hitedEnemies)
+        var hitLower = Physics2D.Raycast(stayRayLower.transform.position,
+            Vector2.right*(int)faceOrientation, 0.8f, ground);
+        if (hitLower.collider is not null && _rb.velocity.y >= 0 &&  _rb.velocity.x*(int)faceOrientation > 0.1f)
+        {
+            var hitUpper = Physics2D.Raycast(stayRayUpper.transform.position,
+                Vector2.right*(int)faceOrientation, 0.8f, ground);
+            if (hitUpper.collider is null)
+            {
+                _rb.position -= new Vector2(-stepLenght*(int)faceOrientation, -stepHeight);
+            }
+        }
+    }
+    
+    private void Damage(float attackRadius, int damage)
+    {
+        var hitEnemies = Physics2D.OverlapCircleAll(attack1Collider.position, attackRadius, enemies);
+        foreach (var enemy in hitEnemies)
         {
             enemy.GetComponent<SmallFlyer>().GetDamage(damage);
         }
+        var hitBullets = Physics2D.OverlapCircleAll(attack1Collider.position, attackRadius, enemyBullet);
+        foreach (var enemy in hitBullets)
+        {
+            enemy.GetComponent<EnemyBullet>().Destroy();
+        }
+    }
+    
+    private void HeavyDamage()
+    {
+        var hitEnemies = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, enemies);
+        foreach (var enemy in hitEnemies)
+        {
+            enemy.GetComponent<SmallFlyer>().GetDamage(heavyAttackDamage);
+        }
+        var hitBullets = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, enemies);
+        foreach (var enemy in hitBullets)
+        {
+            enemy.GetComponent<EnemyBullet>().Destroy();
+        }
     }
 
-    public void GetDamage(int inputDamage)
+    public void GetDamage(int inputDamage, Transform attackVector)
     {
         health -= inputDamage;
+        var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
+        if (!_onFoot)
+        {
+            ChangeAnimation("Get_Damaged_in_air_anim");
+        }
+        _rb.velocity -= new Vector2(Math.Min(inputDamage / 20, 5) * damageVector, 0);
     }
 
     private void Flip()
     {
         transform.localScale = faceOrientation == Side.Right ? RightLocalScale : LeftLocalScale;
+    }
+    
+    public Side GetFaceOrientation()
+    {
+        return faceOrientation;
     }
 
     private void ChangeAttack(float delayTime)
@@ -332,7 +414,7 @@ public class Player : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Stairs"))
         {
             _onFoot = true;
             _attackInAir = true;
@@ -340,10 +422,10 @@ public class Player : MonoBehaviour
             _doubleJump = true;
         }
     }
-    
+
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Stairs"))
         {
             _onFoot = false;
         }
@@ -352,6 +434,7 @@ public class Player : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(attack1Collider.position, attackRange);
+        Gizmos.DrawWireSphere(attack1Collider.position, lightAttackRange);
+        Gizmos.DrawWireCube(attack2Collider.position, fallAttackRange);
     }
 }

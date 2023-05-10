@@ -9,20 +9,23 @@ TagManager:
   - Bullet
   - BG
   - AttackCollider
+  - Platform
+  - Stairs
+  - Pod
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - Attack
   - Enemy
-  - 
-  - 
-  - 
-  - 
-  - 
+  - PlayerWeapon
+  - Bullet
+  - EnemyBullet
+  - Player
+  - Pod
   - 
   - 
   - 

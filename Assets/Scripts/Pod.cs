@@ -1,6 +1,7 @@
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Search;
+using UnityEngine.Serialization;
 
 
 public class Pod : MonoBehaviour
@@ -22,7 +23,7 @@ public class Pod : MonoBehaviour
     private const float BrakingSpeed = 3;
     private const float Speed = 5;
     private const float MaxDistance = 0.1f;
-    private const float FireRate = 10;
+    [SerializeField] private float fireRate = 10;
 
     private Vector3 _velocity;
     private float _angle;
@@ -39,7 +40,7 @@ public class Pod : MonoBehaviour
                 ? Side.Right
                 : Side.Left;
 
-    private static float FireDelay => 1 / FireRate;
+    private float FireDelay => 1 / fireRate;
     private Vector3 BulletPosition => gun.transform.position;
     private Vector3 PodToPlayer => TargetPosition - _rb.transform.position;
     private float DistanceToPlayer => PodToPlayer.magnitude;

@@ -1,9 +1,5 @@
 using System;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {

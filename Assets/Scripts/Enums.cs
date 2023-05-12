@@ -11,3 +11,9 @@ public enum State
     Chase = 0,
     Attack = 1
 }
+
+public enum PlayerState
+{
+    Dead = -1,
+    Default = 0
+}

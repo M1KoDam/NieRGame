@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask enemies;
     [SerializeField] private LayerMask enemyBullet;
+    [SerializeField] private LayerMask checkpoints;
 
     [Header("Step Climb Settings")]
     [SerializeField] private GameObject stayRayUpper;
@@ -39,6 +41,11 @@ public class Player : MonoBehaviour
     [SerializeField] private int health;
     [SerializeField] private int maxHealth;
     
+    [Header("Delay")]
+    [SerializeField] private float attackDelay1;
+    [SerializeField] private float attackDelay2;
+    [SerializeField] private float attackDelay3;
+    
     [Header("Other Settings")]
     [SerializeField] private float speed = 12;
     [SerializeField] private float jumpForce = 1200;
@@ -49,6 +56,10 @@ public class Player : MonoBehaviour
     [SerializeField] private int heavyAttackDamage = 60;
     [SerializeField] private Side faceOrientation;
 
+    [SerializeField] private Checkpoint checkpoint;
+    private PlayerState _playerState = PlayerState.Default;
+    private List<Collider2D> _hitEnemies;
+
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
@@ -58,20 +69,21 @@ public class Player : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _hitEnemies = new List<Collider2D>();
     }
 
     private void Update()
     {
-        StepClimb();
-
-        if (_currentAnimation is "Get_Damaged_in_air_anim" && AnimPlaying())
-        {
+        if (_playerState is PlayerState.Dead)
             return;
-        }
         
         if (health <= 0)
             Die();
         
+        StepClimb();
+        
+        ChangeCheckpoint();
+
         if (heavySword.inHands && _currentAnimation is not "Fall_Attack_End_anim") heavySword.ReturnSword();
         if (lightSword.inHands) lightSword.ReturnSword();
         
@@ -81,8 +93,12 @@ public class Player : MonoBehaviour
             heavySword.DrawSword();
             return;
         }
-        CancelInvoke(nameof(HeavyDamage));
-        
+        _hitEnemies.Clear();
+        if (_currentAnimation is "Get_Damaged_in_air_anim" && AnimPlaying())
+        {
+            return;
+        }
+
         if (LightAttack())
         {
             lightSword.DrawSword();
@@ -95,6 +111,22 @@ public class Player : MonoBehaviour
         if (Fall()) return;
         Idle();
     }
+
+    #region ChangeCheckpoint
+
+    private void ChangeCheckpoint()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            var hitCheckpoint = Physics2D.OverlapCircleAll(transform.position, 5, checkpoints);
+            if (hitCheckpoint.Length > 0)
+            {
+                checkpoint = hitCheckpoint[0].GetComponent<Checkpoint>();
+            }
+        }
+    }
+
+    #endregion
     
     #region HeavyAttack
 
@@ -116,7 +148,6 @@ public class Player : MonoBehaviour
             }
             else if (_rb.velocity.y < 0)
             {
-                InvokeRepeating(nameof(HeavyDamage), 0, 0.2f);
                 ChangeAnimation("Fall_Attack_Falling_anim");
                 _rb.velocity = new Vector2(0, -15);
             }
@@ -130,6 +161,8 @@ public class Player : MonoBehaviour
         
         if (_currentAnimation is "Fall_Attack_Falling_anim" or "Fall_Attack_End_anim")
         {
+            if (_currentAnimation is "Fall_Attack_Falling_anim")
+                HeavyDamage(heavyAttackDamage);
             return _currentAnimation is not "Fall_Attack_End_anim" || !CheckAnimTime(0.5f);
         }
 
@@ -147,14 +180,14 @@ public class Player : MonoBehaviour
             if (_currentAnimation == "Attack_anim" && CheckAnimTime(0.5f))
             {
                 Damage(lightAttackRange, lightAttackDamage);
-                ChangeAttack(1);
+                ChangeAttack(attackDelay2);
                 ChangeAnimation("Attack_anim2");
                 _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
                 return true;
             }
             if (_currentAnimation == "Attack_anim2" && CheckAnimTime(0.5f))
             {
-                ChangeAttack(2);
+                ChangeAttack(attackDelay3);
                 ChangeAnimation("Attack_anim3");
                 _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
                 spinningSword.Create();
@@ -164,7 +197,7 @@ public class Player : MonoBehaviour
             {
                 Damage(lightAttackRange, lightAttackDamage);
                 _attack = false;
-                ChangeAttack(1);
+                ChangeAttack(attackDelay1);
                 if (_rb.velocity.x > 20)
                     _rb.velocity = new Vector2(10 * (int)faceOrientation, _rb.velocity.y);
                 ChangeAnimation("Attack_anim");
@@ -304,7 +337,15 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        gameObject.SetActive(false);
+        _playerState = PlayerState.Dead;
+        Invoke(nameof(Respawn), 5);
+    }
+
+    private void Respawn()
+    {
+        _playerState = PlayerState.Default;
+        health = maxHealth;
+        transform.position = checkpoint.transform.position;
     }
 
     private void StepClimb()
@@ -336,14 +377,17 @@ public class Player : MonoBehaviour
         }
     }
     
-    private void HeavyDamage()
+    private void HeavyDamage(int damage)
     {
-        var hitEnemies = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, enemies);
+        var hitEnemies = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, 0, enemies);
         foreach (var enemy in hitEnemies)
         {
-            enemy.GetComponent<SmallFlyer>().GetDamage(heavyAttackDamage);
+            if (_hitEnemies.Contains(enemy))
+                continue;
+            enemy.GetComponent<SmallFlyer>().GetDamage(damage);
+            _hitEnemies.Add(enemy);
         }
-        var hitBullets = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, enemies);
+        var hitBullets = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, 0,enemyBullet);
         foreach (var enemy in hitBullets)
         {
             enemy.GetComponent<EnemyBullet>().Destroy();

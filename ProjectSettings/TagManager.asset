@@ -12,6 +12,8 @@ TagManager:
   - Platform
   - Stairs
   - Pod
+  - EnemyBullet
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
@@ -26,7 +28,7 @@ TagManager:
   - EnemyBullet
   - Player
   - Pod
-  - 
+  - Checkpoint
   - 
   - 
   - 

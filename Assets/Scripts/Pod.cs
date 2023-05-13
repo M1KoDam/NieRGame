@@ -35,7 +35,7 @@ public class Pod : MonoBehaviour
             ? -90 <= _angle && _angle <= 90
                 ? Side.Right
                 : Side.Left
-            : _velocity.x > 0
+            : _rb.velocity.x > 0
                 ? Side.Right
                 : Side.Left;
 

@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,19 +10,41 @@ public class SpinningSword : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private float time = 1.5f;
     [SerializeField] private LayerMask enemies;
+    [SerializeField] private LayerMask enemyBullet;
+    [SerializeField] private Vector2 attackRadius;
+    [SerializeField] private int damage;
     private Vector3 DistanceToPlayer => player.transform.position - _rb.transform.position;
 
     private Rigidbody2D _rb;
+
+    private List<Collider2D> _hitEnemies;
+    private Vector2 TransformCoord => transform.position + new Vector3(0, 0.18f, 0);
 
     // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _hitEnemies = new List<Collider2D>();
         Destroy();
     }
     
     void FixedUpdate()
     {
+        var _tempHitEnemies = Physics2D.OverlapBoxAll(TransformCoord, attackRadius, 0, enemies);
+        foreach (var enemy in _tempHitEnemies)
+        {
+            if (_hitEnemies.Contains(enemy))
+                continue;
+            enemy.GetComponent<SmallFlyer>().GetDamage(damage);
+            _hitEnemies.Add(enemy);
+        }
+        
+        var hitBullets = Physics2D.OverlapBoxAll(TransformCoord, attackRadius, 0, enemyBullet);
+        foreach (var enemy in hitBullets)
+        {
+            enemy.GetComponent<EnemyBullet>().Destroy();
+        }
+        
         transform.rotation = new Quaternion(0, 0, 0, 0);
         if (Math.Abs(player.transform.position.x - transform.position.x) < 1f)
         {
@@ -38,13 +63,11 @@ public class SpinningSword : MonoBehaviour
     public void Destroy()
     {
         gameObject.SetActive(false);
+        _hitEnemies.Clear();
     }
-    
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    void OnDrawGizmosSelected()
     {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            collision.gameObject.GetComponent<SmallFlyer>().GetDamage(20);
-        }
+        Gizmos.DrawWireCube(TransformCoord, attackRadius);
     }
 }

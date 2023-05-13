@@ -30,9 +30,11 @@ public class EnemyBullet : MonoBehaviour
 
     public void Destroy()
     {
+        _rb ??= GetComponent<Rigidbody2D>();
+        _animator ??= GetComponent<Animator>();
+        _collider2D ??= GetComponent<Collider2D>();
         _rb.velocity = Vector2.zero;
         _collider2D.enabled = false;
-        _animator ??= GetComponent<Animator>();
         _animator.Play("EnemyBulletExploding");
         _currentAnimation = "EnemyBulletExploding";
     }
@@ -44,15 +46,8 @@ public class EnemyBullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
-            Physics2D.IgnoreCollision(collision.collider, collision.otherCollider, true);
-    
         if (collision.gameObject.CompareTag("Player") && _currentAnimation is not "EnemyBulletExploding")
             collision.gameObject.GetComponent<Player>().GetDamage(damage, transform);
-
-        if (!collision.gameObject.CompareTag("Enemy"))
-        {
-            Destroy();
-        }
+        Destroy();
     }
 }

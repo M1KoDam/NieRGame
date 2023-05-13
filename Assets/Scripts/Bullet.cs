@@ -52,16 +52,8 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Pod") || collision.gameObject.CompareTag("Player"))
-        {
-            Physics2D.IgnoreCollision(collision.collider, collision.otherCollider, true);
-            return;
-        }
-        
         if (collision.gameObject.CompareTag("Enemy") && _currentAnimation is not "BulletExploding")
-        {
             collision.gameObject.GetComponent<SmallFlyer>().GetDamage(damage);
-        }
         Destroy();
     }
 }

@@ -12,21 +12,21 @@ public class LightSword : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _currentAnimation = "Light_Sword_anim";
+        _currentAnimation = "LightSword";
     }
 
     // Update is called once per frame
     void Update()
     {
         _animator.Play(_currentAnimation);
-        if (_currentAnimation == "Return_Light_Sword_anim" && AnimCompleted())
-            _currentAnimation = "Light_Sword_anim";
+        if (_currentAnimation == "ReturnLightSword" && AnimCompleted())
+            _currentAnimation = "LightSword";
     }
 
     public void ReturnSword()
     {
         gameObject.SetActive(true);
-        _currentAnimation = "Return_Light_Sword_anim";
+        _currentAnimation = "ReturnLightSword";
         inHands = false;
     }
 

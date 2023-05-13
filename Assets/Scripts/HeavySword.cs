@@ -15,21 +15,21 @@ public class HeavySword : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _currentAnimation = "Heavy_Sword_anim";
+        _currentAnimation = "HeavySword";
     }
 
     // Update is called once per frame
     void Update()
     {
         _animator.Play(_currentAnimation);
-        if (_currentAnimation == "Return_Heavy_Sword_anim" && AnimCompleted())
-            _currentAnimation = "Heavy_Sword_anim";
+        if (_currentAnimation == "ReturnHeavySword" && AnimCompleted())
+            _currentAnimation = "HeavySword";
     }
 
     public void ReturnSword()
     {
         gameObject.SetActive(true);
-        _currentAnimation = "Return_Heavy_Sword_anim";
+        _currentAnimation = "ReturnHeavySword";
         inHands = false;
     }
     

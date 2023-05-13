@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    public float explosionScale = 1f;
-    public float radius = 20f;
-    public float force = 500f;
+    public float explosionScale;
+    public float radius;
+    public float force;
 
     private Animator _animator;
     private bool _exploding;
@@ -31,6 +31,7 @@ public class Explosion : MonoBehaviour
             var attachedRigidbody = overlappedCollider.attachedRigidbody;
             if (attachedRigidbody)
             {
+                Debug.Log(attachedRigidbody.bodyType);
                 attachedRigidbody.AddExplosionForce(force, transform.position, radius);
             }
         }

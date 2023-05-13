@@ -262,10 +262,13 @@ private void Patrolling()
             }
             var tempPosition = transform.position;
             var tempRotation = transform.rotation;
+            
             Destroy(gameObject);
-            var smallFlyerDestroyingCopy = Instantiate(smallFlyerDestroying, tempPosition + Vector3.up, tempRotation);
+
+            var smallFlyerDestroyingCopy = Instantiate(smallFlyerDestroying, tempPosition, tempRotation);
             smallFlyerDestroyingCopy.Activate();
             Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
+            
             var smallFlyerExplosion = Instantiate(explosion, tempPosition + Vector3.down, tempRotation);
             smallFlyerExplosion.Explode();
         }

@@ -1,8 +1,5 @@
 using System.Linq;
-using System.Threading;
-using Pathfinding;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 
 public class Pod : MonoBehaviour
@@ -14,7 +11,6 @@ public class Pod : MonoBehaviour
     private Rigidbody2D _rb;
     private Camera _camera;
     private ChasingBehaviour _cb;
-    private Path _path;
 
     private static readonly Vector3 RightPosition = new(2, 3.5f, 0);
     private static readonly Vector3 LeftPosition = new(-2, 3.5f, 0);
@@ -26,7 +22,6 @@ public class Pod : MonoBehaviour
     private const float BrakingSpeed = 3;
     private const float Speed = 5;
     private const float MaxDistance = 0.1f;
-    [SerializeField, Range(1f, 5f)] private float obstacleDistance = 2f;
     [SerializeField] private float fireRate = 10;
 
     private Vector3 _velocity;
@@ -34,9 +29,6 @@ public class Pod : MonoBehaviour
     private bool _isScoping;
     private bool _canShoot;
     private float _fireTimer;
-    private int _currentWaypoint;
-    private float _pathTimer;
-    private bool _byPath;
 
     private Side FaceOrientation
         => _isScoping
@@ -151,46 +143,24 @@ public class Pod : MonoBehaviour
 
     private void MoveToPlayer()
     {
-        var kek = Physics2D.RaycastAll(transform.position, PodToPlayer)
+        var obstacles = Physics2D.RaycastAll(transform.position, PodToPlayer)
             .Select(hit => hit.transform.gameObject)
             .Where(obj => obj != gameObject && obj != player.gameObject);
-        
-        if (kek.Any())
+
+        if (obstacles.Any())
         {
-            MoveByPath();
-            Debug.Log("by path");
+            _cb.aipath.canMove = true;
         }
         else
         {
+            _cb.aipath.canMove = false;
             Move(PodToPlayer);
-            _byPath = false;
-            Debug.Log("simple move");
         }
     }
 
     private void Move(Vector3 direction)
     {
         _velocity = direction.normalized * (Speed * Mathf.Log(DistanceToPlayer));
-    }
-
-    private void MoveByPath()
-    {
-        if (!_byPath || _path?.path is null || _currentWaypoint >= _path.vectorPath.Count)
-        {
-            _currentWaypoint = 0;
-            _cb.CreateNewPath();
-            _path = _cb.Seeker.GetCurrentPath();
-            _byPath = true;
-        }
-
-        if (_path?.path is null)
-            return;
-
-        var dir = _path.vectorPath[_currentWaypoint] - transform.position;
-        Move(dir);
-        
-        if ((transform.position - _path.vectorPath[_currentWaypoint]).magnitude < 0.3f)
-            _currentWaypoint++;
     }
 
     private void Brake()

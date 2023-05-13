@@ -1,6 +1,7 @@
 using System;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ChasingBehaviour : MonoBehaviour
 {
@@ -8,29 +9,29 @@ public class ChasingBehaviour : MonoBehaviour
     [SerializeField] private float nodeSize;
     [SerializeField, Range(0.5f, 3)] public float recreateGraphPeriod;
 
-    private AstarPath _path;
+    [NonSerialized] public AIPath aipath;
+    private AstarPath path;
     private float _time;
     private GridGraph _graph;
-    [NonSerialized] public Seeker Seeker;
 
     private void Start()
     {
-        _path = GetComponent<AstarPath>();
-        _graph = _path.data.gridGraph;
-        Seeker = GetComponent<Seeker>();
+        path = GetComponent<AstarPath>();
+        aipath = GetComponent<AIPath>();
+        _graph = path.data.gridGraph;
     }
 
     private void FixedUpdate()
     {
-        // _time += Time.fixedDeltaTime;
-        // if (_time > recreateGraphPeriod)
-        // {
-        //     _time = 0;
-        //     CreateNewPath();
-        // }
+        _time += Time.fixedDeltaTime;
+        if (_time > recreateGraphPeriod)
+        {
+            _time = 0;
+            CreateNewPath();
+        }
     }
 
-    public void CreateNewPath()
+    private void CreateNewPath()
     {
         _graph.center = transform.position;
         _graph.SetDimensions(scanningArea.x, scanningArea.y, nodeSize);

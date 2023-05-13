@@ -12,12 +12,13 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private string _currentAnimation;
 
-    [Header("Swords")] [SerializeField] private LightSword lightSword;
+    [Header("Swords")] 
+    [SerializeField] private LightSword lightSword;
     [SerializeField] private HeavySword heavySword;
     [SerializeField] private SpinningSword spinningSword;
 
-    [Header("References")] [SerializeField]
-    private Transform attack1Collider;
+    [Header("References")] 
+    [SerializeField] private Transform attack1Collider;
 
     [SerializeField] private Transform attack2Collider;
     [SerializeField] private LayerMask ground;
@@ -25,8 +26,8 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask enemyBullet;
     [SerializeField] private LayerMask checkpoints;
 
-    [Header("Step Climb Settings")] [SerializeField]
-    private GameObject stayRayUpper;
+    [Header("Step Climb Settings")] 
+    [SerializeField] private GameObject stayRayUpper;
 
     [SerializeField] private GameObject stayRayLower;
     [SerializeField] private float stepHeight;
@@ -41,17 +42,18 @@ public class Player : MonoBehaviour
     private bool _climb;
     private bool _canMove = true;
 
-    [Header("Health Settings")] [SerializeField]
-    private int health;
+    [Header("Health Settings")] 
+    [SerializeField] private int health;
 
     [SerializeField] private int maxHealth;
 
-    [Header("Delay")] [SerializeField] private float attackDelay1;
+    [Header("Delay")] 
+    [SerializeField] private float attackDelay1;
     [SerializeField] private float attackDelay2;
     [SerializeField] private float attackDelay3;
 
-    [Header("Other Settings")] [SerializeField]
-    private float speed = 12;
+    [Header("Other Settings")] 
+    [SerializeField] private float speed = 12;
 
     [SerializeField] private float jumpForce = 1200;
     [SerializeField] private float lightAttackRange;
@@ -79,7 +81,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_rb.velocity);
         if (_playerState is PlayerState.Dead)
             return;
 

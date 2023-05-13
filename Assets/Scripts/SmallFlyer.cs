@@ -5,10 +5,13 @@ using UnityEngine.Serialization;
 public class SmallFlyer : MonoBehaviour
 {
     private Rigidbody2D _rb;
+    private Animator _animator;
     public Player player;
     public EnemyBullet bullet;
     public Transform gun;
     [SerializeField] private int hp;
+    [SerializeField] private SmallFlyerDestroying smallFlyerDestroying;
+    [SerializeField] private Explosion explosion;
 
     public Transform[] moveSpot;
     private int curId;
@@ -84,6 +87,7 @@ public class SmallFlyer : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
         _curWaitTime = waitTime;
         _curDestructionTime = destructionTime;
     }
@@ -249,14 +253,29 @@ private void Patrolling()
 
     private void Die()
     {
+        _animator.Play("Destroy");
         if (_curDestructionTime <= 0)
+        {
+            if (FaceOrientation is Side.Right)
+            {
+                transform.Rotate(new Vector3(0, 180, 0));
+            }
+            var tempPosition = transform.position;
+            var tempRotation = transform.rotation;
             Destroy(gameObject);
+            var smallFlyerDestroyingCopy = Instantiate(smallFlyerDestroying, tempPosition + Vector3.up, tempRotation);
+            smallFlyerDestroyingCopy.Activate();
+            Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
+            var smallFlyerExplosion = Instantiate(explosion, tempPosition + Vector3.down, tempRotation);
+            smallFlyerExplosion.Explode();
+        }
         else
             _curDestructionTime -= Time.deltaTime;
     }
     
     public void GetDamage(int damage)
     {
+        _angle -= Math.Min(20, damage/4);
         hp -= damage;
     }
 }

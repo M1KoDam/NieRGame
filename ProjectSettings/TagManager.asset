@@ -15,6 +15,7 @@ TagManager:
   - EnemyBullet
   - Checkpoint
   - Wall
+  - DeadZone
   layers:
   - Default
   - TransparentFX

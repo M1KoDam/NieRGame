@@ -10,7 +10,6 @@ public class SmallFlyerDestroying : MonoBehaviour
     {
         foreach(var childBody in GetComponentsInChildren<Rigidbody2D>())
         {
-            Debug.Log(childBody);
             childBody.bodyType = RigidbodyType2D.Dynamic;
             childBody.mass = 5f;
         }

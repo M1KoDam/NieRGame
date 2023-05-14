@@ -11,7 +11,7 @@ public class EnemyBullet : MonoBehaviour
     public int bulletSpeed;
     [SerializeField] private int damage;
 
-    private void Start()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
@@ -30,9 +30,6 @@ public class EnemyBullet : MonoBehaviour
 
     public void Destroy()
     {
-        _rb ??= GetComponent<Rigidbody2D>();
-        _animator ??= GetComponent<Animator>();
-        _collider2D ??= GetComponent<Collider2D>();
         _rb.velocity = Vector2.zero;
         _collider2D.enabled = false;
         _animator.Play("EnemyBulletExploding");
@@ -41,7 +38,7 @@ public class EnemyBullet : MonoBehaviour
     
     private bool AnimCompleted()
     {
-        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.01f;
+        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.1f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

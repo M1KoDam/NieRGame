@@ -31,7 +31,6 @@ public class Explosion : MonoBehaviour
             var attachedRigidbody = overlappedCollider.attachedRigidbody;
             if (attachedRigidbody)
             {
-                Debug.Log(attachedRigidbody.bodyType);
                 attachedRigidbody.AddExplosionForce(force, transform.position, radius);
             }
         }

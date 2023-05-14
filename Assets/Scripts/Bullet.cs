@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
     public int bulletSpeed;
     [SerializeField] private int damage;
     
-    private void Start()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
@@ -35,14 +35,13 @@ public class Bullet : MonoBehaviour
     {
         _rb.velocity = Vector2.zero;
         _collider2D.enabled = false;
-        _animator ??= GetComponent<Animator>();
         _animator.Play("BulletExploding");
         _currentAnimation = "BulletExploding";
     }
     
     private bool AnimCompleted()
     {
-        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.01f;
+        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.1f;
     }
     
     private bool AnimPlaying(float time = 1)

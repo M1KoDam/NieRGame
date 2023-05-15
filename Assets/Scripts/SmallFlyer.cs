@@ -1,6 +1,9 @@
 using System;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class SmallFlyer : MonoBehaviour
 {
@@ -30,6 +33,7 @@ public class SmallFlyer : MonoBehaviour
     private const float ChaseSpeed = 5;
     [SerializeField] private float fireRate;
     [SerializeField] private float damage;
+    [SerializeField] private LayerMask layerGround;
 
     private Vector2 _velocity;
     private float _angle;
@@ -49,10 +53,11 @@ public class SmallFlyer : MonoBehaviour
     private State GetState
         =>  hp <= 0 
             ? State.Dead 
-            : SmallFlyerToPlayer.magnitude > 15 && SmallFlyerToPlayer.magnitude < 25
-                ? State.Chase
-                : SmallFlyerToPlayer.magnitude <= 15
-                    ? State.Attack
+            : SmallFlyerToPlayer.magnitude <= 15 && Physics2D.Raycast(transform.position, 
+                SmallFlyerToPlayer, SmallFlyerToPlayer.magnitude, layerGround).collider is null
+                ? State.Attack
+                : SmallFlyerToPlayer.magnitude < 25
+                    ? State.Chase
                     : State.Patrol;
 
     private static readonly Vector2 RightLocalScale = new(-1, 1);
@@ -100,10 +105,24 @@ public class SmallFlyer : MonoBehaviour
 
     private void RestoreAngle()
     {
-        if (_angle != 0)
+        if (_angle is < 270 and > 90 or < -270 and > -90)
+            _angle = 90;
+        
+        if (_angle is >= 270 and <= 360 or <= -270 and >= -360)
+        {
+            _angle = _angle >= 270 
+                ? _angle + 15 
+                : _angle - 15;
+            if (360 - Math.Abs(_angle) < 30)
+                _angle = 360;
+        }
+        
+        if (_angle is <= 90 and >= -90)
+        {  
             _angle /= 2;
-        if ((_angle is > 0 and < 1f or < 0 and > -1f))
-            _angle = 0;
+            if (Math.Abs(_angle) < 5)
+                _angle = 0;
+        }
     }
 
     // Update is called once per frame
@@ -114,7 +133,7 @@ public class SmallFlyer : MonoBehaviour
         
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
-            : LeftLocalScale;
+            : LeftLocalScale;   
 
         _rb.MoveRotation(_angle);
         _rb.velocity = _velocity + Sway();

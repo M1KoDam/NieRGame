@@ -129,11 +129,11 @@ public class Player : MonoBehaviour
     {
         var hitLower = Physics2D.Raycast(stayRayLower.transform.position,
             Vector2.right * (int)faceOrientation, 0.8f, ground);
-        if (hitLower.collider is not null && _rb.velocity.y >= 0 && _rb.velocity.x * (int)faceOrientation > 0.1f)
+        if (hitLower.collider && _rb.velocity.y >= 0 && _rb.velocity.x * (int)faceOrientation > 0.1f)
         {
             var hitUpper = Physics2D.Raycast(stayRayUpper.transform.position,
                 Vector2.right * (int)faceOrientation, 0.8f, ground);
-            if (hitUpper.collider is null)
+            if (!hitUpper.collider)
             {
                 _rb.position -= new Vector2(-stepLenght * (int)faceOrientation, -stepHeight);
             }

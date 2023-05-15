@@ -146,7 +146,7 @@ public class SmallFlyer : MonoBehaviour
         
     }
 
-private void Patrolling()
+    private void Patrolling()
     {
         _isScoping = false;
         if (SmallFlyerToSpot.magnitude < 1f)

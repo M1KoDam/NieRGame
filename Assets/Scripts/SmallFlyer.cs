@@ -12,6 +12,7 @@ public class SmallFlyer : MonoBehaviour
     [SerializeField] private int hp;
     [SerializeField] private SmallFlyerDestroying smallFlyerDestroying;
     [SerializeField] private Explosion explosion;
+    [SerializeField] private Transform explosionCenter;
 
     public Transform[] moveSpot;
     private int curId;

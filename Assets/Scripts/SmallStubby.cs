@@ -21,11 +21,14 @@ public class SmallStubby: Enemy
     private const float BrakingSpeed = 2;
     private const float PatrolSpeed = 3;
     private const float ChaseSpeed = 5;
+    [SerializeField] private EnemyDestroying enemyDestroying;
+    [SerializeField] private Explosion explosion;
     [SerializeField] private float fireRate; // частота атаки 
     [SerializeField] private float damage;
     [SerializeField] private GameObject stayRayUpper;
     [SerializeField] private GameObject stayRayLower;
     [SerializeField] private LayerMask layerGround;
+    [SerializeField] private Transform explosionCenter;
 
     private Side FaceOrientation =>
         _rb.velocity.x < 0
@@ -109,7 +112,7 @@ public class SmallStubby: Enemy
                 Vector2.right * (int)FaceOrientation, 0.8f, layerGround);
             if (true)
             {
-                _rb.position -= new Vector2(-0.05f * (int)FaceOrientation, -0.025f);
+                _rb.position -= new Vector2(-0.01f * (int)FaceOrientation, -0.005f);
             }
         }
     }
@@ -145,7 +148,6 @@ public class SmallStubby: Enemy
 
     private void Attack()
     {
-        Debug.Log(true);
         _animator.Play("StubbyAttack");
     }
     
@@ -192,8 +194,27 @@ public class SmallStubby: Enemy
 
     private void Die()
     {
+        _rb.freezeRotation = false;
+        _animator.Play("StubbyDestroy");
         if (_curDestructionTime <= 0)
+        {
+            if (FaceOrientation is Side.Right)
+            {
+                transform.Rotate(new Vector3(0, 180, 0));
+            }
+            var tempPosition = transform.position;
+            var tempRotation = transform.rotation;
+            
             Destroy(gameObject);
+
+            var smallStubbyDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
+            smallStubbyDestroyingCopy.Activate();
+            Destroy(smallStubbyDestroyingCopy.gameObject, 5f);
+            
+            var smallStubbyExplosion = Instantiate(explosion, explosionCenter.position, tempRotation);
+            smallStubbyExplosion.force = 15000;
+            smallStubbyExplosion.Explode();
+        }
         else
             _curDestructionTime -= Time.deltaTime;
     }

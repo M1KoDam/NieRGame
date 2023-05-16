@@ -445,7 +445,7 @@ public class Player : MonoBehaviour
         {
             if (_hitEnemies.Contains(enemy))
                 continue;
-            enemy.GetComponent<SmallFlyer>().GetDamage(damage);
+            enemy.GetComponent<Enemy>().GetDamage(damage);
             _hitEnemies.Add(enemy);
         }
 

@@ -52,7 +52,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy") && _currentAnimation is not "BulletExploding")
-            collision.gameObject.GetComponent<SmallFlyer>().GetDamage(damage);
+            collision.gameObject.GetComponent<Enemy>().GetDamage(damage);
         Destroy();
     }
 }

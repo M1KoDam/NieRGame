@@ -270,7 +270,7 @@ public class SmallFlyer : Enemy
 
     private void Die()
     {
-        _animator.Play("Destroy");
+        _animator.Play("FlyerDestroy");
         if (_curDestructionTime <= 0)
         {
             if (FaceOrientation is Side.Right)
@@ -286,7 +286,7 @@ public class SmallFlyer : Enemy
             smallFlyerDestroyingCopy.Activate();
             Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
             
-            var smallFlyerExplosion = Instantiate(explosion, tempPosition + Vector3.down, tempRotation);
+            var smallFlyerExplosion = Instantiate(explosion, explosionCenter.position, tempRotation);
             smallFlyerExplosion.Explode();
         }
         else

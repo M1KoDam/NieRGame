@@ -5,15 +5,14 @@ using UnityEngine.Serialization;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-public class SmallFlyer : MonoBehaviour
+public class SmallFlyer : Enemy
 {
     private Rigidbody2D _rb;
     private Animator _animator;
     public Player player;
     public EnemyBullet bullet;
     public Transform gun;
-    [SerializeField] private int hp;
-    [SerializeField] private SmallFlyerDestroying smallFlyerDestroying;
+    [SerializeField] private EnemyDestroying enemyDestroying;
     [SerializeField] private Explosion explosion;
     [SerializeField] private Transform explosionCenter;
 
@@ -34,8 +33,7 @@ public class SmallFlyer : MonoBehaviour
     [SerializeField] private float fireRate;
     [SerializeField] private float damage;
     [SerializeField] private LayerMask layerGround;
-
-    private Vector2 _velocity;
+    
     private float _angle;
 
     private static readonly Vector2 LeftOrientationShootingPosition = new(9, 4f);
@@ -46,7 +44,7 @@ public class SmallFlyer : MonoBehaviour
             ? -90 <= _angle && _angle <= 90
                 ? Side.Left
                 : Side.Right
-            : _velocity.x < 0
+            :  _rb.velocity.x < 0
                 ? Side.Left
                 : Side.Right;
 
@@ -100,7 +98,7 @@ public class SmallFlyer : MonoBehaviour
 
     private void Wait()
     {
-        _velocity = new Vector2(0, 0.2f);
+        _rb.velocity = new Vector2(0, 0.2f);
     }
 
     private void RestoreAngle()
@@ -136,7 +134,6 @@ public class SmallFlyer : MonoBehaviour
             : LeftLocalScale;   
 
         _rb.MoveRotation(_angle);
-        _rb.velocity = _velocity + Sway();
     }
 
     private void FixedUpdate()
@@ -207,7 +204,7 @@ public class SmallFlyer : MonoBehaviour
         if (ShootingPositionToPlayer.magnitude < 2f)
             Brake();
         else
-            _velocity = ShootingPositionToPlayer.normalized * ChaseSpeed;
+            _rb.velocity = ShootingPositionToPlayer.normalized * ChaseSpeed;
     }
 
     private void Shoot()
@@ -245,7 +242,7 @@ public class SmallFlyer : MonoBehaviour
 
     private void GoToPlayer()
     {
-        _velocity = SmallFlyerToPlayer.normalized * ChaseSpeed;
+        _rb.velocity = SmallFlyerToPlayer.normalized * ChaseSpeed;
     }
 
     private void ChangeSpotId()
@@ -263,12 +260,12 @@ public class SmallFlyer : MonoBehaviour
 
     private void GoToSpot()
     {
-        _velocity = SmallFlyerToSpot.normalized * PatrolSpeed;
+        _rb.velocity = SmallFlyerToSpot.normalized * PatrolSpeed;
     }
 
     private void Brake()
     {
-        _velocity /= BrakingSpeed;
+        _rb.velocity /= BrakingSpeed;
     }
 
     private void Die()
@@ -285,7 +282,7 @@ public class SmallFlyer : MonoBehaviour
             
             Destroy(gameObject);
 
-            var smallFlyerDestroyingCopy = Instantiate(smallFlyerDestroying, tempPosition, tempRotation);
+            var smallFlyerDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
             smallFlyerDestroyingCopy.Activate();
             Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
             
@@ -296,7 +293,7 @@ public class SmallFlyer : MonoBehaviour
             _curDestructionTime -= Time.deltaTime;
     }
     
-    public void GetDamage(int damage)
+    public override void GetDamage(int damage)
     {
         _angle -= Math.Min(20, damage/4);
         hp -= damage;

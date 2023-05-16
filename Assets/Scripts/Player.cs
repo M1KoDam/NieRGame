@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
 
     [Header("Step Climb Settings")] 
     [SerializeField] private GameObject stayRayUpper;
-
     [SerializeField] private GameObject stayRayLower;
     [SerializeField] private float stepHeight;
     [SerializeField] private float stepLenght;
@@ -429,7 +428,7 @@ public class Player : MonoBehaviour
         var hitEnemies = Physics2D.OverlapCircleAll(attack1Collider.position, attackRadius, enemies);
         foreach (var enemy in hitEnemies)
         {
-            enemy.GetComponent<SmallFlyer>().GetDamage(damage);
+            enemy.GetComponent<Enemy>().GetDamage(damage);
         }
 
         var hitBullets = Physics2D.OverlapCircleAll(attack1Collider.position, attackRadius, enemyBullet);

@@ -2,16 +2,16 @@ using System;
 using System.Reflection.Emit;
 using UnityEngine;
 
-public class SmallStubby: MonoBehaviour
+public class SmallStubby: Enemy
 {
     private Rigidbody2D _rb;
+    private Animator _animator;
     public Player player;
-    [SerializeField] private int hp;
 
     public Transform[] moveSpot;
     private int curId;
     private bool reverseGettingId;
-    private bool _canBeat;
+    private bool _canAttack = true;
 
     public float waitTime;
     private float _curWaitTime;
@@ -23,21 +23,23 @@ public class SmallStubby: MonoBehaviour
     private const float ChaseSpeed = 5;
     [SerializeField] private float fireRate; // частота атаки 
     [SerializeField] private float damage;
-
-    private Vector2 _velocity;
+    [SerializeField] private GameObject stayRayUpper;
+    [SerializeField] private GameObject stayRayLower;
+    [SerializeField] private LayerMask layerGround;
 
     private Side FaceOrientation =>
-        _velocity.x < 0
+        _rb.velocity.x < 0
             ? Side.Left
             : Side.Right;
 
     private State GetState
         =>  hp <= 0 
             ? State.Dead 
-            : SmallStubbyToPlayer.magnitude > 1 && SmallStubbyToPlayer.magnitude < 25
-                ? State.Chase
-                : SmallStubbyToPlayer.magnitude <= 1
-                    ? State.Attack
+            : SmallStubbyToPlayer.magnitude <= 2 && Physics2D.Raycast(transform.position, 
+                SmallStubbyToPlayer, SmallStubbyToPlayer.magnitude, layerGround).collider is null
+                ? State.Attack
+                : SmallStubbyToPlayer.magnitude < 25
+                    ? State.Chase
                     : State.Patrol;
 
     private static readonly Vector2 RightLocalScale = new(-1, 1);
@@ -54,6 +56,7 @@ public class SmallStubby: MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
         _curWaitTime = waitTime;
         _curDestructionTime = destructionTime;
     }
@@ -61,14 +64,14 @@ public class SmallStubby: MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        StepClimb();
+        
         if (GetState == State.Dead)
             return;
         
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
             : LeftLocalScale;
-
-        _rb.velocity = _velocity;
     }
     
     private void FixedUpdate()
@@ -94,6 +97,21 @@ public class SmallStubby: MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
         
+    }
+    
+    private void StepClimb()
+    {
+        var hitLower = Physics2D.Raycast(stayRayLower.transform.position,
+            Vector2.right * (int)FaceOrientation, 1, layerGround);
+        if (hitLower.collider && _rb.velocity.y >= 0 && _rb.velocity.x * (int)FaceOrientation > 0.1f)
+        {
+            var hitUpper = Physics2D.Raycast(stayRayUpper.transform.position,
+                Vector2.right * (int)FaceOrientation, 0.8f, layerGround);
+            if (true)
+            {
+                _rb.position -= new Vector2(-0.05f * (int)FaceOrientation, -0.025f);
+            }
+        }
     }
 
     private void Patrolling()
@@ -121,18 +139,14 @@ public class SmallStubby: MonoBehaviour
     private void Attacking()
     {
         GoToPlayer();
-        if (_canBeat)
-            Beat();
+        if (_canAttack)
+            Attack();
     }
 
-    private void Jump()
+    private void Attack()
     {
-        // создать как у плеера 2 нижних точки, чтобы по лестницам умел ходить, ну и ещё jump из плеера
-    }
-
-    private void Beat()
-    {
-        //запускай анимацию, ну как ты умеешь
+        Debug.Log(true);
+        _animator.Play("StubbyAttack");
     }
     
     private void HandleFireRate() //для задержки атаки, но я это место пока не трогал
@@ -143,14 +157,14 @@ public class SmallStubby: MonoBehaviour
         }
         else
         {
-            _canBeat = true;
+            _canAttack = true;
             _fireTimer = 0;
         }
     }
 
     private void GoToPlayer()
     {
-        _velocity = new Vector2(SmallStubbyToPlayer.normalized.x * ChaseSpeed, _rb.velocity.y);
+        _rb.velocity = new Vector2(SmallStubbyToPlayer.normalized.x * ChaseSpeed, _rb.velocity.y);
     }
 
     private void ChangeSpotId()
@@ -168,12 +182,12 @@ public class SmallStubby: MonoBehaviour
 
     private void GoToSpot()
     {
-        _velocity = new Vector2(SmallStubbyToSpot.normalized.x * PatrolSpeed, _rb.velocity.y);
+        _rb.velocity = new Vector2(SmallStubbyToSpot.normalized.x * PatrolSpeed, _rb.velocity.y);
     }
 
     private void Brake()
     {
-        _velocity /= BrakingSpeed;
+        _rb.velocity /= BrakingSpeed;
     }
 
     private void Die()
@@ -182,11 +196,6 @@ public class SmallStubby: MonoBehaviour
             Destroy(gameObject);
         else
             _curDestructionTime -= Time.deltaTime;
-    }
-    
-    public void GetDamage(int damage)
-    {
-        hp -= damage;
     }
 }
 

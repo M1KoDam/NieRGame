@@ -29,16 +29,12 @@ public class SmallStubby: Enemy
     [SerializeField] private GameObject stayRayLower;
     [SerializeField] private LayerMask layerGround;
     [SerializeField] private Transform explosionCenter;
-
-    private Side FaceOrientation =>
-        _rb.velocity.x < 0
-            ? Side.Left
-            : Side.Right;
-
+    private Side faceOrientation;
+    
     private State GetState
         =>  hp <= 0 
             ? State.Dead 
-            : SmallStubbyToPlayer.magnitude <= 2 && Physics2D.Raycast(transform.position, 
+            : SmallStubbyToPlayer.magnitude <= 5 && Physics2D.Raycast(transform.position, 
                 SmallStubbyToPlayer, SmallStubbyToPlayer.magnitude, layerGround).collider is null
                 ? State.Attack
                 : SmallStubbyToPlayer.magnitude < 25
@@ -60,6 +56,7 @@ public class SmallStubby: Enemy
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        faceOrientation = Side.Left;
         _curWaitTime = waitTime;
         _curDestructionTime = destructionTime;
     }
@@ -72,14 +69,14 @@ public class SmallStubby: Enemy
         if (GetState == State.Dead)
             return;
         
-        transform.localScale = FaceOrientation == Side.Right
+        transform.localScale = faceOrientation == Side.Right
             ? RightLocalScale
             : LeftLocalScale;
     }
     
     private void FixedUpdate()
     {
-        //HandleFireRate();
+        HandleFireRate();
         
         var state = GetState;
         switch (state)
@@ -91,7 +88,7 @@ public class SmallStubby: Enemy
                 Patrolling();
                 break;
             case State.Attack:
-                Attacking(); // <-----------
+                Attacking();
                 break;
             case State.Dead:
                 Die();
@@ -100,19 +97,31 @@ public class SmallStubby: Enemy
                 throw new ArgumentOutOfRangeException();
         }
         
+        ChangeFaceOrientation();
+    }
+    
+    private void ChangeFaceOrientation()
+    {
+        faceOrientation = GetState is State.Attack
+            ? SmallStubbyToPlayer.x > 0 ? Side.Right : Side.Left
+            : _rb.velocity.x < 0
+                ? Side.Left
+                : _rb.velocity.x > 0
+                    ? Side.Right
+                    : faceOrientation;
     }
     
     private void StepClimb()
     {
         var hitLower = Physics2D.Raycast(stayRayLower.transform.position,
-            Vector2.right * (int)FaceOrientation, 1, layerGround);
-        if (hitLower.collider && _rb.velocity.y >= 0 && _rb.velocity.x * (int)FaceOrientation > 0.1f)
+            Vector2.right * (int)faceOrientation, 1, layerGround);
+        if (hitLower.collider && _rb.velocity.y >= 0 && _rb.velocity.x * (int)faceOrientation > 0.1f)
         {
             var hitUpper = Physics2D.Raycast(stayRayUpper.transform.position,
-                Vector2.right * (int)FaceOrientation, 0.8f, layerGround);
-            if (true)
+                Vector2.right * (int)faceOrientation, 0.8f, layerGround);
+            if (!hitUpper.collider)
             {
-                _rb.position -= new Vector2(-0.01f * (int)FaceOrientation, -0.005f);
+                _rb.position -= new Vector2(-0.01f * (int)faceOrientation, -0.005f);
             }
         }
     }
@@ -198,7 +207,7 @@ public class SmallStubby: Enemy
         _animator.Play("StubbyDestroy");
         if (_curDestructionTime <= 0)
         {
-            if (FaceOrientation is Side.Right)
+            if (faceOrientation is Side.Right)
             {
                 transform.Rotate(new Vector3(0, 180, 0));
             }

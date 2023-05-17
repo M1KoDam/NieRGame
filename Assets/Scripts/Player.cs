@@ -69,6 +69,9 @@ public class Player : MonoBehaviour
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
+    private readonly string[] _getDamagedAnimations = 
+        {"GetDamaged1", "GetDamaged2", "GetDamagedInAir1", "GetDamagedInAir2"};
+
     private static float MovementAxis => Input.GetAxis("Horizontal");
 
     private void Start()
@@ -87,6 +90,9 @@ public class Player : MonoBehaviour
             Die();
 
         StepClimb();
+        
+        if (_getDamagedAnimations.Contains(_currentAnimation) && AnimPlaying())
+            return;
 
         if (Climb()) return;
 
@@ -147,7 +153,8 @@ public class Player : MonoBehaviour
     {
         if (_climb)
         {
-            ChangeAnimation("Climb");
+            if (_currentAnimation is not "GetDamagedClimb" && !AnimPlaying()) 
+                ChangeAnimation("Climb");
             var velocity = _rb.velocity;
             _rb.velocity = new Vector2(velocity.x, Math.Max(0.2f, velocity.y));
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
@@ -460,11 +467,14 @@ public class Player : MonoBehaviour
     {
         health -= inputDamage;
         var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
-        if (!_onFoot)
-        {
-            ChangeAnimation("GetDamagedInAir");
-        }
-
+        
+        if (_climb)
+            ChangeAnimation("GetDamagedClimb");
+        else if (damageVector == 1 && faceOrientation is Side.Right || damageVector == -1 && faceOrientation is Side.Left)
+            ChangeAnimation(_onFoot ? "GetDamaged1" : "GetDamagedInAir1");
+        else
+            ChangeAnimation(_onFoot ? "GetDamaged2" : "GetDamagedInAir2");
+        
         _rb.velocity -= new Vector2(Math.Min(inputDamage / 20, 5) * damageVector, 0);
     }
 

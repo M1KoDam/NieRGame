@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
         _rb.useAutoMass = true;
     }
     
-    private void Update()
+    private void FixedUpdate()
     {
         if (_currentAnimation is "BulletExploding")
         {
@@ -41,7 +41,7 @@ public class Bullet : MonoBehaviour
     
     private bool AnimCompleted()
     {
-        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.1f;
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
     }
     
     private bool AnimPlaying(float time = 1)

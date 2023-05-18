@@ -1,16 +1,24 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SmallStubby: Enemy
 {
+    [SerializeField] private Transform attackCollider;
+    [SerializeField] private LayerMask pLayerLayer;
+    [SerializeField] private Vector2 attackRadius = new (3, 1);
+
     [Header("Step Climb Settings")]
     [SerializeField] private GameObject stayRayUpper;
     [SerializeField] private GameObject stayRayLower;
-    
+
     // Update is called once per frame
     private void Update()
     {
-        StepClimb();
+        if (CurrentAnimation is not "StubbyStartAttack" or "StubbyAttack")
+        {
+            StepClimb();
+        }
         
         if (GetState == State.Dead)
             return;
@@ -22,8 +30,12 @@ public class SmallStubby: Enemy
     
     private void FixedUpdate()
     {
-        //HandleFireRate();
-        
+        if (CurrentAnimation is "StubbyStartAttack" or "StubbyAttack")
+        {
+            Attack();
+            return;
+        }
+
         var state = GetState;
         switch (state)
         {
@@ -62,7 +74,7 @@ public class SmallStubby: Enemy
         }
 
         else
-            GoToSpot();
+            GoTo(EnemyToSpot, patrolSpeed);
     }
     
     private void ChangeSpotId()
@@ -84,7 +96,7 @@ public class SmallStubby: Enemy
     
     private void Chase()
     {
-        GoToPlayer();
+        GoTo(EnemyToPlayer, chaseSpeed);
     }
     
     #endregion
@@ -92,29 +104,29 @@ public class SmallStubby: Enemy
     #region Attack
     private void Attack()
     {
-        GoToPlayer();
         if (CanAttack)
-            AttackAnimation();
+        {
+            CanAttack = false;
+            ChangeAnimation("StubbyStartAttack");
+            Invoke(nameof(WaitForAttack), attackRate);
+            return;
+        }
+        
+        if (CurrentAnimation is "StubbyStartAttack" && AnimCompleted())
+        {
+            ChangeAnimation("StubbyAttack");
+            var hitPlayer = Physics2D.OverlapBox(attackCollider.position, attackRadius, 0, pLayerLayer);
+            if (hitPlayer)
+                hitPlayer.GetComponent<Player>().GetDamage(damage, transform);
+            return;
+        }
+        
+        if (CurrentAnimation is "StubbyAttack" && AnimCompleted())
+        {
+            ChangeAnimation("StubbyIdle");
+        }
     }
 
-    private void AttackAnimation()
-    {
-        Animator.Play("StubbyAttack");
-    }
-    
-    private void HandleAttackRate()
-    {
-        if (AttackTimer < AttackDelay)
-        {
-            AttackTimer += Time.fixedDeltaTime;
-        }
-        else
-        {
-            CanAttack = true;
-            AttackTimer = 0;
-        }
-    }
-    
     #endregion
     
     #region FaceOrientation
@@ -140,35 +152,31 @@ public class SmallStubby: Enemy
     {
         var hitLower = Physics2D.Raycast(stayRayLower.transform.position,
             Vector2.right * (int)FaceOrientation, 1, layerGround);
-        if (hitLower.collider && Rb.velocity.y >= 0 && Rb.velocity.x * (int)FaceOrientation > 0.1f)
+        if (hitLower.collider)
         {
             var hitUpper = Physics2D.Raycast(stayRayUpper.transform.position,
-                Vector2.right * (int)FaceOrientation, 0.8f, layerGround);
+                Vector2.right * (int)FaceOrientation, 1, layerGround);
             if (!hitUpper.collider)
             {
                 Rb.position -= new Vector2(-0.01f * (int)FaceOrientation, -0.005f);
             }
         }
     }
-    
-    private void GoToPlayer()
+
+    private void GoTo(Vector2 distance, float speed)
     {
-        Rb.velocity = new Vector2(EnemyToPlayer.normalized.x * ChaseSpeed, Rb.velocity.y);
-    }
-    
-    private void GoToSpot()
-    {
-        Rb.velocity = new Vector2(EnemyToSpot.normalized.x * PatrolSpeed, Rb.velocity.y);
+        ChangeAnimation(Math.Abs(Rb.velocity.x) > 0.1f ? "StubbyMovement" : "StubbyIdle");
+        Rb.velocity = new Vector2(distance.normalized.x * speed, Rb.velocity.y);
     }
 
     #endregion
 
-    #region Damage
-    
+    #region GetDamage
+
     private void Die()
     {
         Rb.freezeRotation = false;
-        Animator.Play("StubbyDestroy");
+        ChangeAnimation("StubbyDestroy");
         if (CurDestructionTime <= 0)
         {
             if (FaceOrientation is Side.Right)
@@ -193,4 +201,13 @@ public class SmallStubby: Enemy
     }
     
     #endregion
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireCube(attackCollider.position, attackRadius);
+        var position = transform.position;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(position, maxAttackRaduis);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(position, maxChaseRaduis);
+    }
 }

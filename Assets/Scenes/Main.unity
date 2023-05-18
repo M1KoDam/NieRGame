@@ -5628,6 +5628,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1314277543
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1314277544}
+  m_Layer: 7
+  m_Name: AttackCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1314277544
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314277543}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.82, y: 0.32, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2019174488}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1385662135
 GameObject:
   m_ObjectHideFlags: 0
@@ -6235,23 +6266,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b529b0a586db0444f8e8b424d18be6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
   player: {fileID: 231469658}
-  bullet: {fileID: 405301099}
-  gun: {fileID: 1629370392}
-  enemyDestroying: {fileID: 2085212250}
-  explosion: {fileID: 1405773791}
-  explosionCenter: {fileID: 293441083}
+  hp: 100
+  brakingSpeed: 2
+  patrolSpeed: 3
+  chaseSpeed: 5
   moveSpot:
   - {fileID: 840756079}
   - {fileID: 502041721}
   waitTime: 1
-  destructionTime: 3
-  fireRate: 0.5
   damage: 0
+  attackRate: 3
+  maxAttackRaduis: 15
+  maxChaseRaduis: 25
+  enemyDestroying: {fileID: 2085212250}
+  explosion: {fileID: 1405773791}
+  explosionCenter: {fileID: 293441083}
+  destructionTime: 3
   layerGround:
     serializedVersion: 2
     m_Bits: 8
+  bullet: {fileID: 405301099}
+  gun: {fileID: 1629370392}
 --- !u!50 &1531901556
 Rigidbody2D:
   serializedVersion: 4
@@ -9384,23 +9420,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8400205a573695047a315998e8b19896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
   player: {fileID: 231469658}
+  hp: 100
+  brakingSpeed: 2
+  patrolSpeed: 2
+  chaseSpeed: 3
   moveSpot:
   - {fileID: 504767092}
   - {fileID: 1196016247}
   waitTime: 1
-  destructionTime: 3
+  damage: 20
+  attackRate: 2
+  maxAttackRaduis: 3
+  maxChaseRaduis: 15
   enemyDestroying: {fileID: 1886092630}
   explosion: {fileID: 1405773791}
-  fireRate: 0.5
-  damage: 0
-  stayRayUpper: {fileID: 2025974760}
-  stayRayLower: {fileID: 1081107160}
+  explosionCenter: {fileID: 1974851769}
+  destructionTime: 3
   layerGround:
     serializedVersion: 2
     m_Bits: 8
-  explosionCenter: {fileID: 1974851769}
+  attackCollider: {fileID: 1314277544}
+  pLayerLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  attackRadius: {x: 3, y: 1}
+  stayRayUpper: {fileID: 2025974760}
+  stayRayLower: {fileID: 1081107160}
 --- !u!70 &2019174486
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -9484,6 +9530,7 @@ Transform:
   - {fileID: 1081107161}
   - {fileID: 2025974761}
   - {fileID: 1974851769}
+  - {fileID: 1314277544}
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9499,7 +9546,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 60
+  m_Mass: 500
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 3

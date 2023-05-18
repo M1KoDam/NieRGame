@@ -39,9 +39,8 @@ public class SmallFlyer : Enemy
     
     private void FixedUpdate()
     {
-        _swayCount += 1;  
-        HandleFireRate();
-        
+        _swayCount += 1;
+
         var state = GetState;
         switch (state)
         {
@@ -52,7 +51,7 @@ public class SmallFlyer : Enemy
                 Patrolling();
                 break;
             case State.Attack:
-                Attacking();
+                Attack();
                 break;
             case State.Dead:
                 Die();
@@ -116,35 +115,24 @@ public class SmallFlyer : Enemy
 
     #region Attack
 
-    private void Attacking()
+    private void Attack()
     {
         _isScoping = true;
         GoToShootingPosition();
         LookAtPlayer();
         if (CanAttack)
+        {
+            CanAttack = false;
             Shoot();
+            Invoke(nameof(WaitForAttack), attackRate);
+        }
     }
     
     private void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
-        Destroy(bul.gameObject, 5f);
-
-        CanAttack = false;
-    }
-    
-    private void HandleFireRate()
-    {
-        if (AttackTimer < AttackDelay)
-        {
-            AttackTimer += Time.fixedDeltaTime;
-        }
-        else
-        {
-            CanAttack = true;
-            AttackTimer = 0;
-        }
+        Destroy(bul.gameObject, 5f); ;
     }
 
     #endregion
@@ -170,12 +158,12 @@ public class SmallFlyer : Enemy
 
     private void GoToPlayer()
     {
-        Rb.velocity = EnemyToPlayer.normalized * ChaseSpeed;
+        Rb.velocity = EnemyToPlayer.normalized * chaseSpeed;
     }
     
     private void GoToSpot()
     {
-        Rb.velocity = EnemyToSpot.normalized * PatrolSpeed;
+        Rb.velocity = EnemyToSpot.normalized * patrolSpeed;
     }
     
     private void GoToShootingPosition()
@@ -183,7 +171,7 @@ public class SmallFlyer : Enemy
         if (ShootingPositionToPlayer.magnitude < 2f)
             Brake();
         else
-            Rb.velocity = ShootingPositionToPlayer.normalized * ChaseSpeed;
+            Rb.velocity = ShootingPositionToPlayer.normalized * chaseSpeed;
     }
     
     private Vector2 Sway()
@@ -242,7 +230,7 @@ public class SmallFlyer : Enemy
     
     #endregion
 
-    #region Damage
+    #region GetDamage
 
     private void Die()
     {
@@ -269,11 +257,20 @@ public class SmallFlyer : Enemy
             CurDestructionTime -= Time.deltaTime;
     }
     
-    public override void GetDamage(int damage)
+    public override void GetDamage(int inputDamage)
     {
-        _angle -= Math.Min(20, damage/4);
-        hp -= damage;
+        _angle -= Math.Min(20, inputDamage/4);
+        hp -= inputDamage;
     }
 
     #endregion
+    
+    void OnDrawGizmosSelected()
+    {
+        var position = transform.position;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(position, maxAttackRaduis);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(position, maxChaseRaduis);
+    }
 }

@@ -20,7 +20,7 @@ public class EnemyBullet : MonoBehaviour
         _rb.useAutoMass = true;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (_currentAnimation is "EnemyBulletExploding" && AnimCompleted())
         {
@@ -38,7 +38,7 @@ public class EnemyBullet : MonoBehaviour
     
     private bool AnimCompleted()
     {
-        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.1f;
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

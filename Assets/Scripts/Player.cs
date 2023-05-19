@@ -17,10 +17,12 @@ public class Player : MonoBehaviour
     [SerializeField] private HeavySword heavySword;
     [SerializeField] private SpinningSword spinningSword;
 
+    [FormerlySerializedAs("SwingCollider")]
+    [FormerlySerializedAs("attack1Collider")]
     [Header("References")] 
-    [SerializeField] private Transform attack1Collider;
+    [SerializeField] private Transform SwingSwordCollider;
 
-    [SerializeField] private Transform attack2Collider;
+    [FormerlySerializedAs("FallCollider")] [FormerlySerializedAs("attack2Collider")] [SerializeField] private Transform FallSwordCollider;
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask enemies;
     [SerializeField] private LayerMask enemyBullet;
@@ -28,7 +30,6 @@ public class Player : MonoBehaviour
 
     [Header("Step Climb Settings")] 
     [SerializeField] private GameObject stayRayUpper;
-
     [SerializeField] private GameObject stayRayLower;
     [SerializeField] private float stepHeight;
     [SerializeField] private float stepLenght;
@@ -66,9 +67,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Checkpoint checkpoint;
     private PlayerState _playerState = PlayerState.Default;
     private List<Collider2D> _hitEnemies;
+    // A variable used to give the animator a frame to update animations called outside the Update method
+    private bool _changeAnimFrameWait;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
+
+    private readonly string[] _getDamagedAnimations = 
+        {"GetDamaged1", "GetDamaged2", "GetDamagedInAir1", "GetDamagedInAir2"};
 
     private static float MovementAxis => Input.GetAxis("Horizontal");
 
@@ -81,47 +87,59 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (_playerState is PlayerState.Dead)
-            return;
-
-        if (health <= 0)
-            Die();
-
+        if (Dead()) return;
+        if (Preprocessing()) return;
         StepClimb();
-
         if (Climb()) return;
-
         ChangeCheckpoint();
-
-        if (heavySword.inHands && _currentAnimation is not "FallAttackEnd") heavySword.ReturnSword();
-        if (lightSword.inHands) lightSword.ReturnSword();
-
-        if (HeavyAttack())
-        {
-            spinningSword.Destroy();
-            heavySword.DrawSword();
-            return;
-        }
-
-        _hitEnemies.Clear();
-        if (_currentAnimation is "GetDamagedInAir" && AnimPlaying())
-        {
-            return;
-        }
-
-        if (LightAttack())
-        {
-            lightSword.DrawSword();
-            return;
-        }
-
-        spinningSword.Destroy();
-
+        if (Attack()) return;
         if (Jump()) return;
         if (Move()) return;
         if (Fall()) return;
         Idle();
     }
+
+    #region Death
+
+    private bool Dead()
+    {
+        if (_playerState is PlayerState.Dead)
+            return true;
+
+        if (health > 0) return false;
+        Die();
+        return true;
+    }
+    
+    private void Die()
+    {
+        _playerState = PlayerState.Dead;
+        Invoke(nameof(Respawn), 5);
+    }
+
+    private void Respawn()
+    {
+        _playerState = PlayerState.Default;
+        health = maxHealth;
+        transform.position = checkpoint.transform.position;
+    }
+
+    #endregion
+
+    #region Preprocessing
+    
+    private bool Preprocessing()
+    {
+        if (_changeAnimFrameWait || _getDamagedAnimations.Contains(_currentAnimation) && AnimPlaying())
+        {
+            if (_changeAnimFrameWait) _changeAnimFrameWait = false;
+            return true;
+        }
+
+        return false;
+    }
+    
+    #endregion
 
     #region StepClimb
 
@@ -129,11 +147,11 @@ public class Player : MonoBehaviour
     {
         var hitLower = Physics2D.Raycast(stayRayLower.transform.position,
             Vector2.right * (int)faceOrientation, 0.8f, ground);
-        if (hitLower.collider is not null && _rb.velocity.y >= 0 && _rb.velocity.x * (int)faceOrientation > 0.1f)
+        if (hitLower.collider && _rb.velocity.y >= 0 && _rb.velocity.x * (int)faceOrientation > 0.1f)
         {
             var hitUpper = Physics2D.Raycast(stayRayUpper.transform.position,
                 Vector2.right * (int)faceOrientation, 0.8f, ground);
-            if (hitUpper.collider is null)
+            if (!hitUpper.collider)
             {
                 _rb.position -= new Vector2(-stepLenght * (int)faceOrientation, -stepHeight);
             }
@@ -148,7 +166,12 @@ public class Player : MonoBehaviour
     {
         if (_climb)
         {
-            ChangeAnimation("Climb");
+            if (_currentAnimation is "GetDamagedClimb" && AnimPlaying())
+                ChangeAnimation("GetDamagedClimb");
+            else
+            {
+                ChangeAnimation("Climb");
+            }
             var velocity = _rb.velocity;
             _rb.velocity = new Vector2(velocity.x, Math.Max(0.2f, velocity.y));
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
@@ -190,6 +213,37 @@ public class Player : MonoBehaviour
                 checkpoint = hitCheckpoint[0].GetComponent<Checkpoint>();
             }
         }
+    }
+
+    #endregion
+
+    #region Attack
+
+    private bool Attack()
+    {
+        if (heavySword.inHands && _currentAnimation is not "FallAttackEnd") heavySword.ReturnSword();
+        if (lightSword.inHands) lightSword.ReturnSword();
+
+        if (HeavyAttack())
+        {
+            spinningSword.Destroy();
+            heavySword.DrawSword();
+            return true;
+        }
+
+        _hitEnemies.Clear();
+        if (_currentAnimation is "GetDamagedInAir" && AnimPlaying())
+        {
+            return true;
+        }
+
+        if (LightAttack())
+        {
+            lightSword.DrawSword();
+            return true;
+        }
+        
+        return false;
     }
 
     #endregion
@@ -304,12 +358,25 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (_currentAnimation is "Attack" or "Attack2" or "Attack3" && AnimPlaying())
+        if (_currentAnimation is "Attack3" or "AttackInAir3" && AnimPlaying() && !spinningSword.isActiveAndEnabled)
+        {
+            ChangeAnimation(_currentAnimation is "Attack3" ? "Attack3End" : "AttackInAir3End");
+            return true;
+        }
+        
+        if (_currentAnimation is "Attack3" or "AttackInAir3" && AnimCompleted() && spinningSword.isActiveAndEnabled)
+        {
+            ChangeAnimation(_currentAnimation is "Attack3" ? "Attack3End" : "AttackInAir3End");
+            spinningSword.Destroy();
+            return true;
+        }
+
+        if (_currentAnimation is "Attack" or "Attack2" or "Attack3" or "Attack3End" && AnimPlaying())
         {
             return true;
         }
 
-        if (_currentAnimation is "AttackInAir" or "AttackInAir2" or "AttackInAir3" &&
+        if (_currentAnimation is "AttackInAir" or "AttackInAir2" or "AttackInAir3" or "AttackInAir3End" &&
             AnimPlaying())
         {
             _rb.velocity = new Vector2(_rb.velocity.x, 0.5f);
@@ -410,29 +477,16 @@ public class Player : MonoBehaviour
     }
 
     #endregion
-
-    private void Die()
-    {
-        _playerState = PlayerState.Dead;
-        Invoke(nameof(Respawn), 5);
-    }
-
-    private void Respawn()
-    {
-        _playerState = PlayerState.Default;
-        health = maxHealth;
-        transform.position = checkpoint.transform.position;
-    }
-
+    
     private void Damage(float attackRadius, int damage)
     {
-        var hitEnemies = Physics2D.OverlapCircleAll(attack1Collider.position, attackRadius, enemies);
+        var hitEnemies = Physics2D.OverlapCircleAll(SwingSwordCollider.position, attackRadius, enemies);
         foreach (var enemy in hitEnemies)
         {
-            enemy.GetComponent<SmallFlyer>().GetDamage(damage);
+            enemy.GetComponent<Enemy>().GetDamage(damage);
         }
 
-        var hitBullets = Physics2D.OverlapCircleAll(attack1Collider.position, attackRadius, enemyBullet);
+        var hitBullets = Physics2D.OverlapCircleAll(SwingSwordCollider.position, attackRadius, enemyBullet);
         foreach (var enemy in hitBullets)
         {
             enemy.GetComponent<EnemyBullet>().Destroy();
@@ -441,16 +495,16 @@ public class Player : MonoBehaviour
 
     private void HeavyDamage(int damage)
     {
-        var hitEnemies = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, 0, enemies);
+        var hitEnemies = Physics2D.OverlapBoxAll(FallSwordCollider.position, fallAttackRange, 0, enemies);
         foreach (var enemy in hitEnemies)
         {
             if (_hitEnemies.Contains(enemy))
                 continue;
-            enemy.GetComponent<SmallFlyer>().GetDamage(damage);
+            enemy.GetComponent<Enemy>().GetDamage(damage);
             _hitEnemies.Add(enemy);
         }
 
-        var hitBullets = Physics2D.OverlapBoxAll(attack2Collider.position, fallAttackRange, 0, enemyBullet);
+        var hitBullets = Physics2D.OverlapBoxAll(FallSwordCollider.position, fallAttackRange, 0, enemyBullet);
         foreach (var enemy in hitBullets)
         {
             enemy.GetComponent<EnemyBullet>().Destroy();
@@ -461,12 +515,17 @@ public class Player : MonoBehaviour
     {
         health -= inputDamage;
         var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
-        if (!_onFoot)
-        {
-            ChangeAnimation("GetDamagedInAir");
-        }
-
-        _rb.velocity -= new Vector2(Math.Min(inputDamage / 20, 5) * damageVector, 0);
+        spinningSword.Destroy();
+        
+        if (_climb)
+            ChangeAnimation("GetDamagedClimb");
+        else if (damageVector == 1 && faceOrientation is Side.Right || damageVector == -1 && faceOrientation is Side.Left)
+            ChangeAnimation(_onFoot ? "GetDamaged1" : "GetDamagedInAir1");
+        else
+            ChangeAnimation(_onFoot ? "GetDamaged2" : "GetDamagedInAir2");
+        
+        _changeAnimFrameWait = true;
+        _rb.velocity -= new Vector2(Math.Min(inputDamage / 5, 10) * damageVector, 0);
     }
 
     private void Flip()
@@ -504,7 +563,7 @@ public class Player : MonoBehaviour
 
     private bool AnimCompleted()
     {
-        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.01f;
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
     }
 
     private bool CheckAnimTime(float time)
@@ -527,7 +586,9 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Stairs"))
+        if (collision.gameObject.CompareTag("Platform") 
+            || collision.gameObject.CompareTag("Stairs") 
+            || collision.gameObject.CompareTag("Enemy"))
         {
             _onFoot = true;
             _attackInAir = true;
@@ -537,7 +598,9 @@ public class Player : MonoBehaviour
             _canMove = true;
         }
 
-        if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Stairs"))
+        if (collision.gameObject.CompareTag("Platform") 
+            || collision.gameObject.CompareTag("Stairs")
+            || collision.gameObject.CompareTag("Enemy"))
         {
             _onCollision++;
         }
@@ -552,7 +615,9 @@ public class Player : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Stairs"))
+        if (collision.gameObject.CompareTag("Platform") 
+            || collision.gameObject.CompareTag("Stairs")
+            || collision.gameObject.CompareTag("Enemy"))
         {
             _onCollision--;
         }
@@ -577,8 +642,10 @@ public class Player : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(attack1Collider.position, lightAttackRange);
-        Gizmos.DrawWireCube(attack2Collider.position, fallAttackRange);
+        var position = SwingSwordCollider.position;
+        Gizmos.DrawWireSphere(position, lightAttackRange);
+        Gizmos.DrawWireSphere(position, heavyAttackRange);
+        Gizmos.DrawWireCube(FallSwordCollider.position, fallAttackRange);
     }
 
     #endregion

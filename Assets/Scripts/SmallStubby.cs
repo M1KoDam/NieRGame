@@ -1,91 +1,52 @@
 using System;
-using System.Reflection.Emit;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class SmallStubby: MonoBehaviour
+public class SmallStubby: Enemy
 {
-    private Rigidbody2D _rb;
-    public Player player;
-    [SerializeField] private int hp;
+    [SerializeField] private Transform attackCollider;
+    [SerializeField] private LayerMask pLayerLayer;
+    [SerializeField] private Vector2 attackRadius = new (3, 1);
 
-    public Transform[] moveSpot;
-    private int curId;
-    private bool reverseGettingId;
-    private bool _canBeat;
-
-    public float waitTime;
-    private float _curWaitTime;
-    public float destructionTime;
-    private float _curDestructionTime;
-
-    private const float BrakingSpeed = 2;
-    private const float PatrolSpeed = 3;
-    private const float ChaseSpeed = 5;
-    [SerializeField] private float fireRate; // частота атаки 
-    [SerializeField] private float damage;
-
-    private Vector2 _velocity;
-
-    private Side FaceOrientation =>
-        _velocity.x < 0
-            ? Side.Left
-            : Side.Right;
-
-    private State GetState
-        =>  hp <= 0 
-            ? State.Dead 
-            : SmallStubbyToPlayer.magnitude > 1 && SmallStubbyToPlayer.magnitude < 25
-                ? State.Chase
-                : SmallStubbyToPlayer.magnitude <= 1
-                    ? State.Attack
-                    : State.Patrol;
-
-    private static readonly Vector2 RightLocalScale = new(-1, 1);
-    private static readonly Vector2 LeftLocalScale = new(1, 1);
-
-    private float FireDelay => 1 / fireRate; // переписать
-    private Vector2 SmallStubbyToSpot => moveSpot[curId].transform.position - _rb.transform.position;
-    private Vector2 SmallStubbyToPlayer => player.transform.position - _rb.transform.position;
-
-
-    private float _fireTimer; // аналогично
-   
-    // Start is called before the first frame update
-    private void Start()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-        _curWaitTime = waitTime;
-        _curDestructionTime = destructionTime;
-    }
+    [Header("Step Climb Settings")]
+    [SerializeField] private GameObject stayRayUpper;
+    [SerializeField] private GameObject stayRayLower;
 
     // Update is called once per frame
     private void Update()
     {
+        if (CurrentAnimation is not "StubbyStartAttack" or "StubbyAttack")
+        {
+            StepClimb();
+        }
+        
         if (GetState == State.Dead)
             return;
         
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
             : LeftLocalScale;
-
-        _rb.velocity = _velocity;
     }
     
     private void FixedUpdate()
     {
-        //HandleFireRate();
-        
+        if (CurrentAnimation is "StubbyStartAttack" or "StubbyAttack")
+        {
+            Attack();
+            return;
+        }
+
         var state = GetState;
         switch (state)
         {
             case State.Chase:
-                Chasing();
+                Chase();
                 break;
             case State.Patrol:
-                Patrolling();
+                Patrol();
                 break;
             case State.Attack:
-                Attacking(); // <-----------
+                Attack();
                 break;
             case State.Dead:
                 Die();
@@ -94,99 +55,159 @@ public class SmallStubby: MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
         
+        ChangeFaceOrientation();
     }
 
-    private void Patrolling()
+    #region Patrol
+    
+    private void Patrol()
     {
-        if (SmallStubbyToSpot.magnitude < 1f)
+        if (EnemyToSpot.magnitude < 1f)
         {
-            if (_curWaitTime <= 0)
+            if (CurWaitTime <= 0)
                 ChangeSpotId();
             else
             {
-                _curWaitTime -= Time.deltaTime;
+                CurWaitTime -= Time.deltaTime;
                 Brake();
             }
         }
 
         else
-            GoToSpot();
-    }
-
-    private void Chasing()
-    {
-        GoToPlayer();
-    }
-
-    private void Attacking()
-    {
-        GoToPlayer();
-        if (_canBeat)
-            Beat();
-    }
-
-    private void Jump()
-    {
-        // создать как у плеера 2 нижних точки, чтобы по лестницам умел ходить, ну и ещё jump из плеера
-    }
-
-    private void Beat()
-    {
-        //запускай анимацию, ну как ты умеешь
+            GoTo(EnemyToSpot, patrolSpeed);
     }
     
-    private void HandleFireRate() //для задержки атаки, но я это место пока не трогал
-    {
-        if (_fireTimer < FireDelay)
-        {
-            _fireTimer += Time.fixedDeltaTime;
-        }
-        else
-        {
-            _canBeat = true;
-            _fireTimer = 0;
-        }
-    }
-
-    private void GoToPlayer()
-    {
-        _velocity = new Vector2(SmallStubbyToPlayer.normalized.x * ChaseSpeed, _rb.velocity.y);
-    }
-
     private void ChangeSpotId()
     {
-        curId = reverseGettingId ? curId - 1 : curId + 1;
+        CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
 
-        if (curId >= moveSpot.Length || curId < 0)
+        if (CurId >= moveSpot.Length || CurId < 0)
         {
-            reverseGettingId = !reverseGettingId;
-            curId = reverseGettingId ? moveSpot.Length - 1 : 0;
+            ReverseGettingId = !ReverseGettingId;
+            CurId = ReverseGettingId ? moveSpot.Length - 1 : 0;
         }
 
-        _curWaitTime = waitTime;
+        CurWaitTime = waitTime;
     }
 
-    private void GoToSpot()
+    #endregion
+    
+    #region Chase
+    
+    private void Chase()
     {
-        _velocity = new Vector2(SmallStubbyToSpot.normalized.x * PatrolSpeed, _rb.velocity.y);
+        GoTo(EnemyToPlayer, chaseSpeed);
+    }
+    
+    #endregion
+    
+    #region Attack
+    private void Attack()
+    {
+        if (CanAttack)
+        {
+            CanAttack = false;
+            ChangeAnimation("StubbyStartAttack");
+            Invoke(nameof(WaitForAttack), attackRate);
+            return;
+        }
+        
+        if (CurrentAnimation is "StubbyStartAttack" && AnimCompleted())
+        {
+            ChangeAnimation("StubbyAttack");
+            var hitPlayer = Physics2D.OverlapBox(attackCollider.position, attackRadius, 0, pLayerLayer);
+            if (hitPlayer)
+                hitPlayer.GetComponent<Player>().GetDamage(damage, transform);
+            return;
+        }
+        
+        if (CurrentAnimation is "StubbyAttack" && AnimCompleted())
+        {
+            ChangeAnimation("StubbyIdle");
+        }
     }
 
-    private void Brake()
+    #endregion
+    
+    #region FaceOrientation
+    
+    private void ChangeFaceOrientation()
     {
-        _velocity /= BrakingSpeed;
+        FaceOrientation = GetState is State.Attack
+            ? EnemyToPlayer.x > 0 
+                ? Side.Right 
+                : Side.Left
+            : Rb.velocity.x < 0
+                ? Side.Left
+                : Rb.velocity.x > 0
+                    ? Side.Right
+                    : FaceOrientation;
     }
+    
+    #endregion
+    
+    #region Move
+    
+    private void StepClimb()
+    {
+        var hitLower = Physics2D.Raycast(stayRayLower.transform.position,
+            Vector2.right * (int)FaceOrientation, 1, layerGround);
+        if (hitLower.collider)
+        {
+            var hitUpper = Physics2D.Raycast(stayRayUpper.transform.position,
+                Vector2.right * (int)FaceOrientation, 1, layerGround);
+            if (!hitUpper.collider)
+            {
+                Rb.position -= new Vector2(-0.01f * (int)FaceOrientation, -0.005f);
+            }
+        }
+    }
+
+    private void GoTo(Vector2 distance, float speed)
+    {
+        ChangeAnimation(Math.Abs(Rb.velocity.x) > 0.1f ? "StubbyMovement" : "StubbyIdle");
+        Rb.velocity = new Vector2(distance.normalized.x * speed, Rb.velocity.y);
+    }
+
+    #endregion
+
+    #region GetDamage
 
     private void Die()
     {
-        if (_curDestructionTime <= 0)
+        Rb.freezeRotation = false;
+        ChangeAnimation("StubbyDestroy");
+        if (CurDestructionTime <= 0)
+        {
+            if (FaceOrientation is Side.Right)
+            {
+                transform.Rotate(new Vector3(0, 180, 0));
+            }
+            var tempPosition = transform.position;
+            var tempRotation = transform.rotation;
+            
             Destroy(gameObject);
+
+            var smallStubbyDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
+            smallStubbyDestroyingCopy.Activate();
+            Destroy(smallStubbyDestroyingCopy.gameObject, 5f);
+            
+            var smallStubbyExplosion = Instantiate(explosion, explosionCenter.position, tempRotation);
+            smallStubbyExplosion.force = 15000;
+            smallStubbyExplosion.Explode();
+        }
         else
-            _curDestructionTime -= Time.deltaTime;
+            CurDestructionTime -= Time.deltaTime;
     }
     
-    public void GetDamage(int damage)
+    #endregion
+    void OnDrawGizmosSelected()
     {
-        hp -= damage;
+        Gizmos.DrawWireCube(attackCollider.position, attackRadius);
+        var position = transform.position;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(position, maxAttackRaduis);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(position, maxChaseRaduis);
     }
 }
-

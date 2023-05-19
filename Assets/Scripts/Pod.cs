@@ -10,6 +10,7 @@ public class Pod : MonoBehaviour
     public Bullet bullet;
     public Transform gun;
 
+    private Collider2D _collider;
     private Rigidbody2D _rb;
     private Camera _camera;
 
@@ -19,11 +20,12 @@ public class Pod : MonoBehaviour
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
-    
+
     private const float BrakingSpeed = 3;
     private const float Speed = 5;
     private const float MaxDistance = 0.1f;
     [SerializeField] private float fireRate = 10;
+    [SerializeField] private double obstacleDistance;
 
     private Vector3 _velocity;
     private float _angle;
@@ -57,6 +59,7 @@ public class Pod : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _camera = Camera.main;
+        _collider = GetComponent<Collider2D>();
     }
 
     private void FixedUpdate()
@@ -67,6 +70,8 @@ public class Pod : MonoBehaviour
 
     private void HandleMovement()
     {
+        Physics2D.IgnoreLayerCollision(12, 3, DistanceToPlayer > obstacleDistance);
+        
         if (DistanceToPlayer > MaxDistance)
             MoveToPlayer();
         else

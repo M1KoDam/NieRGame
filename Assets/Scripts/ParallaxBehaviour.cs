@@ -24,6 +24,6 @@ public class ParallaxBehaviour : MonoBehaviour
 
         _targetPreviousPosition = followingTarget.position;
 
-        transform.position += parallaxStrength * delta;
+        transform.position += parallaxStrength * -delta;
     }
 }

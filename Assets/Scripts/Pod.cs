@@ -10,7 +10,6 @@ public class Pod : MonoBehaviour
     public Bullet bullet;
     public Transform gun;
 
-    private Collider2D _collider;
     private Rigidbody2D _rb;
     private Camera _camera;
 
@@ -59,7 +58,6 @@ public class Pod : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _camera = Camera.main;
-        _collider = GetComponent<Collider2D>();
     }
 
     private void FixedUpdate()

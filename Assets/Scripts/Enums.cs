@@ -20,14 +20,13 @@ public enum PlayerState
     Default = 0
 }
 
-public static class Animation
 public enum ViewType
 {
     Side,
     Top
 }
 
-public static class PlayerAnim
+public static class Animation
 {
     public const string
         Idle = "Idle",

@@ -10,6 +10,7 @@ public class Plane : MonoBehaviour
     [SerializeField, Range(0, 20)] private float maxSway;
     [SerializeField, Range(0, 0.033f)] private float rotationSpeed;
     [SerializeField] private float fireRate;
+    [SerializeField] private ViewType view;
 
     private float MaxSway => maxSway * Mathf.Deg2Rad;
 
@@ -56,13 +57,25 @@ public class Plane : MonoBehaviour
     private void HandleSways()
     {
         var rot = transform.rotation;
-
-        if (MovementDelta.y > 0)
-            rot.x = Mathf.Max(rot.x - rotationSpeed, -MaxSway);
-        else if (MovementDelta.y < 0)
-            rot.x = Mathf.Min(rot.x + rotationSpeed, MaxSway);
+        
+        if (view == ViewType.Top)
+        {
+            if (MovementDelta.y > 0)
+                rot.x = Mathf.Max(rot.x - rotationSpeed, -MaxSway);
+            else if (MovementDelta.y < 0)
+                rot.x = Mathf.Min(rot.x + rotationSpeed, MaxSway);
+            else
+                rot.x = 0;
+        }
         else
-            rot.x = 0;
+        {
+            if (MovementDelta.y > 0)
+                rot.z = Mathf.Max(rot.x + rotationSpeed, MaxSway);
+            else if (MovementDelta.y < 0)
+                rot.z = Mathf.Min(rot.x - rotationSpeed, -MaxSway);
+            else
+                rot.z = 0;
+        }
 
         transform.rotation = rot;
     }

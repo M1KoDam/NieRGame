@@ -1,22 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public Player player;
-    private Vector3 _deltaPos;
-    
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Player player;
+    [SerializeField, Range(0f, 1f)] private float alpha;
+    private Vector3 _prevPos;
+
+    private void Start()
     {
-        _deltaPos = transform.position - player.transform.position;
+        _prevPos = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        transform.position = player.transform.position + _deltaPos;
+        var newPosition = _prevPos + alpha * (player.transform.position - _prevPos);
+        // var newPosition = (_prevPos + player.transform.position) / 2f;
+        newPosition.z = _prevPos.z;
+        
+        transform.position = newPosition;
+        
+        _prevPos = transform.position;
     }
 }

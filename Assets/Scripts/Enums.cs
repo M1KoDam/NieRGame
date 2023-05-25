@@ -18,6 +18,12 @@ public enum PlayerState
     Default = 0
 }
 
+public enum ViewType
+{
+    Side,
+    Top
+}
+
 public static class PlayerAnim
 {
     public const string

@@ -496,9 +496,10 @@ MonoBehaviour:
   bulletPositions:
   - {fileID: 1892886232}
   speed: 0.5
-  maxSway: 20
+  maxSway: 5
   rotationSpeed: 0.033
   fireRate: 2
+  view: 0
 --- !u!60 &520894212
 PolygonCollider2D:
   m_ObjectHideFlags: 0

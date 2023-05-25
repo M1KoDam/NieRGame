@@ -3155,6 +3155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 231469658}
+  alpha: 0.1
 --- !u!1 &536671020
 GameObject:
   m_ObjectHideFlags: 0
@@ -3281,7 +3282,7 @@ MonoBehaviour:
   bullet: {fileID: 2035310908}
   gun: {fileID: 1643171028}
   fireRate: 8
-  obstacleDistance: 0
+  obstacleDistance: 15
 --- !u!50 &536671025
 Rigidbody2D:
   serializedVersion: 4

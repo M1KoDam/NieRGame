@@ -5,6 +5,8 @@ public class Plane : MonoBehaviour
     [SerializeField] private Bullet bullet;
     [SerializeField] private Transform[] bulletPositions;
     [SerializeField] private float speed;
+    [SerializeField] private float health;
+    [SerializeField] private float maxHealth;
     [SerializeField, Range(0, 20)] private float maxSway;
     [SerializeField, Range(0, 0.033f)] private float rotationSpeed;
     [SerializeField] private float fireRate;
@@ -81,5 +83,10 @@ public class Plane : MonoBehaviour
         }
 
         _canShoot = false;
+    }
+    
+    public void GetDamage(int inputDamage, Transform attackVector)
+    {
+        health -= inputDamage;
     }
 }

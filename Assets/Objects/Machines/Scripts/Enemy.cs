@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     protected Rigidbody2D Rb;
     protected Animator Animator;
     protected string CurrentAnimation;
-    public Player player;
+    public GameObject player;
     [SerializeField] protected int hp;
 
     [Header("Move Settings")]
@@ -41,6 +41,7 @@ public class Enemy : MonoBehaviour
     protected int CurId;
     protected bool ReverseGettingId;
     protected bool CanAttack;
+    protected bool IsDamaged;
 
     protected Vector2 EnemyToSpot => moveSpot[CurId].transform.position - Rb.transform.position;
     protected Vector2 EnemyToPlayer => player.transform.position - Rb.transform.position;
@@ -70,9 +71,24 @@ public class Enemy : MonoBehaviour
         Rb.velocity /= brakingSpeed;
     }
 
-    public virtual void GetDamage(int inputDamage)
+    public virtual void GetDamage(int inputDamage, Transform attackVector)
     {
+        if (GetState is State.Dead)
+            return;
+        
         hp -= inputDamage;
+        
+        var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
+        Rb.velocity = new Vector2(-Math.Min(inputDamage / 5, 5) * damageVector, 0);
+        Rb.AddForce(new Vector2(0, Math.Min(inputDamage * 500, 20000)));
+        
+        IsDamaged = true;
+        Invoke(nameof(RemoveDamaged), 2);
+    }
+
+    private void RemoveDamaged()
+    {
+        IsDamaged = false;
     }
 
     protected void WaitForAttack()

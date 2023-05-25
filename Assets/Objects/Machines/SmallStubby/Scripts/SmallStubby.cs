@@ -15,14 +15,14 @@ public class SmallStubby: Enemy
     // Update is called once per frame
     private void Update()
     {
+        if (GetState is State.Dead || IsDamaged)
+            return;
+        
         if (CurrentAnimation is not "StubbyStartAttack" or "StubbyAttack")
         {
             StepClimb();
         }
-        
-        if (GetState == State.Dead)
-            return;
-        
+
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
             : LeftLocalScale;

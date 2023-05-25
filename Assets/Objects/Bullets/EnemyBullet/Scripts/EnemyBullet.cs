@@ -45,6 +45,8 @@ public class EnemyBullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && _currentAnimation is not "EnemyBulletExploding")
             collision.gameObject.GetComponent<Player>().GetDamage(damage, transform);
+        if (collision.gameObject.CompareTag("Plane") && _currentAnimation is not "EnemyBulletExploding")
+            collision.gameObject.GetComponent<Plane>().GetDamage(damage, transform);
         Destroy();
     }
 }

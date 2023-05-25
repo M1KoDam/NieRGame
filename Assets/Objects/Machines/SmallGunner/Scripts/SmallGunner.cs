@@ -19,11 +19,11 @@ public class SmallGunner : Enemy
     // Update is called once per frame
     private void Update()
     {
-        StepClimb();
-
-        if (GetState == State.Dead)
+        if (GetState is State.Dead || IsDamaged)
             return;
         
+        StepClimb();
+
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
             : LeftLocalScale;

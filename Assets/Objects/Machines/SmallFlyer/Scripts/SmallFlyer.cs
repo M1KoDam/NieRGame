@@ -257,7 +257,7 @@ public class SmallFlyer : Enemy
             CurDestructionTime -= Time.deltaTime;
     }
     
-    public override void GetDamage(int inputDamage)
+    public override void GetDamage(int inputDamage, Transform attackVector)
     {
         _angle -= Math.Min(20, inputDamage/4);
         hp -= inputDamage;

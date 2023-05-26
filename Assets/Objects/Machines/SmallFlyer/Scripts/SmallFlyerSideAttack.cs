@@ -5,12 +5,12 @@ public class SmallFlyerSideAttack : SmallFlyer
     private bool _onFlyScene;
     [SerializeField] private Vector2 _fallDirection = new Vector2(1, 0.25f);
 
-    protected override State GetState
+    protected override IState state
         => _onFlyScene
-        ? base.GetState
-        : State.GoToScene;
-    
-    protected override void GoToScene()
+        ? base.state
+        : new GoToSceneState();
+
+    public override void GoToScene()
     {
         GetComponent<Collider2D>().enabled = false;
 
@@ -32,8 +32,8 @@ public class SmallFlyerSideAttack : SmallFlyer
         else
             GoToSpot();
     }
-    
-    protected override void Die()
+
+    public override void Die()
     {
         GetComponent<Collider2D>().enabled = false;
         base.Die();

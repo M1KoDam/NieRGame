@@ -20,7 +20,7 @@ public class SmallStubby: Enemy
             StepClimb();
         }
         
-        if (GetState == State.Dead)
+        if (state is DeadState)
             return;
         
         transform.localScale = FaceOrientation == Side.Right
@@ -36,11 +36,11 @@ public class SmallStubby: Enemy
             return;
         }
 
-        HandleState();
+        state.Execute(this);
         FaceOrientation = GetFaceOrientation();
     }
 
-    protected override void Patrol()
+    public override void Patrol()
     {
         if (EnemyToSpot.magnitude < 1f)
         {
@@ -57,12 +57,12 @@ public class SmallStubby: Enemy
             GoTo(EnemyToSpot, patrolSpeed);
     }
 
-    protected override void Chase()
+    public override void Chase()
     {
         GoTo(EnemyToPlayer, chaseSpeed);
     }
-    
-    protected override void Attack()
+
+    public override void Attack()
     {
         if (CanAttack)
         {
@@ -88,7 +88,7 @@ public class SmallStubby: Enemy
     }
 
     protected override Side GetFaceOrientation() =>
-        GetState is State.Attack
+        state is AttackState
             ? EnemyToPlayer.x > 0
                 ? Side.Right
                 : Side.Left
@@ -116,8 +116,8 @@ public class SmallStubby: Enemy
         ChangeAnimation(Math.Abs(Rb.velocity.x) > 0.1f ? "StubbyMovement" : "StubbyIdle");
         Rb.velocity = new Vector2(distance.normalized.x * speed, Rb.velocity.y);
     }
-    
-    protected override void GoToScene()
+
+    public override void GoToScene()
     {
         throw new Exception("this type of smallFlyer don't support 'GoToScene' work mode");
     }
@@ -126,7 +126,7 @@ public class SmallStubby: Enemy
 
     #region GetDamage
 
-    protected override void Die()
+    public override void Die()
     {
         Rb.freezeRotation = false;
         ChangeAnimation("StubbyDestroy");

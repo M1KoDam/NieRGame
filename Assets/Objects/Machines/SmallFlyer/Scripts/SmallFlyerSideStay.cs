@@ -3,16 +3,16 @@ using UnityEngine;
 public class SmallFlyerSideStay : SmallFlyer
 {
     private bool _onFlyScene;
-    [SerializeField] private Vector2 _fallDirection = new Vector2(1, 0.25f);
+    [SerializeField] private Vector2 fallDirection = new Vector2(1, 0.25f);
 
-    protected override State GetState
+    protected override IState state
         => hp <= 0
-            ? State.Dead
+            ? new DeadState()
             : _onFlyScene
-                ? State.Attack
-                : State.GoToScene;
+                ? new AttackState()
+                : new GoToSceneState();
 
-    protected override void Attack()
+    public override void Attack()
     {
         GetComponent<Collider2D>().enabled = true;
         LookAtPlayer();
@@ -40,7 +40,7 @@ public class SmallFlyerSideStay : SmallFlyer
         }
     }
 
-    protected override void GoToScene()
+    public override void GoToScene()
     {
         GetComponent<Collider2D>().enabled = false;
 
@@ -70,10 +70,10 @@ public class SmallFlyerSideStay : SmallFlyer
         Rb.velocity = EnemyToSpot.normalized * chaseSpeed;
     }
 
-    protected override void Die()
+    public override void Die()
     {
         GetComponent<Collider2D>().enabled = false;
         base.Die();
-        Rb.velocity -= _fallDirection;
+        Rb.velocity -= fallDirection;
     }
 }

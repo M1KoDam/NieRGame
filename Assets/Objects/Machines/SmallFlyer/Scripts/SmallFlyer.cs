@@ -27,7 +27,7 @@ public class SmallFlyer : Enemy
     // Update is called once per frame
     private void Update()
     {
-        if (GetState == State.Dead)
+        if (state is DeadState)
             return;
 
         transform.localScale = FaceOrientation == Side.Right
@@ -40,12 +40,12 @@ public class SmallFlyer : Enemy
     private void FixedUpdate()
     {
         _swayCount += 1;
-        HandleState();
+        state.Execute(this);
         Rb.velocity += Sway();
         FaceOrientation = GetFaceOrientation();
     }
 
-    protected override void Patrol()
+    public override void Patrol()
     {
         GetComponent<Collider2D>().enabled = true;
         _isScoping = false;
@@ -69,7 +69,7 @@ public class SmallFlyer : Enemy
 
     #region Chase
 
-    protected override void Chase()
+    public override void Chase()
     {
         GetComponent<Collider2D>().enabled = true;
         _isScoping = false;
@@ -79,7 +79,7 @@ public class SmallFlyer : Enemy
 
     #endregion
 
-    protected override void Attack()
+    public override void Attack()
     {
         GetComponent<Collider2D>().enabled = true;
         GoToShootingPosition();
@@ -126,7 +126,7 @@ public class SmallFlyer : Enemy
             Rb.velocity = ShootingPositionToPlayer.normalized * chaseSpeed;
     }
 
-    protected override void GoToScene()
+    public override void GoToScene()
     {
         throw new Exception("this type of smallFlyer don't support 'GoToScene' work mode");
     }
@@ -188,7 +188,7 @@ public class SmallFlyer : Enemy
 
     #endregion
 
-    protected override void Die()
+    public override void Die()
     {
         Animator.Play("FlyerDestroy");
         if (CurDestructionTime <= 0)

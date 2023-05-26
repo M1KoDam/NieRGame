@@ -4,15 +4,6 @@ public enum Side
     Right = 1
 }
 
-public enum State
-{
-    GoToScene = -3,
-    Dead = -2,
-    Patrol = -1,
-    Chase = 0,
-    Attack = 1
-}
-
 public enum PlayerState
 {
     Dead = -1,

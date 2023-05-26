@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     protected Rigidbody2D Rb;
     protected Animator Animator;
     protected string CurrentAnimation;
-    public Player player;
+    public GameObject player;
     [SerializeField] protected int hp;
 
     [Header("Move Settings")]
@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
 
     protected Vector2 EnemyToSpot => moveSpot[CurId].transform.position - Rb.transform.position;
     protected Vector2 EnemyToPlayer => player.transform.position - Rb.transform.position;
-    protected State GetState
+    protected virtual State GetState
         =>  hp <= 0 
             ? State.Dead 
             : EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position, 

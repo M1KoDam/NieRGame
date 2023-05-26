@@ -5,8 +5,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class SmallFlyer : Enemy
 {
-    private static readonly Vector2 LeftOrientationShootingPosition = new(9, 4f);
-    private static readonly Vector2 RightOrientationShootingPosition = new(-9, 4f);
+    [SerializeField] private Vector2 LeftOrientationShootingPosition = new(9, 4f);
+    [SerializeField] private Vector2 RightOrientationShootingPosition = new(-9, 4f);
     
     [Header("Gun Settings")]
     [SerializeField] private EnemyBullet bullet;
@@ -45,13 +45,16 @@ public class SmallFlyer : Enemy
         switch (state)
         {
             case State.Chase:
-                Chasing();
+                Chase();
                 break;
             case State.Patrol:
-                Patrolling();
+                Patrol();
                 break;
             case State.Attack:
                 Attack();
+                break;
+            case State.GoToScene:
+                GoToScene();
                 break;
             case State.Dead:
                 Die();
@@ -66,8 +69,9 @@ public class SmallFlyer : Enemy
     
     #region Patrol 
     
-    private void Patrolling()
+    private void Patrol()
     {
+        GetComponent<Collider2D>().enabled = true;
         _isScoping = false;
         if (EnemyToSpot.magnitude < 1f)
         {
@@ -87,7 +91,7 @@ public class SmallFlyer : Enemy
         RestoreAngle();
     }
     
-    private void ChangeSpotId()
+    protected void ChangeSpotId()
     {
         CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
 
@@ -104,8 +108,9 @@ public class SmallFlyer : Enemy
 
     #region Chase
 
-    private void Chasing()
+    private void Chase()
     {
+        GetComponent<Collider2D>().enabled = true;
         _isScoping = false;
         GoToPlayer();
         RestoreAngle();
@@ -115,9 +120,9 @@ public class SmallFlyer : Enemy
 
     #region Attack
 
-    private void Attack()
+    protected virtual void Attack()
     {
-        _isScoping = true;
+        GetComponent<Collider2D>().enabled = true;
         GoToShootingPosition();
         LookAtPlayer();
         if (CanAttack)
@@ -128,7 +133,7 @@ public class SmallFlyer : Enemy
         }
     }
     
-    private void Shoot()
+    protected void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
@@ -161,7 +166,7 @@ public class SmallFlyer : Enemy
         Rb.velocity = EnemyToPlayer.normalized * chaseSpeed;
     }
     
-    private void GoToSpot()
+    protected virtual void GoToSpot()
     {
         Rb.velocity = EnemyToSpot.normalized * patrolSpeed;
     }
@@ -172,6 +177,11 @@ public class SmallFlyer : Enemy
             Brake();
         else
             Rb.velocity = ShootingPositionToPlayer.normalized * chaseSpeed;
+    }
+
+    protected virtual void GoToScene()
+    {
+        throw new Exception("This type of smallFlyer don't support working mode 'GoToScene'");
     }
     
     private Vector2 Sway()
@@ -186,7 +196,7 @@ public class SmallFlyer : Enemy
         return _swayDown ? new Vector2(0, -0.5f) : new Vector2(0, 0.5f);
     }
     
-    private void Wait()
+    protected void Wait()
     {
         Rb.velocity = new Vector2(0, 0.2f);
     }
@@ -217,8 +227,9 @@ public class SmallFlyer : Enemy
         }
     }
     
-    private void LookAtPlayer()
+    protected void LookAtPlayer()
     {
+        _isScoping = true;
         var angle = -Vector2.SignedAngle(EnemyToPlayer, Vector2.left);
         if (-90 <= angle && angle <= 90)
             _angle = angle;
@@ -232,7 +243,7 @@ public class SmallFlyer : Enemy
 
     #region GetDamage
 
-    private void Die()
+    protected virtual void Die()
     {
         Animator.Play("FlyerDestroy");
         if (CurDestructionTime <= 0)

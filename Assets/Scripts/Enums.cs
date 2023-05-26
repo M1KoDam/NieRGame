@@ -6,6 +6,7 @@ public enum Side
 
 public enum State
 {
+    GoToScene = -3,
     Dead = -2,
     Patrol = -1,
     Chase = 0,

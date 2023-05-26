@@ -1,3 +1,4 @@
+using UnityEditor.Overlays;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
@@ -57,7 +58,7 @@ public abstract class Enemy : MonoBehaviour
                     ? new ChaseState()
                     : new PatrolState();
 
-    protected void Start()
+    protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();

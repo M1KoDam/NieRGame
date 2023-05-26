@@ -11,10 +11,17 @@ public class SmallFlyerSideSupport : SmallFlyer
             : _onFlyScene
                 ? new AttackState()
                 : new GoToSceneState();
+    
+    protected override void Start()
+    {
+        base.Start();
+        _onFlyScene = false;
+        Physics2D.IgnoreLayerCollision((int)EnemyLayer, (int)PlayerLayer, true);
+    }
 
     public override void Attack()
     {
-        GetComponent<Collider2D>().enabled = true;
+        IgnoreLayerCollision(false);
         LookAtPlayer();
         
         if (EnemyToSpot.magnitude < 1f)
@@ -42,8 +49,7 @@ public class SmallFlyerSideSupport : SmallFlyer
 
     public override void GoToScene()
     {
-        GetComponent<Collider2D>().enabled = false;
-
+        IgnoreLayerCollision(true);
         LookAtPlayer();
         
         if (EnemyToSpot.magnitude < 1f)
@@ -72,7 +78,7 @@ public class SmallFlyerSideSupport : SmallFlyer
 
     public override void Die()
     {
-        GetComponent<Collider2D>().enabled = false;
+        IgnoreLayerCollision(false);
         base.Die();
         Rb.velocity -= fallDirection;
     }

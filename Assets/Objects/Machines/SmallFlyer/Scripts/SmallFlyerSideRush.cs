@@ -3,7 +3,7 @@ using UnityEngine;
 public class SmallFlyerSideRush : SmallFlyer
 {
     private bool _onFlyScene;
-    [SerializeField] private Vector2 _fallDirection = new Vector2(1, 0.25f);
+    [SerializeField] private Vector2 fallDirection = new Vector2(1, 0.25f);
 
     protected override IState state
         => hp <= 0
@@ -15,9 +15,16 @@ public class SmallFlyerSideRush : SmallFlyer
                     : new ChaseState()
                 : new GoToSceneState();
 
+    protected override void Start()
+    {
+        base.Start();
+        _onFlyScene = false;
+        Physics2D.IgnoreLayerCollision((int)EnemyLayer, (int)PlayerLayer, true);
+    }
+
     public override void GoToScene()
     {
-        GetComponent<Collider2D>().enabled = false;
+        IgnoreLayerCollision(true);
 
         if (EnemyToSpot.magnitude < 1f)
         {
@@ -40,8 +47,8 @@ public class SmallFlyerSideRush : SmallFlyer
 
     public override void Die()
     {
-        GetComponent<Collider2D>().enabled = false;
+        IgnoreLayerCollision(false);
         base.Die();
-        Rb.velocity -= _fallDirection;
+        Rb.velocity -= fallDirection;
     }
 }

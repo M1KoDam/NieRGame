@@ -1,4 +1,6 @@
 using System;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.Overlays;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -11,6 +13,11 @@ public class SmallFlyer : Enemy
     [Header("Gun Settings")]
     [SerializeField] private EnemyBullet bullet;
     [SerializeField] private Transform gun;
+    
+    protected const int EnemyLayer = 7;
+    private const int PlayerBulletLayer = 9;
+    protected const int PlayerLayer = 11;
+    private const int GroundLayer = 3;
 
     private float _angle;
 
@@ -47,7 +54,7 @@ public class SmallFlyer : Enemy
 
     public override void Patrol()
     {
-        GetComponent<Collider2D>().enabled = true;
+        IgnoreLayerCollision(false);
         _isScoping = false;
         if (EnemyToSpot.magnitude < 1f)
         {
@@ -69,7 +76,7 @@ public class SmallFlyer : Enemy
 
     public override void Chase()
     {
-        GetComponent<Collider2D>().enabled = true;
+        IgnoreLayerCollision(false);
         _isScoping = false;
         GoToPlayer();
         RestoreAngle();
@@ -77,7 +84,7 @@ public class SmallFlyer : Enemy
 
     public override void Attack()
     {
-        GetComponent<Collider2D>().enabled = true;
+        IgnoreLayerCollision(false);
         GoToShootingPosition();
         LookAtPlayer();
         if (CanAttack)
@@ -214,5 +221,11 @@ public class SmallFlyer : Enemy
     {
         _angle -= Math.Min(20, inputDamage / 4);
         hp -= inputDamage;
+    }
+
+    protected void IgnoreLayerCollision(bool ignore)
+    {
+        Physics2D.IgnoreLayerCollision(EnemyLayer, GroundLayer, ignore);
+        Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerBulletLayer, ignore);
     }
 }

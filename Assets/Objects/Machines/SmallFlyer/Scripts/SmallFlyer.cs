@@ -7,13 +7,13 @@ public class SmallFlyer : Enemy
 {
     [SerializeField] private Vector2 LeftOrientationShootingPosition = new(9, 4f);
     [SerializeField] private Vector2 RightOrientationShootingPosition = new(-9, 4f);
-    
+
     [Header("Gun Settings")]
     [SerializeField] private EnemyBullet bullet;
     [SerializeField] private Transform gun;
-    
+
     private float _angle;
-    
+
     private bool _isScoping;
     private bool _swayDown;
     private int _swayCount;
@@ -29,47 +29,23 @@ public class SmallFlyer : Enemy
     {
         if (GetState == State.Dead)
             return;
-        
+
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
-            : LeftLocalScale;   
+            : LeftLocalScale;
 
         Rb.MoveRotation(_angle);
     }
-    
+
     private void FixedUpdate()
     {
         _swayCount += 1;
-
-        var state = GetState;
-        switch (state)
-        {
-            case State.Chase:
-                Chase();
-                break;
-            case State.Patrol:
-                Patrol();
-                break;
-            case State.Attack:
-                Attack();
-                break;
-            case State.GoToScene:
-                GoToScene();
-                break;
-            case State.Dead:
-                Die();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
+        HandleState();
         Rb.velocity += Sway();
-        ChangeFaceOrientation();
+        FaceOrientation = GetFaceOrientation();
     }
-    
-    #region Patrol 
-    
-    private void Patrol()
+
+    protected override void Patrol()
     {
         GetComponent<Collider2D>().enabled = true;
         _isScoping = false;
@@ -90,25 +66,10 @@ public class SmallFlyer : Enemy
 
         RestoreAngle();
     }
-    
-    protected void ChangeSpotId()
-    {
-        CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
-
-        if (CurId >= moveSpot.Length || CurId < 0)
-        {
-            ReverseGettingId = !ReverseGettingId;
-            CurId = ReverseGettingId ? moveSpot.Length - 1 : 0;
-        }
-
-        CurWaitTime = waitTime;
-    }
-    
-    #endregion
 
     #region Chase
 
-    private void Chase()
+    protected override void Chase()
     {
         GetComponent<Collider2D>().enabled = true;
         _isScoping = false;
@@ -118,9 +79,7 @@ public class SmallFlyer : Enemy
 
     #endregion
 
-    #region Attack
-
-    protected virtual void Attack()
+    protected override void Attack()
     {
         GetComponent<Collider2D>().enabled = true;
         GoToShootingPosition();
@@ -132,32 +91,20 @@ public class SmallFlyer : Enemy
             Invoke(nameof(WaitForAttack), attackRate);
         }
     }
-    
+
     protected void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
-        Destroy(bul.gameObject, 5f); ;
+        Destroy(bul.gameObject, 5f);
     }
 
-    #endregion
-
-    #region FaceOrientation
-
-    private void ChangeFaceOrientation()
-    {
-        FaceOrientation = _isScoping
+    protected override Side GetFaceOrientation() =>
+        _isScoping
             ? -90 <= _angle && _angle <= 90
                 ? Side.Left
                 : Side.Right
-            : Rb.velocity.x < 0
-                ? Side.Left 
-                : Rb.velocity.x > 0 
-                    ? Side.Right 
-                    : FaceOrientation;
-    }
-
-    #endregion
+            : base.GetFaceOrientation();
 
     #region Move
 
@@ -165,12 +112,12 @@ public class SmallFlyer : Enemy
     {
         Rb.velocity = EnemyToPlayer.normalized * chaseSpeed;
     }
-    
+
     protected virtual void GoToSpot()
     {
         Rb.velocity = EnemyToSpot.normalized * patrolSpeed;
     }
-    
+
     private void GoToShootingPosition()
     {
         if (ShootingPositionToPlayer.magnitude < 2f)
@@ -179,11 +126,11 @@ public class SmallFlyer : Enemy
             Rb.velocity = ShootingPositionToPlayer.normalized * chaseSpeed;
     }
 
-    protected virtual void GoToScene()
+    protected override void GoToScene()
     {
-        throw new Exception("This type of smallFlyer don't support working mode 'GoToScene'");
+        throw new Exception("this type of smallFlyer don't support 'GoToScene' work mode");
     }
-    
+
     private Vector2 Sway()
     {
         if (_swayCount > 60)
@@ -195,38 +142,38 @@ public class SmallFlyer : Enemy
         if (_swayCount < 30) return Vector2.zero;
         return _swayDown ? new Vector2(0, -0.5f) : new Vector2(0, 0.5f);
     }
-    
+
     protected void Wait()
     {
         Rb.velocity = new Vector2(0, 0.2f);
     }
 
     #endregion
-    
+
     #region Angle
-    
+
     private void RestoreAngle()
     {
         if (_angle is < 270 and > 90 or < -270 and > -90)
             _angle = 90;
-        
+
         if (_angle is >= 270 and <= 360 or <= -270 and >= -360)
         {
-            _angle = _angle >= 270 
-                ? _angle + 15 
+            _angle = _angle >= 270
+                ? _angle + 15
                 : _angle - 15;
             if (360 - Math.Abs(_angle) < 30)
                 _angle = 360;
         }
-        
+
         if (_angle is <= 90 and >= -90)
-        {  
+        {
             _angle /= 2;
             if (Math.Abs(_angle) < 5)
                 _angle = 0;
         }
     }
-    
+
     protected void LookAtPlayer()
     {
         _isScoping = true;
@@ -238,12 +185,10 @@ public class SmallFlyer : Enemy
         else if (angle < -90)
             _angle = angle - 180;
     }
-    
+
     #endregion
 
-    #region GetDamage
-
-    protected virtual void Die()
+    protected override void Die()
     {
         Animator.Play("FlyerDestroy");
         if (CurDestructionTime <= 0)
@@ -252,36 +197,26 @@ public class SmallFlyer : Enemy
             {
                 transform.Rotate(new Vector3(0, 180, 0));
             }
+
             var tempPosition = transform.position;
             var tempRotation = transform.rotation;
-            
+
             Destroy(gameObject);
 
             var smallFlyerDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
             smallFlyerDestroyingCopy.Activate();
             Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
-            
+
             var smallFlyerExplosion = Instantiate(explosion, explosionCenter.position, tempRotation);
             smallFlyerExplosion.Explode();
         }
         else
             CurDestructionTime -= Time.deltaTime;
     }
-    
+
     public override void GetDamage(int inputDamage)
     {
-        _angle -= Math.Min(20, inputDamage/4);
+        _angle -= Math.Min(20, inputDamage / 4);
         hp -= inputDamage;
-    }
-
-    #endregion
-    
-    void OnDrawGizmosSelected()
-    {
-        var position = transform.position;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(position, maxAttackRaduis);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(position, maxChaseRaduis);
     }
 }

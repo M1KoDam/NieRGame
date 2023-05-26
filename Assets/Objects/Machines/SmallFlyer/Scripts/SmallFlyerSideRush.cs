@@ -1,14 +1,19 @@
 using UnityEngine;
 
-public class SmallFlyerSideAttack : SmallFlyer
+public class SmallFlyerSideRush : SmallFlyer
 {
     private bool _onFlyScene;
     [SerializeField] private Vector2 _fallDirection = new Vector2(1, 0.25f);
 
     protected override IState state
-        => _onFlyScene
-        ? base.state
-        : new GoToSceneState();
+        => hp <= 0
+            ? new DeadState()
+            : _onFlyScene
+                ? EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position,
+        EnemyToPlayer, EnemyToPlayer.magnitude, layerGround).collider is null
+                    ? new AttackState()
+                    : new ChaseState()
+                : new GoToSceneState();
 
     public override void GoToScene()
     {

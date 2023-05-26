@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SmallFlyerSideStay : SmallFlyer
+public class SmallFlyerSideSupport : SmallFlyer
 {
     private bool _onFlyScene;
     [SerializeField] private Vector2 fallDirection = new Vector2(1, 0.25f);

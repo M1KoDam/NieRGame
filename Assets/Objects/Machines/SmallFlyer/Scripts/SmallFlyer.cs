@@ -67,8 +67,6 @@ public class SmallFlyer : Enemy
         RestoreAngle();
     }
 
-    #region Chase
-
     public override void Chase()
     {
         GetComponent<Collider2D>().enabled = true;
@@ -76,8 +74,6 @@ public class SmallFlyer : Enemy
         GoToPlayer();
         RestoreAngle();
     }
-
-    #endregion
 
     public override void Attack()
     {

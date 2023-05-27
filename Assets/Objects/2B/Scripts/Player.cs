@@ -246,7 +246,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1) && _fallAttack && !_onFoot)
         {
-            Damage(heavyAttackRange, heavyAttackDamage);
+            Damage(heavyAttackDamage, heavyAttackRange);
             ChangeAnimation(Animation.FallAttackStart);
             _rb.velocity = new Vector2(0, 0.25f);
             _fallAttack = false;
@@ -295,7 +295,7 @@ public class Player : MonoBehaviour
         {
             if (_currentAnimation == Animation.Attack1 && CheckAnimTime(0.5f))
             {
-                Damage(lightAttackRange, lightAttackDamage);
+                Damage(lightAttackDamage, lightAttackRange);
                 ChangeAttack(attackDelay2);
                 ChangeAnimation(Animation.Attack2);
                 _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
@@ -313,7 +313,7 @@ public class Player : MonoBehaviour
 
             if (_canAttack)
             {
-                Damage(lightAttackRange, lightAttackDamage);
+                Damage(lightAttackDamage, lightAttackRange);
                 _canAttack = false;
                 ChangeAttack(attackDelay1);
                 if (_rb.velocity.x > 20)
@@ -327,7 +327,7 @@ public class Player : MonoBehaviour
         {
             if (_canAttackInAir)
             {
-                Damage(lightAttackRange, lightAttackDamage);
+                Damage(lightAttackDamage, lightAttackRange);
                 ChangeAnimation(Animation.AttackInAir1);
                 _rb.velocity = new Vector2(0, 0.5f);
                 _canAttackInAir = false;
@@ -336,7 +336,7 @@ public class Player : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0) && _currentAnimation is Animation.AttackInAir1 && CheckAnimTime(0.5f))
             {
-                Damage(lightAttackRange, lightAttackDamage);
+                Damage(lightAttackDamage, lightAttackRange);
                 ChangeAnimation(Animation.AttackInAir2);
                 _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
                 return true;
@@ -471,7 +471,7 @@ public class Player : MonoBehaviour
 
     #endregion
     
-    private void Damage(float attackRadius, int damage)
+    private void Damage(int damage, float attackRadius)
     {
         var hitEnemies = Physics2D.OverlapCircleAll(swingSwordCollider.position, attackRadius, enemies);
         foreach (var enemy in hitEnemies)

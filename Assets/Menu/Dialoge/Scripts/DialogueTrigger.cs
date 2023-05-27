@@ -8,12 +8,6 @@ public class DialogueTrigger : MonoBehaviour
 
     public void TriggerDialogue()
     {
-        Debug.Log("Start");
         FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
-    }
-
-    public void Suck()
-    {
-        Debug.Log("Suck");
     }
 }

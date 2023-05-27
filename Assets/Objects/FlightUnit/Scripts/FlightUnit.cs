@@ -8,19 +8,19 @@ public class FlightUnit : MonoBehaviour
     [SerializeField] private float health;
     [SerializeField] private float maxHealth;
     [SerializeField, Range(0, 20)] private float maxSway;
-    [SerializeField, Range(0, 0.033f)] private float rotationSpeed;
+    [SerializeField, Range(0, 10)] private float rotationSpeed;
     [SerializeField] private float fireRate;
     [SerializeField] private ViewType view;
-
-    private float MaxSway => maxSway * Mathf.Deg2Rad;
-
-    private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-    private double FireDelay => 1 / fireRate;
 
     private Rigidbody2D _rb;
     private bool _canShoot;
     private float _fireTimer;
     private float _rotationTimer;
+
+    private float MaxSway => maxSway * Mathf.Deg2Rad;
+    private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+    private double FireDelay => 1 / fireRate;
+    private float RotationSpeed => rotationSpeed * Mathf.Deg2Rad;
 
     private void Start()
     {
@@ -61,20 +61,28 @@ public class FlightUnit : MonoBehaviour
         if (view == ViewType.Top)
         {
             if (MovementDelta.y > 0)
-                rot.x = Mathf.Max(rot.x - rotationSpeed, -MaxSway);
+                rot.x = Mathf.Max(rot.x - RotationSpeed, -MaxSway);
             else if (MovementDelta.y < 0)
-                rot.x = Mathf.Min(rot.x + rotationSpeed, MaxSway);
+                rot.x = Mathf.Min(rot.x + RotationSpeed, MaxSway);
             else
-                rot.x = 0;
+                rot.x = rot.x == 0 
+                    ? 0
+                    : rot.x > 0
+                        ? Mathf.Max(rot.x - RotationSpeed, 0)
+                        : Mathf.Min(rot.x + RotationSpeed, 0);
         }
         else
         {
-            if (MovementDelta.x > 0)
-                rot.z = Mathf.Max(rot.x - rotationSpeed, -MaxSway);
-            else if (MovementDelta.x < 0)
-                rot.z = Mathf.Min(rot.x + rotationSpeed, MaxSway);
+            if (MovementDelta.y > 0)
+                rot.z = Mathf.Min(rot.z + RotationSpeed, MaxSway);
+            else if (MovementDelta.y < 0)
+                rot.z = Mathf.Max(rot.z - RotationSpeed, -MaxSway);
             else
-                rot.z = 0;
+                rot.z = rot.z == 0 
+                    ? 0
+                    : rot.z > 0
+                        ? Mathf.Max(rot.z - RotationSpeed, 0)
+                        : Mathf.Min(rot.z + RotationSpeed, 0);
         }
 
         transform.rotation = rot;

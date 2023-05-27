@@ -15,7 +15,7 @@ public class SmallStubby: Enemy
     // Update is called once per frame
     private void Update()
     {
-        if (GetState is State.Dead || IsDamaged)
+        if (State is DeadState || IsDamaged)
             return;
         
         if (CurrentAnimation is not "StubbyStartAttack" or "StubbyAttack")
@@ -36,7 +36,7 @@ public class SmallStubby: Enemy
             return;
         }
 
-        state.Execute(this);
+        State.Execute(this);
         FaceOrientation = GetFaceOrientation();
     }
 
@@ -88,7 +88,7 @@ public class SmallStubby: Enemy
     }
 
     protected override Side GetFaceOrientation() =>
-        state is AttackState
+        State is AttackState
             ? EnemyToPlayer.x > 0
                 ? Side.Right
                 : Side.Left

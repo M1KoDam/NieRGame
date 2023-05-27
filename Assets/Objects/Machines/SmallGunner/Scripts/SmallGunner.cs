@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SmallGunner : Enemy
 {
@@ -19,7 +20,7 @@ public class SmallGunner : Enemy
     // Update is called once per frame
     private void Update()
     {
-        if (GetState is State.Dead || IsDamaged)
+        if (State is DeadState || IsDamaged)
             return;
         
         StepClimb();
@@ -31,7 +32,7 @@ public class SmallGunner : Enemy
     
     private void FixedUpdate()
     {
-        state.Execute(this);
+        State.Execute(this);
         FaceOrientation = GetFaceOrientation();
     }
 
@@ -76,7 +77,7 @@ public class SmallGunner : Enemy
     }
 
     protected override Side GetFaceOrientation() =>
-        state is AttackState
+        State is AttackState
             ? EnemyToPlayer.x > 0
                 ? Side.Right
                 : Side.Left

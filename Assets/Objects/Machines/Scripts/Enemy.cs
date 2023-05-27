@@ -1,4 +1,4 @@
-using UnityEditor.Overlays;
+using System;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
@@ -49,7 +49,7 @@ public abstract class Enemy : MonoBehaviour
     protected Vector2 EnemyToSpot => moveSpot[CurId].transform.position - Rb.transform.position;
     protected Vector2 EnemyToPlayer => player.transform.position - Rb.transform.position;
 
-    protected virtual IState state
+    protected virtual IState State
         => hp <= 0
             ? new DeadState()
             : EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position,
@@ -102,7 +102,7 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void GetDamage(int inputDamage, Transform attackVector)
     {
-        if (GetState is State.Dead)
+        if (State is DeadState)
             return;
         
         hp -= inputDamage;

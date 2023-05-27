@@ -14,6 +14,8 @@ public class DialogueManager : MonoBehaviour
     public Animator windowAnimator;
     public Animator speakerAnimator;
 
+    public LevelEventSystem levelEventSystem;
+
     private Queue<string> _sentences;
     private Queue<string> _speakers;
 
@@ -91,8 +93,9 @@ public class DialogueManager : MonoBehaviour
             Invoke(nameof(DisplayNextSentence), 3);
     }
 
-    public void EndDialogue()
+    private void EndDialogue()
     {
+        levelEventSystem.NextEvent();
         windowAnimator.SetBool("StartOpen", false);
     }
 }

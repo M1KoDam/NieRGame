@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FlightUnit : MonoBehaviour
 {
@@ -11,11 +12,13 @@ public class FlightUnit : MonoBehaviour
     [SerializeField, Range(0, 10)] private float rotationSpeed;
     [SerializeField] private float fireRate;
     [SerializeField] private ViewType view;
+    [SerializeField] private GameObject[] engines;
 
     private Rigidbody2D _rb;
     private bool _canShoot;
     private float _fireTimer;
     private float _rotationTimer;
+    private PlayerState _state;
 
     private float MaxSway => maxSway * Mathf.Deg2Rad;
     private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -25,13 +28,43 @@ public class FlightUnit : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _state = PlayerState.Default;
     }
 
     private void FixedUpdate()
     {
+        ManageEngines();
+        if (_state is PlayerState.UnActive or PlayerState.Dead)
+            return;
+        if (HandleDeath()) return;
         HandleMovement();
         HandleShooting();
         HandleFireRate();
+    }
+
+    private bool HandleDeath()
+    {
+        if (health <= 0 && _state is not PlayerState.Dead)
+        {
+            _state = PlayerState.Dead;
+            Invoke(nameof(Respawn), 5f);
+            return true;
+        }
+        return false;
+    }
+
+    private void ManageEngines()
+    {
+        var enginesStatus = !(Input.GetKey(KeyCode.A));
+        foreach (var engine in engines)
+        {
+            engine.SetActive(enginesStatus);
+        }
+    }
+
+    private void Respawn()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void HandleFireRate()
@@ -46,8 +79,7 @@ public class FlightUnit : MonoBehaviour
             _fireTimer = 0;
         }
     }
-
-
+    
     private void HandleMovement()
     {
         _rb.MovePosition(_rb.position + MovementDelta.normalized * speed);

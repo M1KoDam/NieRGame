@@ -8,7 +8,8 @@ public enum Side
 
 public enum PlayerState
 {
-    Dead = -1,
+    Dead = -2,
+    UnActive = -1,
     Default = 0
 }
 

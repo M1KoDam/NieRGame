@@ -31,31 +31,11 @@ public class SmallGunner : Enemy
     
     private void FixedUpdate()
     {
-        var state = GetState;
-        switch (state)
-        {
-            case State.Chase:
-                Chase();
-                break;
-            case State.Patrol:
-                Patrol();
-                break;
-            case State.Attack:
-                Attack();
-                break;
-            case State.Dead:
-                Die();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-        
-        ChangeFaceOrientation();
+        state.Execute(this);
+        FaceOrientation = GetFaceOrientation();
     }
 
-    #region Patrol
-    
-    private void Patrol()
+    public override void Patrol()
     {
         if (EnemyToSpot.magnitude < 1f)
         {
@@ -71,33 +51,13 @@ public class SmallGunner : Enemy
         else
             GoTo(EnemyToSpot, patrolSpeed);
     }
-    
-    private void ChangeSpotId()
-    {
-        CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
 
-        if (CurId >= moveSpot.Length || CurId < 0)
-        {
-            ReverseGettingId = !ReverseGettingId;
-            CurId = ReverseGettingId ? moveSpot.Length - 1 : 0;
-        }
-
-        CurWaitTime = waitTime;
-    }
-
-    #endregion
-    
-    #region Chase
-    
-    private void Chase()
+    public override void Chase()
     {
         GoTo(EnemyToPlayer, chaseSpeed);
     }
-    
-    #endregion
-    
-    #region Attack
-    private void Attack()
+
+    public override void Attack()
     {
         ChangeAnimation("GunnerIdle");
         if (CanAttack)
@@ -115,25 +75,13 @@ public class SmallGunner : Enemy
         Destroy(bul.gameObject, 5f); ;
     }
 
-    #endregion
-    
-    #region FaceOrientation
-    
-    private void ChangeFaceOrientation()
-    {
-        FaceOrientation = GetState is State.Attack
-            ? EnemyToPlayer.x > 0 
-                ? Side.Right 
+    protected override Side GetFaceOrientation() =>
+        state is AttackState
+            ? EnemyToPlayer.x > 0
+                ? Side.Right
                 : Side.Left
-            : Rb.velocity.x < 0
-                ? Side.Left
-                : Rb.velocity.x > 0
-                    ? Side.Right
-                    : FaceOrientation;
-    }
-    
-    #endregion
-    
+            : base.GetFaceOrientation();
+
     #region Move
     
     private void StepClimb()
@@ -157,11 +105,16 @@ public class SmallGunner : Enemy
         Rb.velocity = new Vector2(distance.normalized.x * speed, Rb.velocity.y);
     }
 
+    public override void GoToScene()
+    {
+        throw new Exception("this type of smallFlyer don't support 'GoToScene' work mode");
+    }
+
     #endregion
 
     #region GetDamage
 
-    private void Die()
+    public override void Die()
     {
         Rb.freezeRotation = false;
         ChangeAnimation("GunnerDestroy");
@@ -185,12 +138,4 @@ public class SmallGunner : Enemy
     }
     
     #endregion
-    void OnDrawGizmosSelected()
-    {
-        var position = transform.position;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(position, maxAttackRaduis);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(position, maxChaseRaduis);
-    }
 }

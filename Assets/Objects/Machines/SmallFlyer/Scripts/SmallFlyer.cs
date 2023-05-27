@@ -1,19 +1,26 @@
 using System;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.Overlays;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 public class SmallFlyer : Enemy
 {
-    private static readonly Vector2 LeftOrientationShootingPosition = new(9, 4f);
-    private static readonly Vector2 RightOrientationShootingPosition = new(-9, 4f);
-    
+    [SerializeField] private Vector2 LeftOrientationShootingPosition = new(9, 4f);
+    [SerializeField] private Vector2 RightOrientationShootingPosition = new(-9, 4f);
+
     [Header("Gun Settings")]
     [SerializeField] private EnemyBullet bullet;
     [SerializeField] private Transform gun;
     
+    protected const int EnemyLayer = 7;
+    private const int PlayerBulletLayer = 9;
+    protected const int PlayerLayer = 11;
+    private const int GroundLayer = 3;
+
     private float _angle;
-    
+
     private bool _isScoping;
     private bool _swayDown;
     private int _swayCount;
@@ -27,47 +34,27 @@ public class SmallFlyer : Enemy
     // Update is called once per frame
     private void Update()
     {
-        if (GetState == State.Dead)
+        if (state is DeadState)
             return;
-        
+
         transform.localScale = FaceOrientation == Side.Right
             ? RightLocalScale
-            : LeftLocalScale;   
+            : LeftLocalScale;
 
         Rb.MoveRotation(_angle);
     }
-    
+
     private void FixedUpdate()
     {
         _swayCount += 1;
-
-        var state = GetState;
-        switch (state)
-        {
-            case State.Chase:
-                Chasing();
-                break;
-            case State.Patrol:
-                Patrolling();
-                break;
-            case State.Attack:
-                Attack();
-                break;
-            case State.Dead:
-                Die();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
+        state.Execute(this);
         Rb.velocity += Sway();
-        ChangeFaceOrientation();
+        FaceOrientation = GetFaceOrientation();
     }
-    
-    #region Patrol 
-    
-    private void Patrolling()
+
+    public override void Patrol()
     {
+        IgnoreLayerCollision(false);
         _isScoping = false;
         if (EnemyToSpot.magnitude < 1f)
         {
@@ -86,38 +73,18 @@ public class SmallFlyer : Enemy
 
         RestoreAngle();
     }
-    
-    private void ChangeSpotId()
+
+    public override void Chase()
     {
-        CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
-
-        if (CurId >= moveSpot.Length || CurId < 0)
-        {
-            ReverseGettingId = !ReverseGettingId;
-            CurId = ReverseGettingId ? moveSpot.Length - 1 : 0;
-        }
-
-        CurWaitTime = waitTime;
-    }
-    
-    #endregion
-
-    #region Chase
-
-    private void Chasing()
-    {
+        IgnoreLayerCollision(false);
         _isScoping = false;
         GoToPlayer();
         RestoreAngle();
     }
 
-    #endregion
-
-    #region Attack
-
-    private void Attack()
+    public override void Attack()
     {
-        _isScoping = true;
+        IgnoreLayerCollision(false);
         GoToShootingPosition();
         LookAtPlayer();
         if (CanAttack)
@@ -127,32 +94,20 @@ public class SmallFlyer : Enemy
             Invoke(nameof(WaitForAttack), attackRate);
         }
     }
-    
-    private void Shoot()
+
+    protected void Shoot()
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
-        Destroy(bul.gameObject, 5f); ;
+        Destroy(bul.gameObject, 5f);
     }
 
-    #endregion
-
-    #region FaceOrientation
-
-    private void ChangeFaceOrientation()
-    {
-        FaceOrientation = _isScoping
+    protected override Side GetFaceOrientation() =>
+        _isScoping
             ? -90 <= _angle && _angle <= 90
                 ? Side.Left
                 : Side.Right
-            : Rb.velocity.x < 0
-                ? Side.Left 
-                : Rb.velocity.x > 0 
-                    ? Side.Right 
-                    : FaceOrientation;
-    }
-
-    #endregion
+            : base.GetFaceOrientation();
 
     #region Move
 
@@ -160,12 +115,12 @@ public class SmallFlyer : Enemy
     {
         Rb.velocity = EnemyToPlayer.normalized * chaseSpeed;
     }
-    
-    private void GoToSpot()
+
+    protected virtual void GoToSpot()
     {
         Rb.velocity = EnemyToSpot.normalized * patrolSpeed;
     }
-    
+
     private void GoToShootingPosition()
     {
         if (ShootingPositionToPlayer.magnitude < 2f)
@@ -173,7 +128,12 @@ public class SmallFlyer : Enemy
         else
             Rb.velocity = ShootingPositionToPlayer.normalized * chaseSpeed;
     }
-    
+
+    public override void GoToScene()
+    {
+        throw new Exception("this type of smallFlyer don't support 'GoToScene' work mode");
+    }
+
     private Vector2 Sway()
     {
         if (_swayCount > 60)
@@ -185,40 +145,41 @@ public class SmallFlyer : Enemy
         if (_swayCount < 30) return Vector2.zero;
         return _swayDown ? new Vector2(0, -0.5f) : new Vector2(0, 0.5f);
     }
-    
-    private void Wait()
+
+    protected void Wait()
     {
         Rb.velocity = new Vector2(0, 0.2f);
     }
 
     #endregion
-    
+
     #region Angle
-    
+
     private void RestoreAngle()
     {
         if (_angle is < 270 and > 90 or < -270 and > -90)
             _angle = 90;
-        
+
         if (_angle is >= 270 and <= 360 or <= -270 and >= -360)
         {
-            _angle = _angle >= 270 
-                ? _angle + 15 
+            _angle = _angle >= 270
+                ? _angle + 15
                 : _angle - 15;
             if (360 - Math.Abs(_angle) < 30)
                 _angle = 360;
         }
-        
+
         if (_angle is <= 90 and >= -90)
-        {  
+        {
             _angle /= 2;
             if (Math.Abs(_angle) < 5)
                 _angle = 0;
         }
     }
-    
-    private void LookAtPlayer()
+
+    protected void LookAtPlayer()
     {
+        _isScoping = true;
         var angle = -Vector2.SignedAngle(EnemyToPlayer, Vector2.left);
         if (-90 <= angle && angle <= 90)
             _angle = angle;
@@ -227,12 +188,10 @@ public class SmallFlyer : Enemy
         else if (angle < -90)
             _angle = angle - 180;
     }
-    
+
     #endregion
 
-    #region GetDamage
-
-    private void Die()
+    public override void Die()
     {
         Animator.Play("FlyerDestroy");
         if (CurDestructionTime <= 0)
@@ -241,15 +200,16 @@ public class SmallFlyer : Enemy
             {
                 transform.Rotate(new Vector3(0, 180, 0));
             }
+
             var tempPosition = transform.position;
             var tempRotation = transform.rotation;
-            
+
             Destroy(gameObject);
 
             var smallFlyerDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
             smallFlyerDestroyingCopy.Activate();
             Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
-            
+
             var smallFlyerExplosion = Instantiate(explosion, explosionCenter.position, tempRotation);
             smallFlyerExplosion.Explode();
         }
@@ -259,18 +219,13 @@ public class SmallFlyer : Enemy
     
     public override void GetDamage(int inputDamage, Transform attackVector)
     {
-        _angle -= Math.Min(20, inputDamage/4);
+        _angle -= Math.Min(20, inputDamage / 4);
         hp -= inputDamage;
     }
 
-    #endregion
-    
-    void OnDrawGizmosSelected()
+    protected void IgnoreLayerCollision(bool ignore)
     {
-        var position = transform.position;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(position, maxAttackRaduis);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(position, maxChaseRaduis);
+        Physics2D.IgnoreLayerCollision(EnemyLayer, GroundLayer, ignore);
+        Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerBulletLayer, ignore);
     }
 }

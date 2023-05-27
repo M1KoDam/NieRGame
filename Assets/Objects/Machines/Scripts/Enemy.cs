@@ -1,13 +1,12 @@
-using System;
+using UnityEditor.Overlays;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
     protected static readonly Vector2 RightLocalScale = new(-1, 1);
     protected static readonly Vector2 LeftLocalScale = new(1, 1);
-    
-    [Header("Basic Settings")] 
+
+    [Header("Basic Settings")]
     protected Rigidbody2D Rb;
     protected Animator Animator;
     protected string CurrentAnimation;
@@ -16,28 +15,32 @@ public class Enemy : MonoBehaviour
 
     [Header("Move Settings")]
     [SerializeField] protected float brakingSpeed = 2;
+
     [SerializeField] protected float patrolSpeed = 3;
     [SerializeField] protected float chaseSpeed = 5;
     [SerializeField] protected Transform[] moveSpot;
     [SerializeField] protected float waitTime;
     protected float CurWaitTime;
     protected Side FaceOrientation;
-    
+
     [Header("Attack Settings")]
     [SerializeField] protected int damage;
+
     [SerializeField] protected float attackRate;
     [SerializeField] protected int maxAttackRaduis;
     [SerializeField] protected int maxChaseRaduis;
 
-    [Header("Destroying Settings")] 
+    [Header("Destroying Settings")]
     [SerializeField] protected EnemyDestroying enemyDestroying;
+
     [SerializeField] protected Explosion explosion;
     [SerializeField] protected Transform explosionCenter;
     [SerializeField] protected float destructionTime;
     protected float CurDestructionTime;
 
-    [Header("Other Settings")] 
+    [Header("Other Settings")]
     [SerializeField] protected LayerMask layerGround;
+
     protected int CurId;
     protected bool ReverseGettingId;
     protected bool CanAttack;
@@ -45,18 +48,18 @@ public class Enemy : MonoBehaviour
 
     protected Vector2 EnemyToSpot => moveSpot[CurId].transform.position - Rb.transform.position;
     protected Vector2 EnemyToPlayer => player.transform.position - Rb.transform.position;
-    protected State GetState
-        =>  hp <= 0 
-            ? State.Dead 
-            : EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position, 
-                EnemyToPlayer, EnemyToPlayer.magnitude, layerGround).collider is null
-                ? State.Attack
-                : EnemyToPlayer.magnitude <= maxChaseRaduis
-                    ? State.Chase
-                    : State.Patrol;
 
-    // Start is called before the first frame update
-    protected void Start()
+    protected virtual IState state
+        => hp <= 0
+            ? new DeadState()
+            : EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position,
+                EnemyToPlayer, EnemyToPlayer.magnitude, layerGround).collider is null
+                ? new AttackState()
+                : EnemyToPlayer.magnitude <= maxChaseRaduis
+                    ? new ChaseState()
+                    : new PatrolState();
+
+    protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
@@ -65,7 +68,33 @@ public class Enemy : MonoBehaviour
         CurDestructionTime = destructionTime;
         CanAttack = true;
     }
-    
+
+    public abstract void Patrol();
+    public abstract void Chase();
+    public abstract void Attack();
+    public abstract void GoToScene();
+    public abstract void Die();
+
+    protected virtual Side GetFaceOrientation() =>
+        Rb.velocity.x < 0
+            ? Side.Left
+            : Rb.velocity.x > 0
+                ? Side.Right
+                : FaceOrientation;
+
+    protected void ChangeSpotId()
+    {
+        CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
+
+        if (CurId >= moveSpot.Length || CurId < 0)
+        {
+            ReverseGettingId = !ReverseGettingId;
+            CurId = ReverseGettingId ? moveSpot.Length - 1 : 0;
+        }
+
+        CurWaitTime = waitTime;
+    }
+
     protected void Brake()
     {
         Rb.velocity /= brakingSpeed;
@@ -97,6 +126,7 @@ public class Enemy : MonoBehaviour
     }
 
     #region Animation
+
     protected bool AnimPlaying(float time = 1)
     {
         return Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < time;
@@ -120,5 +150,15 @@ public class Enemy : MonoBehaviour
         CurrentAnimation = anim;
         Animator.Play(anim);
     }
+
     #endregion
+
+    protected virtual void OnDrawGizmosSelected()
+    {
+        var position = transform.position;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(position, maxAttackRaduis);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(position, maxChaseRaduis);
+    }
 }

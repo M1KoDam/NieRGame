@@ -16,6 +16,13 @@ public enum ViewType
     Top
 }
 
+public enum LiftState
+{
+    MovingDown = -1,
+    Idle = 0,
+    MovingUp = 1
+}
+
 public static class PlayerAnim
 {
     public const string

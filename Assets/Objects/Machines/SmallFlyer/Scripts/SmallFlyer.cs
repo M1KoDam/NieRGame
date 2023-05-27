@@ -1,6 +1,4 @@
 using System;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.Overlays;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -34,7 +32,7 @@ public class SmallFlyer : Enemy
     // Update is called once per frame
     private void Update()
     {
-        if (state is DeadState)
+        if (State is DeadState)
             return;
 
         transform.localScale = FaceOrientation == Side.Right
@@ -47,7 +45,7 @@ public class SmallFlyer : Enemy
     private void FixedUpdate()
     {
         _swayCount += 1;
-        state.Execute(this);
+        State.Execute(this);
         Rb.velocity += Sway();
         FaceOrientation = GetFaceOrientation();
     }
@@ -216,8 +214,8 @@ public class SmallFlyer : Enemy
         else
             CurDestructionTime -= Time.deltaTime;
     }
-
-    public override void GetDamage(int inputDamage)
+    
+    public override void GetDamage(int inputDamage, Transform attackVector)
     {
         _angle -= Math.Min(20, inputDamage / 4);
         hp -= inputDamage;

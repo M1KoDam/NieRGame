@@ -5,7 +5,7 @@ public class SmallFlyerSideSupport : SmallFlyer
     private bool _onFlyScene;
     [SerializeField] private Vector2 fallDirection = new Vector2(1, 0.25f);
 
-    protected override IState state
+    protected override IState State
         => hp <= 0
             ? new DeadState()
             : _onFlyScene

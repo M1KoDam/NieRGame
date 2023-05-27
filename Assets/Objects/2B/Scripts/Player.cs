@@ -69,7 +69,11 @@ public class Player : MonoBehaviour
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
 
     private static float MovementAxis => Input.GetAxis("Horizontal");
-    
+
+    private bool CheckGroundCollision(Collision2D collision) => collision.gameObject.CompareTag("Platform")
+                                                     || collision.gameObject.CompareTag("Stairs")
+                                                     || collision.gameObject.CompareTag("Enemy");
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -122,7 +126,7 @@ public class Player : MonoBehaviour
     
     private bool Preprocessing()
     {
-        if (_changeAnimFrameWait || PlayerAnim.GetDamagedAnimations.Contains(_currentAnimation) && AnimPlaying())
+        if (_changeAnimFrameWait || Animation.GetDamagedAnimations.Contains(_currentAnimation) && AnimPlaying())
         {
             if (_changeAnimFrameWait) _changeAnimFrameWait = false;
             return true;
@@ -158,11 +162,11 @@ public class Player : MonoBehaviour
     {
         if (_climb)
         {
-            if (_currentAnimation is PlayerAnim.GetDamagedClimb && AnimPlaying())
-                ChangeAnimation(PlayerAnim.GetDamagedClimb);
+            if (_currentAnimation is Animation.GetDamagedClimb && AnimPlaying())
+                ChangeAnimation(Animation.GetDamagedClimb);
             else
             {
-                ChangeAnimation(PlayerAnim.Climb);
+                ChangeAnimation(Animation.Climb);
             }
             var velocity = _rb.velocity;
             _rb.velocity = new Vector2(velocity.x, Math.Max(0.2f, velocity.y));
@@ -213,7 +217,7 @@ public class Player : MonoBehaviour
 
     private bool Attack()
     {
-        if (heavySword.inHands && _currentAnimation is not PlayerAnim.FallAttackEnd) heavySword.ReturnSword();
+        if (heavySword.inHands && _currentAnimation is not Animation.FallAttackEnd) heavySword.ReturnSword();
         if (lightSword.inHands) lightSword.ReturnSword();
 
         if (FallAttack())
@@ -242,14 +246,14 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1) && _fallAttack && !_onFoot)
         {
-            Damage(heavyAttackRange, heavyAttackDamage);
-            ChangeAnimation(PlayerAnim.FallAttackStart);
+            Damage(heavyAttackDamage, heavyAttackRange);
+            ChangeAnimation(Animation.FallAttackStart);
             _rb.velocity = new Vector2(0, 0.25f);
             _fallAttack = false;
             return true;
         }
 
-        if (_currentAnimation is PlayerAnim.FallAttackStart)
+        if (_currentAnimation is Animation.FallAttackStart)
         {
             if (AnimPlaying())
             {
@@ -257,25 +261,25 @@ public class Player : MonoBehaviour
             }
             else if (_rb.velocity.y < 0)
             {
-                ChangeAnimation(PlayerAnim.FallAttack);
+                ChangeAnimation(Animation.FallAttack);
                 _rb.velocity = new Vector2(0, -15);
             }
 
             return true;
         }
 
-        if (_currentAnimation == PlayerAnim.FallAttack && _onFoot)
+        if (_currentAnimation == Animation.FallAttack && _onFoot)
         {
-            ChangeAnimation(PlayerAnim.FallAttackEnd);
+            ChangeAnimation(Animation.FallAttackEnd);
             HeavyDamage(heavyAttackDamage, fallSwordCollider);
             return true;
         }
 
-        if (_currentAnimation is PlayerAnim.FallAttack or PlayerAnim.FallAttackEnd)
+        if (_currentAnimation is Animation.FallAttack or Animation.FallAttackEnd)
         {
-            if (_currentAnimation is PlayerAnim.FallAttack)
+            if (_currentAnimation is Animation.FallAttack)
                 HeavyDamage(heavyAttackDamage, fallEndSwordCollider);
-            return _currentAnimation is not PlayerAnim.FallAttackEnd || !CheckAnimTime(0.5f);
+            return _currentAnimation is not Animation.FallAttackEnd || !CheckAnimTime(0.5f);
         }
 
         return false;
@@ -289,19 +293,19 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && _onFoot)
         {
-            if (_currentAnimation == PlayerAnim.Attack1 && CheckAnimTime(0.5f))
+            if (_currentAnimation == Animation.Attack1 && CheckAnimTime(0.5f))
             {
-                Damage(lightAttackRange, lightAttackDamage);
+                Damage(lightAttackDamage, lightAttackRange);
                 ChangeAttack(attackDelay2);
-                ChangeAnimation(PlayerAnim.Attack2);
+                ChangeAnimation(Animation.Attack2);
                 _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
                 return true;
             }
 
-            if (_currentAnimation == PlayerAnim.Attack2 && CheckAnimTime(0.5f))
+            if (_currentAnimation == Animation.Attack2 && CheckAnimTime(0.5f))
             {
                 ChangeAttack(attackDelay3);
-                ChangeAnimation(PlayerAnim.Attack3);
+                ChangeAnimation(Animation.Attack3);
                 _rb.velocity = new Vector2(7 * (int)faceOrientation, _rb.velocity.y);
                 spinningSword.Create();
                 return true;
@@ -309,12 +313,12 @@ public class Player : MonoBehaviour
 
             if (_canAttack)
             {
-                Damage(lightAttackRange, lightAttackDamage);
+                Damage(lightAttackDamage, lightAttackRange);
                 _canAttack = false;
                 ChangeAttack(attackDelay1);
                 if (_rb.velocity.x > 20)
                     _rb.velocity = new Vector2(10 * (int)faceOrientation, _rb.velocity.y);
-                ChangeAnimation(PlayerAnim.Attack1);
+                ChangeAnimation(Animation.Attack1);
                 return true;
             }
         }
@@ -323,49 +327,49 @@ public class Player : MonoBehaviour
         {
             if (_canAttackInAir)
             {
-                Damage(lightAttackRange, lightAttackDamage);
-                ChangeAnimation(PlayerAnim.AttackInAir1);
+                Damage(lightAttackDamage, lightAttackRange);
+                ChangeAnimation(Animation.AttackInAir1);
                 _rb.velocity = new Vector2(0, 0.5f);
                 _canAttackInAir = false;
                 return true;
             }
 
-            if (Input.GetMouseButtonDown(0) && _currentAnimation is PlayerAnim.AttackInAir1 && CheckAnimTime(0.5f))
+            if (Input.GetMouseButtonDown(0) && _currentAnimation is Animation.AttackInAir1 && CheckAnimTime(0.5f))
             {
-                Damage(lightAttackRange, lightAttackDamage);
-                ChangeAnimation(PlayerAnim.AttackInAir2);
+                Damage(lightAttackDamage, lightAttackRange);
+                ChangeAnimation(Animation.AttackInAir2);
                 _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
                 return true;
             }
 
-            if (Input.GetMouseButtonDown(0) && _currentAnimation == PlayerAnim.AttackInAir2 && CheckAnimTime(0.5f))
+            if (Input.GetMouseButtonDown(0) && _currentAnimation == Animation.AttackInAir2 && CheckAnimTime(0.5f))
             {
-                ChangeAnimation(PlayerAnim.AttackInAir3);
+                ChangeAnimation(Animation.AttackInAir3);
                 _rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
                 spinningSword.Create();
                 return true;
             }
         }
 
-        if (_currentAnimation is PlayerAnim.Attack3 or PlayerAnim.AttackInAir3 && AnimPlaying() && !spinningSword.isActiveAndEnabled)
+        if (_currentAnimation is Animation.Attack3 or Animation.AttackInAir3 && AnimPlaying() && !spinningSword.isActiveAndEnabled)
         {
-            ChangeAnimation(_currentAnimation is PlayerAnim.Attack3 ? PlayerAnim.Attack3End : PlayerAnim.AttackInAir3End);
+            ChangeAnimation(_currentAnimation is Animation.Attack3 ? Animation.Attack3End : Animation.AttackInAir3End);
             return true;
         }
         
-        if (_currentAnimation is PlayerAnim.Attack3 or PlayerAnim.AttackInAir3 && AnimCompleted() && spinningSword.isActiveAndEnabled)
+        if (_currentAnimation is Animation.Attack3 or Animation.AttackInAir3 && AnimCompleted() && spinningSword.isActiveAndEnabled)
         {
-            ChangeAnimation(_currentAnimation is PlayerAnim.Attack3 ? PlayerAnim.Attack3End : PlayerAnim.AttackInAir3End);
+            ChangeAnimation(_currentAnimation is Animation.Attack3 ? Animation.Attack3End : Animation.AttackInAir3End);
             spinningSword.Destroy();
             return true;
         }
 
-        if (_currentAnimation is PlayerAnim.Attack1 or PlayerAnim.Attack2 or PlayerAnim.Attack3 or PlayerAnim.Attack3End && AnimPlaying())
+        if (_currentAnimation is Animation.Attack1 or Animation.Attack2 or Animation.Attack3 or Animation.Attack3End && AnimPlaying())
         {
             return true;
         }
 
-        if (_currentAnimation is PlayerAnim.AttackInAir1 or PlayerAnim.AttackInAir2 or PlayerAnim.AttackInAir3 or PlayerAnim.AttackInAir3End &&
+        if (_currentAnimation is Animation.AttackInAir1 or Animation.AttackInAir2 or Animation.AttackInAir3 or Animation.AttackInAir3End &&
             AnimPlaying())
         {
             _rb.velocity = new Vector2(_rb.velocity.x, 0.5f);
@@ -388,7 +392,7 @@ public class Player : MonoBehaviour
             Flip();
             if (_onFoot)
             {
-                ChangeAnimation(PlayerAnim.Move);
+                ChangeAnimation(Animation.Move);
                 return true;
             }
         }
@@ -404,14 +408,14 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && _onFoot)
         {
-            ChangeAnimation(PlayerAnim.Jump);
+            ChangeAnimation(Animation.Jump);
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _onFoot = false;
             return true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && _doubleJump && _currentAnimation is PlayerAnim.Jump && CheckAnimTime(0.5f))
+        if (Input.GetKeyDown(KeyCode.Space) && _doubleJump && _currentAnimation is Animation.Jump && CheckAnimTime(0.5f))
         {
             _doubleJump = false;
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
@@ -430,17 +434,17 @@ public class Player : MonoBehaviour
     {
         if (!_onFoot && !_climb && _rb.velocity.y < -5)
         {
-            ChangeAnimation(PlayerAnim.Fall);
+            ChangeAnimation(Animation.Fall);
             return false;
         }
 
-        if (_currentAnimation is PlayerAnim.Fall && _onFoot)
+        if (_currentAnimation is Animation.Fall && _onFoot)
         {
-            ChangeAnimation(PlayerAnim.FallEnd);
+            ChangeAnimation(Animation.FallEnd);
             return true;
         }
 
-        if (_currentAnimation == PlayerAnim.FallEnd && AnimPlaying())
+        if (_currentAnimation == Animation.FallEnd && AnimPlaying())
         {
             return true;
         }
@@ -456,9 +460,9 @@ public class Player : MonoBehaviour
     {
         if (_onFoot)
         {
-            if (_currentAnimation is PlayerAnim.FallAttackEnd && !AnimCompleted())
+            if (_currentAnimation is Animation.FallAttackEnd && !AnimCompleted())
                 return true;
-            ChangeAnimation(PlayerAnim.Idle);
+            ChangeAnimation(Animation.Idle);
             return true;
         }
 
@@ -467,12 +471,12 @@ public class Player : MonoBehaviour
 
     #endregion
     
-    private void Damage(float attackRadius, int damage)
+    private void Damage(int damage, float attackRadius)
     {
         var hitEnemies = Physics2D.OverlapCircleAll(swingSwordCollider.position, attackRadius, enemies);
         foreach (var enemy in hitEnemies)
         {
-            enemy.GetComponent<Enemy>().GetDamage(damage);
+            enemy.GetComponent<Enemy>().GetDamage(damage, transform);
         }
 
         var hitBullets = Physics2D.OverlapCircleAll(swingSwordCollider.position, attackRadius, enemyBullet);
@@ -489,7 +493,7 @@ public class Player : MonoBehaviour
         {
             if (_hitEnemies.Contains(enemy))
                 continue;
-            enemy.GetComponent<Enemy>().GetDamage(damage);
+            enemy.GetComponent<Enemy>().GetDamage(damage, transform);
             _hitEnemies.Add(enemy);
         }
 
@@ -507,11 +511,11 @@ public class Player : MonoBehaviour
         spinningSword.Destroy();
         
         if (_climb)
-            ChangeAnimation(PlayerAnim.GetDamagedClimb);
+            ChangeAnimation(Animation.GetDamagedClimb);
         else if (damageVector == 1 && faceOrientation is Side.Right || damageVector == -1 && faceOrientation is Side.Left)
-            ChangeAnimation(_onFoot ? PlayerAnim.GetDamagedFromFront : PlayerAnim.GetDamagedInAirFromFront);
+            ChangeAnimation(_onFoot ? Animation.GetDamagedFromFront : Animation.GetDamagedInAirFromFront);
         else
-            ChangeAnimation(_onFoot ? PlayerAnim.GetDamagedFromBehind : PlayerAnim.GetDamagedInAirFromBehind);
+            ChangeAnimation(_onFoot ? Animation.GetDamagedFromBehind : Animation.GetDamagedInAirFromBehind);
         
         _changeAnimFrameWait = true;
         _rb.velocity -= new Vector2(Math.Min(inputDamage / 5, 10) * damageVector, 0);
@@ -545,9 +549,9 @@ public class Player : MonoBehaviour
 
     #region Animation
 
-    private bool AnimPlaying(float time = 1)
+    private bool AnimPlaying()
     {
-        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < time;
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1;
     }
 
     private bool AnimCompleted()
@@ -555,7 +559,7 @@ public class Player : MonoBehaviour
         return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
     }
 
-    private bool CheckAnimTime(float time)
+    private bool CheckAnimTime(float time = 1)
     {
         return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > time;
     }
@@ -575,9 +579,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Platform") 
-            || collision.gameObject.CompareTag("Stairs") 
-            || collision.gameObject.CompareTag("Enemy"))
+        if (CheckGroundCollision(collision))
         {
             _onFoot = true;
             _canAttackInAir = true;
@@ -587,9 +589,7 @@ public class Player : MonoBehaviour
             _canMove = true;
         }
 
-        if (collision.gameObject.CompareTag("Platform") 
-            || collision.gameObject.CompareTag("Stairs")
-            || collision.gameObject.CompareTag("Enemy"))
+        if (CheckGroundCollision(collision))
         {
             _onCollision++;
         }
@@ -604,24 +604,17 @@ public class Player : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Platform") 
-            || collision.gameObject.CompareTag("Stairs")
-            || collision.gameObject.CompareTag("Enemy"))
-        {
+        if (CheckGroundCollision(collision))
             _onCollision--;
-        }
-
         if (_onCollision == 0)
-        {
             _onFoot = false;
-        }
 
         if (collision.gameObject.CompareTag("Wall"))
         {
             _climb = false;
             Invoke(nameof(ChangeMove), 0.5f);
             if (!_onFoot)
-                ChangeAnimation(PlayerAnim.Fall);
+                ChangeAnimation(Animation.Fall);
         }
     }
 

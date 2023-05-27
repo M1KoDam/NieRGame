@@ -884,7 +884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8400205a573695047a315998e8b19896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 231469658}
+  player: {fileID: 231469653}
   hp: 100
   brakingSpeed: 2
   patrolSpeed: 2
@@ -6295,7 +6295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ff3461dec7daa4c8586701142996d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 231469658}
+  player: {fileID: 231469653}
   hp: 100
   brakingSpeed: 2
   patrolSpeed: 2
@@ -7986,7 +7986,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b529b0a586db0444f8e8b424d18be6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 231469658}
+  player: {fileID: 231469653}
   hp: 100
   brakingSpeed: 2
   patrolSpeed: 3
@@ -11505,7 +11505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8400205a573695047a315998e8b19896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 231469658}
+  player: {fileID: 231469653}
   hp: 100
   brakingSpeed: 2
   patrolSpeed: 2
@@ -11927,7 +11927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 50
-  damage: 10
+  damage: 5
 --- !u!212 &2035310909
 SpriteRenderer:
   m_ObjectHideFlags: 0

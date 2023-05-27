@@ -1,4 +1,4 @@
-using UnityEditor.Overlays;
+using System;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
@@ -44,11 +44,12 @@ public abstract class Enemy : MonoBehaviour
     protected int CurId;
     protected bool ReverseGettingId;
     protected bool CanAttack;
+    protected bool IsDamaged;
 
     protected Vector2 EnemyToSpot => moveSpot[CurId].transform.position - Rb.transform.position;
     protected Vector2 EnemyToPlayer => player.transform.position - Rb.transform.position;
 
-    protected virtual IState state
+    protected virtual IState State
         => hp <= 0
             ? new DeadState()
             : EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position,
@@ -99,9 +100,24 @@ public abstract class Enemy : MonoBehaviour
         Rb.velocity /= brakingSpeed;
     }
 
-    public virtual void GetDamage(int inputDamage)
+    public virtual void GetDamage(int inputDamage, Transform attackVector)
     {
+        if (State is DeadState)
+            return;
+        
         hp -= inputDamage;
+        
+        var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
+        Rb.velocity = new Vector2(-Math.Min(inputDamage / 5, 5) * damageVector, 0);
+        Rb.AddForce(new Vector2(0, Math.Min(inputDamage * 500, 20000)));
+        
+        IsDamaged = true;
+        Invoke(nameof(RemoveDamaged), 2);
+    }
+
+    private void RemoveDamaged()
+    {
+        IsDamaged = false;
     }
 
     protected void WaitForAttack()

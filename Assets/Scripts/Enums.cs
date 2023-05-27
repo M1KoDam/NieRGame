@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public enum Side
 {
     Left = -1,
@@ -23,7 +25,7 @@ public enum LiftState
     MovingUp = 1
 }
 
-public static class PlayerAnim
+public static class Animation
 {
     public const string
         Idle = "Idle",

@@ -40,7 +40,7 @@ public class Lift : MonoBehaviour
 
     private void HandleStopping()
     {
-        if (_state != LiftState.Idle && DistanceToTarget < 0.1)
+        if (_state != LiftState.Idle && DistanceToTarget < speed)
         {
             _currentMovePointIndex += (int)_state;
             _state = LiftState.Idle;

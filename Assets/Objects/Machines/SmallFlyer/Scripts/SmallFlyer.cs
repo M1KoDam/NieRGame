@@ -15,7 +15,7 @@ public class SmallFlyer : Enemy
     protected const int EnemyLayer = 7;
     private const int PlayerBulletLayer = 9;
     protected const int PlayerLayer = 11;
-    private const int GroundLayer = 3;
+    private const int BorderLayer = 15;
 
     private float _angle;
 
@@ -144,7 +144,7 @@ public class SmallFlyer : Enemy
         return _swayDown ? new Vector2(0, -0.5f) : new Vector2(0, 0.5f);
     }
 
-    protected void Wait()
+    protected virtual void Wait()
     {
         Rb.velocity = new Vector2(0, 0.2f);
     }
@@ -223,7 +223,7 @@ public class SmallFlyer : Enemy
 
     protected void IgnoreLayerCollision(bool ignore)
     {
-        Physics2D.IgnoreLayerCollision(EnemyLayer, GroundLayer, ignore);
+        Physics2D.IgnoreLayerCollision(EnemyLayer, BorderLayer, ignore);
         Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerBulletLayer, ignore);
     }
 }

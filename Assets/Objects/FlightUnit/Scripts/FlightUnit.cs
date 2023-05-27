@@ -5,12 +5,12 @@ public class FlightUnit : MonoBehaviour
 {
     [SerializeField] private Bullet bullet;
     [SerializeField] private Transform[] bulletPositions;
-    [SerializeField] private float speed;
-    [SerializeField] private float health;
-    [SerializeField] private float maxHealth;
-    [SerializeField, Range(0, 20)] private float maxSway;
-    [SerializeField, Range(0, 10)] private float rotationSpeed;
-    [SerializeField] private float fireRate;
+    [SerializeField] private float speed = 0.5f;
+    [SerializeField] private float health = 100;
+    [SerializeField] private float maxHealth = 100;
+    [SerializeField, Range(0, 20)] private float maxSway = 5;
+    [SerializeField, Range(0, 10)] private float rotationSpeed = 2.5f;
+    [SerializeField] private float fireRate = 5;
     [SerializeField] private ViewType view;
     [SerializeField] private GameObject[] engines;
 

@@ -146,7 +146,7 @@ public class SmallFlyer : Enemy
         return _swayDown ? new Vector2(0, -0.5f) : new Vector2(0, 0.5f);
     }
 
-    protected void Wait()
+    protected virtual void Wait()
     {
         Rb.velocity = new Vector2(0, 0.2f);
     }

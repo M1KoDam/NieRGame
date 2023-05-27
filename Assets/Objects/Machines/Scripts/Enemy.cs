@@ -11,7 +11,7 @@ public abstract class Enemy : MonoBehaviour
     protected Animator Animator;
     protected string CurrentAnimation;
     public GameObject player;
-    [SerializeField] protected int hp;
+    [SerializeField] protected int hp = 100;
 
     [Header("Move Settings")]
     [SerializeField] protected float brakingSpeed = 2;
@@ -19,23 +19,23 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float patrolSpeed = 3;
     [SerializeField] protected float chaseSpeed = 5;
     [SerializeField] protected Transform[] moveSpot;
-    [SerializeField] protected float waitTime;
+    [SerializeField] protected float waitTime = 1;
     protected float CurWaitTime;
     protected Side FaceOrientation;
 
     [Header("Attack Settings")]
     [SerializeField] protected int damage;
 
-    [SerializeField] protected float attackRate;
-    [SerializeField] protected int maxAttackRaduis;
-    [SerializeField] protected int maxChaseRaduis;
+    [SerializeField] protected float attackRate = 3;
+    [SerializeField] protected int maxAttackRaduis = 15;
+    [SerializeField] protected int maxChaseRaduis = 25;
 
     [Header("Destroying Settings")]
     [SerializeField] protected EnemyDestroying enemyDestroying;
 
     [SerializeField] protected Explosion explosion;
     [SerializeField] protected Transform explosionCenter;
-    [SerializeField] protected float destructionTime;
+    [SerializeField] protected float destructionTime = 3;
     protected float CurDestructionTime;
 
     [Header("Other Settings")]

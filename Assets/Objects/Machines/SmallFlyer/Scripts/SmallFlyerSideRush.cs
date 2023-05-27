@@ -49,6 +49,6 @@ public class SmallFlyerSideRush : SmallFlyer
     {
         IgnoreLayerCollision(false);
         base.Die();
-        Rb.velocity -= fallDirection;
+        Rb.velocity -= fallDirection*0.75f;
     }
 }

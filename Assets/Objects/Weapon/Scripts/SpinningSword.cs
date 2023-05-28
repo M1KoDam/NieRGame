@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 public class SpinningSword : MonoBehaviour
 {
-    [SerializeField] private Player player;
+    [SerializeField] private Android player;
     [SerializeField] private float time = 1.5f;
     [SerializeField] private LayerMask enemies;
     [SerializeField] private LayerMask enemyBullet;

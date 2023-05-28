@@ -1,40 +1,34 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
-public class FlightUnit : MonoBehaviour
+public class FlightUnit : Player
 {
-    [SerializeField] private Bullet bullet;
-    [SerializeField] private Transform[] bulletPositions;
+    [Header("Main Settings")]
     [SerializeField] private float speed = 0.5f;
-    [SerializeField] private float health = 100;
-    [SerializeField] private float maxHealth = 100;
     [SerializeField, Range(0, 20)] private float maxSway = 5;
     [SerializeField, Range(0, 10)] private float rotationSpeed = 2.5f;
     [SerializeField] private float fireRate = 5;
     [SerializeField] private ViewType view;
-    [SerializeField] private GameObject[] engines;
 
-    private Rigidbody2D _rb;
+    [Header("Objects")]
+    [SerializeField] private Bullet bullet;
+    [SerializeField] private Transform[] gunPositions;
+    [SerializeField] private GameObject[] engines;
+    
     private bool _canShoot;
     private float _fireTimer;
     private float _rotationTimer;
-    private PlayerState _state;
 
     private float MaxSway => maxSway * Mathf.Deg2Rad;
     private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     private double FireDelay => 1 / fireRate;
     private float RotationSpeed => rotationSpeed * Mathf.Deg2Rad;
 
-    private void Start()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-        _state = PlayerState.Default;
-    }
-
     private void FixedUpdate()
     {
         ManageEngines();
-        if (_state is PlayerState.UnActive or PlayerState.Dead)
+        if (State is PlayerState.UnActive or PlayerState.Dead)
             return;
         if (HandleDeath()) return;
         HandleMovement();
@@ -44,9 +38,9 @@ public class FlightUnit : MonoBehaviour
 
     private bool HandleDeath()
     {
-        if (health <= 0 && _state is not PlayerState.Dead)
+        if (health <= 0 && State is not PlayerState.Dead)
         {
-            _state = PlayerState.Dead;
+            State = PlayerState.Dead;
             Invoke(nameof(Respawn), 5f);
             return true;
         }
@@ -82,7 +76,7 @@ public class FlightUnit : MonoBehaviour
     
     private void HandleMovement()
     {
-        _rb.MovePosition(_rb.position + MovementDelta.normalized * speed);
+        Rb.MovePosition(Rb.position + MovementDelta.normalized * speed);
         HandleSways();
     }
 
@@ -128,7 +122,7 @@ public class FlightUnit : MonoBehaviour
 
     private void Shoot()
     {
-        foreach (var pos in bulletPositions)
+        foreach (var pos in gunPositions)
         {
             var bul = Instantiate(bullet, pos.position, transform.rotation);
             bul.GetComponent<Rigidbody2D>().velocity = transform.right * bul.bulletSpeed;
@@ -136,10 +130,5 @@ public class FlightUnit : MonoBehaviour
         }
 
         _canShoot = false;
-    }
-    
-    public void GetDamage(int inputDamage, Transform attackVector)
-    {
-        health -= inputDamage;
     }
 }

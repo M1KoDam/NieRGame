@@ -16,7 +16,6 @@ TagManager:
   - Checkpoint
   - Wall
   - DeadZone
-  - Plane
   layers:
   - Default
   - TransparentFX

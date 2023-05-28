@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 public class LevelEventSystem : MonoBehaviour
 {
-    public DialogueTrigger[] dialogueTriggers;
-    protected Queue<DialogueTrigger> _dialogues;
+    [SerializeField] private DialogueTrigger[] dialogueTriggers;
+    [SerializeField] private Transform[] moveSpots;
+    [SerializeField] private Transform[] spawnSpots;
+    private Queue<DialogueTrigger> _dialogues;
 
     protected int CurrentEvent;
     protected bool EventIsHappening;

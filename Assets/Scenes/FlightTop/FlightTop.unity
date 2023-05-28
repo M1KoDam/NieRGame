@@ -1417,6 +1417,18 @@ MonoBehaviour:
   - {fileID: 494309952}
   - {fileID: 1950035600}
   - {fileID: 958777028}
+  moveSpots:
+  - {fileID: 2119150753}
+  - {fileID: 378207552}
+  - {fileID: 491583701}
+  - {fileID: 1549143176}
+  - {fileID: 129555566}
+  spawnSpots:
+  - {fileID: 1297141761}
+  - {fileID: 867846467}
+  - {fileID: 952365051}
+  - {fileID: 2034265368}
+  - {fileID: 902396863}
 --- !u!1 &207501073
 GameObject:
   m_ObjectHideFlags: 0
@@ -5162,7 +5174,7 @@ GameObject:
   - component: {fileID: 520894212}
   m_Layer: 11
   m_Name: Plane
-  m_TagString: Plane
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5271,17 +5283,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ed2e63a921b47aba2d837cd5e319ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 785098371}
-  bulletPositions:
-  - {fileID: 1892886232}
-  - {fileID: 499752148}
-  speed: 0.5
   health: 100
   maxHealth: 100
+  speed: 0.5
   maxSway: 10
   rotationSpeed: 0.033
   fireRate: 5
   view: 1
+  bullet: {fileID: 785098371}
+  gunPositions:
+  - {fileID: 1892886232}
+  - {fileID: 499752148}
   engines:
   - {fileID: 575976030}
   - {fileID: 134458261}

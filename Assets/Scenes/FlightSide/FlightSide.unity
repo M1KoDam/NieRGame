@@ -6502,7 +6502,7 @@ GameObject:
   - component: {fileID: 1771751518}
   m_Layer: 11
   m_Name: Plane
-  m_TagString: Plane
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6748,17 +6748,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ed2e63a921b47aba2d837cd5e319ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 1833915859}
-  bulletPositions:
-  - {fileID: 56242751}
-  - {fileID: 1606327037}
-  speed: 0.5
   health: 100
   maxHealth: 100
+  speed: 0.5
   maxSway: 5
-  rotationSpeed: 0.033
+  rotationSpeed: 2.5
   fireRate: 5
   view: 0
+  bullet: {fileID: 1833915859}
+  gunPositions:
+  - {fileID: 56242751}
+  - {fileID: 1606327037}
   engines:
   - {fileID: 878631142}
 --- !u!212 &1771751521

@@ -11,6 +11,7 @@ public class SmallFlyerTopRush : SmallFlyerSideRush
     public override void Die()
     {
         base.Die();
+        //Animator.Play("SmallFlyerTopDestroy");
         if (((Vector2)transform.localScale).magnitude >= 0.01f)
             transform.localScale -= new Vector3(0.005f, 0.005f, 0);
     }

@@ -24,9 +24,9 @@ public class SpringyBullet : Bullet
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player") && CurrentAnimation is not "ПОМЕНЯЙ МЕНЯ")
-        {
             collision.gameObject.GetComponent<Player>().GetDamage(damage, transform);
+        
+        if (!collision.gameObject.CompareTag("Ground"))
             Destroy();
-        }
     }
 }

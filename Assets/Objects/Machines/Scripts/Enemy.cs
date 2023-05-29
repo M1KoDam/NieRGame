@@ -3,8 +3,8 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    protected static readonly Vector2 RightLocalScale = new(-1, 1);
-    protected static readonly Vector2 LeftLocalScale = new(1, 1);
+    protected Vector2 RightLocalScale;
+    protected Vector2 LeftLocalScale;
 
     [Header("Basic Settings")]
     protected Rigidbody2D Rb;
@@ -63,10 +63,16 @@ public abstract class Enemy : MonoBehaviour
     {
         Rb = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        FaceOrientation = Side.Left;
+
         CurWaitTime = waitTime;
         CurDestructionTime = destructionTime;
         CanAttack = true;
+        
+        Debug.Log(transform.localScale);
+        var localScale = transform.localScale;
+        FaceOrientation = Side.Left;
+        LeftLocalScale = new Vector2(localScale.x, localScale.y);
+        RightLocalScale = new Vector2(-localScale.x, localScale.y);
     }
 
     public abstract void Patrol();

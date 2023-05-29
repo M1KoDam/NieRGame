@@ -119,7 +119,7 @@ public class SmallFlyer : Enemy
         Rb.velocity = EnemyToSpot.normalized * patrolSpeed;
     }
 
-    private void GoToShootingPosition()
+    protected void GoToShootingPosition()
     {
         if (ShootingPositionToPlayer.magnitude < 2f)
             Brake();

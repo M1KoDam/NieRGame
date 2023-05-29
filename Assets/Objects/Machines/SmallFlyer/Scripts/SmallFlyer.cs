@@ -9,7 +9,7 @@ public class SmallFlyer : Enemy
     [SerializeField] private Vector2 RightOrientationShootingPosition = new(-9, 4f);
 
     [Header("Gun Settings")]
-    [SerializeField] private EnemyBullet bullet;
+    [SerializeField] private Bullet bullet;
     [SerializeField] private Transform gun;
     
     protected const int EnemyLayer = 7;

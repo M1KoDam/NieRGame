@@ -10,7 +10,7 @@ public abstract class Enemy : MonoBehaviour
     protected Rigidbody2D Rb;
     protected Animator Animator;
     protected string CurrentAnimation;
-    public GameObject player;
+    public Player player;
     [SerializeField] protected int hp = 100;
 
     [Header("Move Settings")]

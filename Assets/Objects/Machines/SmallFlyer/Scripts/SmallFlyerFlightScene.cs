@@ -3,7 +3,7 @@ using UnityEngine;
 public class SmallFlyerFlightScene : SmallFlyer
 {
     protected bool OnFlyScene;
-    [SerializeField] protected Vector2 fallDirection = new Vector2(1, 0.25f);
+    [SerializeField] protected Vector2 fallDirection = new Vector2(-1, -0.25f);
     
     protected override void Start()
     {
@@ -34,5 +34,12 @@ public class SmallFlyerFlightScene : SmallFlyer
 
         else
             GoToSpot();
+    }
+
+    public override void Die()
+    {
+        IgnoreLayerCollision(true);
+        Rb.velocity += fallDirection;
+        base.Die();
     }
 }

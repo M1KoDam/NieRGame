@@ -10,7 +10,9 @@ public class SmallFlyer : Enemy
 
     [Header("Gun Settings")]
     [SerializeField] protected Bullet bullet; //<---------------------------------------------- переписать shoot
+    [SerializeField] protected SpringyBullet springyBullet;
     [SerializeField] protected Transform gun;
+    [SerializeField] private int springyBulletRate = 5;
     
     protected const int EnemyLayer = 7;
     private const int PlayerBulletLayer = 9;
@@ -18,11 +20,13 @@ public class SmallFlyer : Enemy
     private const int BorderLayer = 15;
 
     protected float Angle;
-
     protected bool IsUlt;
+
+    private int _springyBulletPeriod;
+    private int _bulletCounter;
+    private int _swayCount;
     private bool _isScoping;
     private bool _swayDown;
-    private int _swayCount;
 
     private Vector2 BulletPosition => gun.transform.position;
 
@@ -132,7 +136,9 @@ public class SmallFlyer : Enemy
 
     protected void Shoot()
     {
-        var bul = Instantiate(bullet, BulletPosition, transform.rotation);
+        _bulletCounter = (_bulletCounter + 1) % springyBulletRate;
+        var bulletPrefab = _bulletCounter == 0 ? springyBullet : bullet;
+        var bul = Instantiate(bulletPrefab, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
         Destroy(bul.gameObject, 5f);
     }

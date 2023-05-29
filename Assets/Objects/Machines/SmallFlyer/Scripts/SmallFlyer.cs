@@ -208,14 +208,17 @@ public class SmallFlyer : Enemy
 
             var tempPosition = transform.position;
             var tempRotation = transform.rotation;
+            var tempLocalScale = transform.localScale;
 
             Destroy(gameObject);
 
             var smallFlyerDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
+            smallFlyerDestroyingCopy.transform.localScale = tempLocalScale;
             smallFlyerDestroyingCopy.Activate();
             Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
 
             var smallFlyerExplosion = Instantiate(explosion, explosionCenter.position, tempRotation);
+            smallFlyerExplosion.transform.localScale = tempLocalScale;
             smallFlyerExplosion.Explode();
         }
         else

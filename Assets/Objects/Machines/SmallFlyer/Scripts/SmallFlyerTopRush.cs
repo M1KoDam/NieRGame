@@ -11,4 +11,9 @@ public class SmallFlyerTopRush : SmallFlyerTop
                     ? new AttackState()
                     : new ChaseState()
                 : new GoToSceneState();
+
+    public override void Attack()
+    {
+        RushAttack();
+    }
 }

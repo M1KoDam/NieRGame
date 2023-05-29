@@ -11,30 +11,7 @@ public class SmallFlyerTopSupport: SmallFlyerTop
     
     public override void Attack()
     {
-        IgnoreLayerCollision(false);
-        LookAtPlayer();
-        
-        if (EnemyToSpot.magnitude < 1f)
-        {
-            if (CurWaitTime <= 0)
-                ChangeSpotId();
-            else
-            {
-                CurWaitTime -= Time.deltaTime;
-                Wait();
-                Brake();
-            }
-        }
-
-        else
-            GoToSpot();
-        
-        if (CanAttack)
-        {
-            CanAttack = false;
-            Shoot();
-            Invoke(nameof(WaitForAttack), attackRate);
-        }
+        SupportAttack();
     }
 
     protected override void GoToSpot()

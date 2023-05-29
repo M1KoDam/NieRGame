@@ -87,47 +87,6 @@ public class BigFlyerTop: SmallFlyerTop
         Ult();
     }
 
-    private void RushAttack()
-    {
-        IgnoreLayerCollision(false);
-        GoToShootingPosition();
-        LookAtPlayer();
-        if (CanAttack)
-        {
-            CanAttack = false;
-            Shoot();
-            Invoke(nameof(WaitForAttack), attackRate);
-        }
-    }
-    
-    private void SupportAttack()
-    {
-        IgnoreLayerCollision(false);
-        LookAtPlayer();
-        
-        if (EnemyToSpot.magnitude < 1f)
-        {
-            if (CurWaitTime <= 0)
-                ChangeSpotId();
-            else
-            {
-                CurWaitTime -= Time.deltaTime;
-                Wait();
-                Brake();
-            }
-        }
-
-        else
-            GoToSpot();
-        
-        if (CanAttack)
-        {
-            CanAttack = false;
-            Shoot();
-            Invoke(nameof(WaitForAttack), attackRate);
-        }
-    }
-
     private void Ult()
     {
         attackRate = 0.1f;

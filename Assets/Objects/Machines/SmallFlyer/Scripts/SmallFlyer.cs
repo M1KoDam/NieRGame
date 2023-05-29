@@ -84,9 +84,42 @@ public class SmallFlyer : Enemy
 
     public override void Attack()
     {
+        RushAttack();
+    }
+
+    protected void RushAttack()
+    {
         IgnoreLayerCollision(false);
         GoToShootingPosition();
         LookAtPlayer();
+        if (CanAttack)
+        {
+            CanAttack = false;
+            Shoot();
+            Invoke(nameof(WaitForAttack), attackRate);
+        }
+    }
+    
+    protected void SupportAttack()
+    {
+        IgnoreLayerCollision(false);
+        LookAtPlayer();
+
+        if (EnemyToSpot.magnitude < 1f)
+        {
+            if (CurWaitTime <= 0)
+                ChangeSpotId();
+            else
+            {
+                CurWaitTime -= Time.deltaTime;
+                Wait();
+                Brake();
+            }
+        }
+
+        else
+            GoToSpot();
+
         if (CanAttack)
         {
             CanAttack = false;

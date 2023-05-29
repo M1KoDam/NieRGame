@@ -1,16 +1,44 @@
 using UnityEngine;
 
-public class SmallFlyerTopSupport: SmallFlyerSideSupport
+public class SmallFlyerTopSupport: SmallFlyerTop
 {
-    protected override void Wait()
-    {
-        Rb.velocity = Vector2.zero;
-    }
+    protected override IState State
+        => hp <= 0
+            ? new DeadState()
+            : OnFlyScene
+                ? new AttackState()
+                : new GoToSceneState();
     
-    public override void Die()
+    public override void Attack()
     {
-        base.Die();
-        if (((Vector2)transform.localScale).magnitude >= 0.01f)
-            transform.localScale -= new Vector3(0.005f, 0.005f, 0);
+        IgnoreLayerCollision(false);
+        LookAtPlayer();
+        
+        if (EnemyToSpot.magnitude < 1f)
+        {
+            if (CurWaitTime <= 0)
+                ChangeSpotId();
+            else
+            {
+                CurWaitTime -= Time.deltaTime;
+                Wait();
+                Brake();
+            }
+        }
+
+        else
+            GoToSpot();
+        
+        if (CanAttack)
+        {
+            CanAttack = false;
+            Shoot();
+            Invoke(nameof(WaitForAttack), attackRate);
+        }
+    }
+
+    protected override void GoToSpot()
+    {
+        Rb.velocity = EnemyToSpot.normalized * chaseSpeed;
     }
 }

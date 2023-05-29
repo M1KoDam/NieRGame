@@ -10,7 +10,7 @@ public class SmallFlyer : Enemy
 
     [Header("Gun Settings")]
     [SerializeField] protected Bullet bullet; //<---------------------------------------------- переписать shoot
-    [SerializeField] private Transform gun;
+    [SerializeField] protected Transform gun;
     
     protected const int EnemyLayer = 7;
     private const int PlayerBulletLayer = 9;
@@ -89,6 +89,7 @@ public class SmallFlyer : Enemy
 
     protected void RushAttack()
     {
+        IsUlt = false;
         IgnoreLayerCollision(false);
         GoToShootingPosition();
         LookAtPlayer();
@@ -102,6 +103,7 @@ public class SmallFlyer : Enemy
     
     protected void SupportAttack()
     {
+        IsUlt = false;
         IgnoreLayerCollision(false);
         LookAtPlayer();
 

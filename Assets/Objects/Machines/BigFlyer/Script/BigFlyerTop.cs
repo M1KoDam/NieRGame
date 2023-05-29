@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BigFlyerTop: SmallFlyerTop
@@ -76,9 +77,16 @@ public class BigFlyerTop: SmallFlyerTop
     private void Stage4()
     {
         Debug.Log($"четвёртая стадия, {hp}");
-        if (_stageTime >= 1000)
-           Ult();
-        Stage3();
+        if (_stageTime >= 1000 || (IsUlt && !IsLookingAtPlayer()))
+            Ult();
+        else if (_stageTime > 500 && _stageTime < 1000)
+            SupportAttack();
+        else if (_stageTime <= 500)
+            RushAttack();
+        
+        _stageTime += 1;
+        if (_stageTime > 1500)
+            _stageTime = 0;
     }
     
     private void Stage5()
@@ -103,6 +111,12 @@ public class BigFlyerTop: SmallFlyerTop
             }
             Invoke(nameof(WaitForAttack), attackRate);
         }
+    }
+    
+    private bool IsLookingAtPlayer()
+    {
+        var angle = Vector2.SignedAngle(EnemyToPlayer, gun.transform.position - explosionCenter.transform.position);
+        return Math.Abs(angle) < 6;
     }
 
     private void Spin()

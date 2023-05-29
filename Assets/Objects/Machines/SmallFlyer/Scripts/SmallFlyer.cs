@@ -191,7 +191,8 @@ public class SmallFlyer : Enemy
 
     public override void Die()
     {
-        Animator.Play("FlyerDestroy");
+        Animator.Play(this is SmallFlyerTop ? "SmallFlyerTopDestroy" : "FlyerDestroy");
+
         if (CurDestructionTime <= 0)
         {
             if (FaceOrientation is Side.Right)

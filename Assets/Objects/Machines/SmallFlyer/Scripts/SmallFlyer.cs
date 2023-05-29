@@ -9,7 +9,7 @@ public class SmallFlyer : Enemy
     [SerializeField] private Vector2 RightOrientationShootingPosition = new(-9, 4f);
 
     [Header("Gun Settings")]
-    [SerializeField] private EnemyBullet bullet;
+    [SerializeField] protected EnemyBullet bullet; //<---------------------------------------------- переписать shoot
     [SerializeField] private Transform gun;
     
     protected const int EnemyLayer = 7;
@@ -17,8 +17,9 @@ public class SmallFlyer : Enemy
     protected const int PlayerLayer = 11;
     private const int BorderLayer = 15;
 
-    private float _angle;
+    protected float Angle;
 
+    protected bool IsUlt;
     private bool _isScoping;
     private bool _swayDown;
     private int _swayCount;
@@ -34,12 +35,13 @@ public class SmallFlyer : Enemy
     {
         if (State is DeadState)
             return;
+        
+        if (!IsUlt)
+            transform.localScale = FaceOrientation == Side.Right
+                ? RightLocalScale
+                : LeftLocalScale;
 
-        transform.localScale = FaceOrientation == Side.Right
-            ? RightLocalScale
-            : LeftLocalScale;
-
-        Rb.MoveRotation(_angle);
+        Rb.MoveRotation(Angle);
     }
 
     private void FixedUpdate()
@@ -102,7 +104,7 @@ public class SmallFlyer : Enemy
 
     protected override Side GetFaceOrientation() =>
         _isScoping
-            ? -90 <= _angle && _angle <= 90
+            ? -90 <= Angle && Angle <= 90
                 ? Side.Left
                 : Side.Right
             : base.GetFaceOrientation();
@@ -155,23 +157,23 @@ public class SmallFlyer : Enemy
 
     private void RestoreAngle()
     {
-        if (_angle is < 270 and > 90 or < -270 and > -90)
-            _angle = 90;
+        if (Angle is < 270 and > 90 or < -270 and > -90)
+            Angle = 90;
 
-        if (_angle is >= 270 and <= 360 or <= -270 and >= -360)
+        if (Angle is >= 270 and <= 360 or <= -270 and >= -360)
         {
-            _angle = _angle >= 270
-                ? _angle + 15
-                : _angle - 15;
-            if (360 - Math.Abs(_angle) < 30)
-                _angle = 360;
+            Angle = Angle >= 270
+                ? Angle + 15
+                : Angle - 15;
+            if (360 - Math.Abs(Angle) < 30)
+                Angle = 360;
         }
 
-        if (_angle is <= 90 and >= -90)
+        if (Angle is <= 90 and >= -90)
         {
-            _angle /= 2;
-            if (Math.Abs(_angle) < 5)
-                _angle = 0;
+            Angle /= 2;
+            if (Math.Abs(Angle) < 5)
+                Angle = 0;
         }
     }
 
@@ -180,18 +182,22 @@ public class SmallFlyer : Enemy
         _isScoping = true;
         var angle = -Vector2.SignedAngle(EnemyToPlayer, Vector2.left);
         if (-90 <= angle && angle <= 90)
-            _angle = angle;
+            Angle = angle;
         else if (angle > 90)
-            _angle = angle + 180;
+            Angle = angle + 180;
         else if (angle < -90)
-            _angle = angle - 180;
+            Angle = angle - 180;
     }
 
     #endregion
 
     public override void Die()
     {
-        Animator.Play(this is SmallFlyerTop ? "SmallFlyerTopDestroy" : "FlyerDestroy");
+        Animator.Play(this is BigFlyerTop 
+            ? "BigFlyerTopDestroy"
+            : this is SmallFlyerTop
+                ? "SmallFlyerTopDestroy"
+                :"FlyerDestroy");
 
         if (CurDestructionTime <= 0)
         {
@@ -218,7 +224,7 @@ public class SmallFlyer : Enemy
     
     public override void GetDamage(int inputDamage, Transform attackVector)
     {
-        _angle -= Math.Min(20, inputDamage / 4);
+        Angle -= Math.Min(20, inputDamage / 4);
         hp -= inputDamage;
     }
 

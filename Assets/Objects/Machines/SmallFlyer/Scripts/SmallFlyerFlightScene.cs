@@ -12,6 +12,11 @@ public abstract class SmallFlyerFlightScene : SmallFlyer
         Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerLayer, true);
     }
 
+    public override void DoIdle()
+    {
+        Wait();
+    }
+
     public override void GoToScene()
     {
         IgnoreCollision(true);
@@ -41,5 +46,10 @@ public abstract class SmallFlyerFlightScene : SmallFlyer
         IgnoreCollision(true);
         Rb.velocity += fallDirection;
         base.Die();
+    }
+
+    public void GiveMoveSpot(params Transform[] inputMoveSpots)
+    {
+        moveSpot.AddRange(inputMoveSpots);
     }
 }

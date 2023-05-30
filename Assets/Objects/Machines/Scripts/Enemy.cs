@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
@@ -18,7 +19,7 @@ public abstract class Enemy : MonoBehaviour
 
     [SerializeField] protected float patrolSpeed = 3;
     [SerializeField] protected float chaseSpeed = 5;
-    [SerializeField] protected Transform[] moveSpot;
+    [SerializeField] protected List<Transform> moveSpot;
     [SerializeField] protected float waitTime = 1;
     protected float CurWaitTime;
     protected Side FaceOrientation;
@@ -78,6 +79,7 @@ public abstract class Enemy : MonoBehaviour
     public abstract void Chase();
     public abstract void Attack();
     public abstract void GoToScene();
+    public abstract void DoIdle();
     public abstract void Die();
 
     protected virtual Side GetFaceOrientation() =>
@@ -91,10 +93,10 @@ public abstract class Enemy : MonoBehaviour
     {
         CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
 
-        if (CurId >= moveSpot.Length || CurId < 0)
+        if (CurId >= moveSpot.Count || CurId < 0)
         {
             ReverseGettingId = !ReverseGettingId;
-            CurId = ReverseGettingId ? moveSpot.Length - 1 : 0;
+            CurId = ReverseGettingId ? moveSpot.Count - 1 : 0;
         }
 
         CurWaitTime = waitTime;

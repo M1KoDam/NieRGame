@@ -230,6 +230,11 @@ public class SmallFlyer : Enemy
 
     #endregion
 
+    public override void DoIdle()
+    {
+        throw new Exception("this type of smallFlyer don't support 'DoIdle' work mode");
+    }
+
     public override void Die()
     {
         Animator.Play(this is BigFlyerTop 

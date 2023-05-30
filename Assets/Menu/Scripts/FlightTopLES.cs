@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class FlightTopLES : LevelEventSystem
 {
-    private void FixedUpdate()
+    [SerializeField] private Transform bigFlyerSpot;
+    [SerializeField] private Transform spawnSpot;
+    
+    public override void CreateEvent()
     {
         if (CurrentEvent == 1 && !EventIsHappening)
         {

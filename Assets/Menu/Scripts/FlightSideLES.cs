@@ -5,10 +5,7 @@ using UnityEngine.Serialization;
 
 public class FlightSideLES : LevelEventSystem
 {
-    [SerializeField] private Transform bigFlyerSpot;
-    [SerializeField] private Transform spawnSpot;
-    
-    private void FixedUpdate()
+    public override void CreateEvent()
     {
         if (CurrentEvent == 1 && !EventIsHappening)
         {

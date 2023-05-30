@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 public class Pod : MonoBehaviour
 {
     public Player player;
-    public Bullet bullet;
+    public PlayerBullet bullet;
     public Transform gun;
 
     private Rigidbody2D _rb;

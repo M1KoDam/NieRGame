@@ -1,28 +1,10 @@
-using System;
 using UnityEngine;
 
-public class EnemyBullet : MonoBehaviour
+public class EnemyBullet : Bullet
 {
-    private Rigidbody2D _rb;
-    private Animator _animator;
-    private Collider2D _collider2D;
-    private string _currentAnimation;
-    
-    public int bulletSpeed;
-    [SerializeField] private int damage;
-
-    private void Awake()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-        _collider2D = GetComponent<Collider2D>();
-        
-        _rb.useAutoMass = true;
-    }
-
     private void FixedUpdate()
     {
-        if (_currentAnimation is "EnemyBulletExploding" && AnimCompleted())
+        if (CurrentAnimation is "EnemyBulletExploding" && AnimCompleted())
         {
             Destroy(gameObject);
         }
@@ -30,20 +12,15 @@ public class EnemyBullet : MonoBehaviour
 
     public void Destroy()
     {
-        _rb.velocity = Vector2.zero;
-        _collider2D.enabled = false;
-        _animator.Play("EnemyBulletExploding");
-        _currentAnimation = "EnemyBulletExploding";
-    }
-    
-    private bool AnimCompleted()
-    {
-        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
+        Rb.velocity = Vector2.zero;
+        Collider2D.enabled = false;
+        Animator.Play("EnemyBulletExploding");
+        CurrentAnimation = "EnemyBulletExploding";
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && _currentAnimation is not "EnemyBulletExploding")
+        if (collision.gameObject.CompareTag("Player") && CurrentAnimation is not "EnemyBulletExploding")
             collision.gameObject.GetComponent<Player>().GetDamage(damage, transform);
         Destroy();
     }

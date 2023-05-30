@@ -1,16 +1,18 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    protected static readonly Vector2 RightLocalScale = new(-1, 1);
-    protected static readonly Vector2 LeftLocalScale = new(1, 1);
+    protected Vector2 RightLocalScale;
+    protected Vector2 LeftLocalScale;
 
     [Header("Basic Settings")]
     protected Rigidbody2D Rb;
+    protected Collider2D Collider;
     protected Animator Animator;
     protected string CurrentAnimation;
-    public GameObject player;
+    public Player player;
     [SerializeField] protected int hp = 100;
 
     [Header("Move Settings")]
@@ -18,7 +20,7 @@ public abstract class Enemy : MonoBehaviour
 
     [SerializeField] protected float patrolSpeed = 3;
     [SerializeField] protected float chaseSpeed = 5;
-    [SerializeField] protected Transform[] moveSpot;
+    [SerializeField] protected List<Transform> moveSpot;
     [SerializeField] protected float waitTime = 1;
     protected float CurWaitTime;
     protected Side FaceOrientation;
@@ -63,16 +65,22 @@ public abstract class Enemy : MonoBehaviour
     {
         Rb = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        FaceOrientation = Side.Left;
+
         CurWaitTime = waitTime;
         CurDestructionTime = destructionTime;
         CanAttack = true;
+        
+        var localScale = transform.localScale;
+        FaceOrientation = Side.Left;
+        LeftLocalScale = new Vector2(localScale.x, localScale.y);
+        RightLocalScale = new Vector2(-localScale.x, localScale.y);
     }
 
     public abstract void Patrol();
     public abstract void Chase();
     public abstract void Attack();
     public abstract void GoToScene();
+    public abstract void DoIdle();
     public abstract void Die();
 
     protected virtual Side GetFaceOrientation() =>
@@ -86,10 +94,10 @@ public abstract class Enemy : MonoBehaviour
     {
         CurId = ReverseGettingId ? CurId - 1 : CurId + 1;
 
-        if (CurId >= moveSpot.Length || CurId < 0)
+        if (CurId >= moveSpot.Count || CurId < 0)
         {
             ReverseGettingId = !ReverseGettingId;
-            CurId = ReverseGettingId ? moveSpot.Length - 1 : 0;
+            CurId = ReverseGettingId ? moveSpot.Count - 1 : 0;
         }
 
         CurWaitTime = waitTime;

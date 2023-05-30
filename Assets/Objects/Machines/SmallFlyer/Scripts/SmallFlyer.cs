@@ -13,7 +13,7 @@ public class SmallFlyer : Enemy
     [SerializeField] protected SpringyBullet springyBullet;
     [SerializeField] protected Transform gun;
     [SerializeField] private int springyBulletRate = 5;
-    
+
     protected const int EnemyLayer = 7;
     protected const int PlayerLayer = 11;
 
@@ -25,6 +25,7 @@ public class SmallFlyer : Enemy
     private int _swayCount;
     private bool _isScoping;
     private bool _swayDown;
+    private bool _ignoreCollision;
 
     private Vector2 BulletPosition => gun.transform.position;
 
@@ -277,6 +278,12 @@ public class SmallFlyer : Enemy
 
     protected void IgnoreCollision(bool ignore)
     {
-        GetComponent<Collider2D>().enabled = !ignore;
+        _ignoreCollision = ignore;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.collider.gameObject.CompareTag("Ground"))
+            Physics2D.IgnoreCollision(collision.collider, collision.otherCollider, _ignoreCollision);
     }
 }

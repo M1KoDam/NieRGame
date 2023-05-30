@@ -19,6 +19,8 @@ public class DialogueManager : MonoBehaviour
     private Queue<string> _sentences;
     private Queue<string> _speakers;
 
+    private bool _ds;
+
     private void Awake()
     {
         _sentences = new Queue<string>();
@@ -27,6 +29,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(Dialogue dialogue)
     {
+        _ds = true;
         windowAnimator.SetBool("StartOpen", true);
         _speakers.Clear();
         _sentences.Clear();
@@ -49,7 +52,8 @@ public class DialogueManager : MonoBehaviour
         CancelInvoke(nameof(DisplayNextSentence));
         if (_sentences.Count == 0 || _speakers.Count == 0)
         {
-            EndDialogue();
+            if (_ds)
+                EndDialogue();
             return;
         }
 
@@ -95,7 +99,9 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
-        levelEventSystem.NextEvent();
+        _ds = false;
+        CancelInvoke(nameof(DisplayNextSentence));
+        levelEventSystem.dialogueEventIsHappening = false;
         windowAnimator.SetBool("StartOpen", false);
     }
 }

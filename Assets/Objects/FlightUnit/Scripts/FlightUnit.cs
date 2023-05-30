@@ -27,8 +27,6 @@ public class FlightUnit : Player
     private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     private double FireDelay => 1 / fireRate;
     private float RotationSpeed => rotationSpeed * Mathf.Deg2Rad;
-    
-    [SerializeField] protected LevelEventSystem levelEventSystem;
 
     private void FixedUpdate()
     {

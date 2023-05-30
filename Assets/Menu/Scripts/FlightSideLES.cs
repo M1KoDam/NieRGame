@@ -5,10 +5,14 @@ using UnityEngine.Serialization;
 
 public class FlightSideLES : LevelEventSystem
 {
+    [SerializeField] private SmallFlyerSideRush smallFlyerRush;
+    [SerializeField] private SmallFlyerSideSupport smallFlyerSupport;
+
     public override void CreateEvent()
     {
-        if (CurrentEvent == 1 && !EventIsHappening)
+        if (CurrentEvent == 0 && !dialogueEventIsHappening)
         {
+            dialogueEventIsHappening = true;
             StartNextDialogue();
         }
     }

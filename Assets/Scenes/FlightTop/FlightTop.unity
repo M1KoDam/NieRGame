@@ -1735,6 +1735,8 @@ MonoBehaviour:
   windowAnimator: {fileID: 362816434}
   pauseAnimator: {fileID: 462758707}
   healthBarAnimator: {fileID: 85141498}
+  bigFlyerSpot: {fileID: 509963634}
+  spawnSpot: {fileID: 952365051}
 --- !u!1 &207501073
 GameObject:
   m_ObjectHideFlags: 0

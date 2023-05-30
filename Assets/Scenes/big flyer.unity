@@ -629,9 +629,9 @@ GameObject:
   - component: {fileID: 1900180256}
   - component: {fileID: 1900180255}
   - component: {fileID: 1900180254}
-  - component: {fileID: 1900180253}
   - component: {fileID: 1900180252}
   - component: {fileID: 1900180251}
+  - component: {fileID: 1900180257}
   m_Layer: 16
   m_Name: Springy Bullet
   m_TagString: EnemyBullet
@@ -676,20 +676,6 @@ CircleCollider2D:
   m_Offset: {x: 0.00000023841858, y: 0}
   serializedVersion: 2
   m_Radius: 0.67444587
---- !u!114 &1900180253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1900180250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dad1d36fe6734a2cb81f3018df0a8b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletSpeed: 8
-  damage: 33
 --- !u!50 &1900180254
 Rigidbody2D:
   serializedVersion: 4
@@ -778,6 +764,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1900180257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900180250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3a2948044fd240419029f811bf78580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletSpeed: 8
+  damage: 33
 --- !u!1 &2123511809
 GameObject:
   m_ObjectHideFlags: 0

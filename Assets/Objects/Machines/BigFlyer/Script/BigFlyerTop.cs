@@ -11,9 +11,11 @@ public class BigFlyerTop: SmallFlyerTop
     protected override IState State
         => hp <= 0
             ? new DeadState()
-            : OnFlightScene
-                ? new AttackState()
-                : new GoToSceneState();
+            : moveSpot.Count == 0
+                ? new IdleState()
+                : OnFlightScene
+                    ? new AttackState()
+                    : new GoToSceneState();
     
 
     protected override void Start()

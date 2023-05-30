@@ -137,6 +137,7 @@ public class SmallFlyer : Enemy
     {
         _bulletCounter = (_bulletCounter + 1) % springyBulletRate;
         var bulletPrefab = _bulletCounter == 0 ? springyBullet : bullet;
+        Debug.Log(bulletPrefab);
         var bul = Instantiate(bulletPrefab, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
         Destroy(bul.gameObject, 5f);

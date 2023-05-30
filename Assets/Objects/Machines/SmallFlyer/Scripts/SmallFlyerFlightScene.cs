@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class SmallFlyerFlightScene : SmallFlyer
+public abstract class SmallFlyerFlightScene : SmallFlyer
 {
-    protected bool OnFlyScene;
+    protected bool OnFlightScene;
     [SerializeField] protected Vector2 fallDirection = new Vector2(-1, -0.25f);
 
     protected override void Start()
     {
         base.Start();
-        OnFlyScene = false;
+        OnFlightScene = false;
         Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerLayer, true);
     }
 
     public override void GoToScene()
     {
-        IgnoreLayerCollision(true);
+        IgnoreCollision(true);
         LookAtPlayer();
 
         if (EnemyToSpot.magnitude < 1f)
@@ -22,7 +22,7 @@ public class SmallFlyerFlightScene : SmallFlyer
             if (CurWaitTime <= 0)
             {
                 ChangeSpotId();
-                OnFlyScene = true;
+                OnFlightScene = true;
             }
             else
             {
@@ -38,7 +38,7 @@ public class SmallFlyerFlightScene : SmallFlyer
 
     public override void Die()
     {
-        IgnoreLayerCollision(true);
+        IgnoreCollision(true);
         Rb.velocity += fallDirection;
         base.Die();
     }

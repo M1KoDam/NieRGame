@@ -68,7 +68,6 @@ public abstract class Enemy : MonoBehaviour
         CurDestructionTime = destructionTime;
         CanAttack = true;
         
-        Debug.Log(transform.localScale);
         var localScale = transform.localScale;
         FaceOrientation = Side.Left;
         LeftLocalScale = new Vector2(localScale.x, localScale.y);

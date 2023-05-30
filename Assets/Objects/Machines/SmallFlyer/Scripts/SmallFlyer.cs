@@ -15,9 +15,7 @@ public class SmallFlyer : Enemy
     [SerializeField] private int springyBulletRate = 5;
     
     protected const int EnemyLayer = 7;
-    private const int PlayerBulletLayer = 9;
     protected const int PlayerLayer = 11;
-    private const int BorderLayer = 15;
 
     protected float Angle;
     protected bool IsUlt;
@@ -58,7 +56,7 @@ public class SmallFlyer : Enemy
 
     public override void Patrol()
     {
-        IgnoreLayerCollision(false);
+        IgnoreCollision(false);
         _isScoping = false;
         if (EnemyToSpot.magnitude < 1f)
         {
@@ -80,7 +78,7 @@ public class SmallFlyer : Enemy
 
     public override void Chase()
     {
-        IgnoreLayerCollision(false);
+        IgnoreCollision(false);
         _isScoping = false;
         GoToPlayer();
         RestoreAngle();
@@ -94,7 +92,7 @@ public class SmallFlyer : Enemy
     protected void RushAttack()
     {
         IsUlt = false;
-        IgnoreLayerCollision(false);
+        IgnoreCollision(false);
         GoToShootingPosition();
         LookAtPlayer();
         if (CanAttack)
@@ -108,7 +106,7 @@ public class SmallFlyer : Enemy
     protected void SupportAttack()
     {
         IsUlt = false;
-        IgnoreLayerCollision(false);
+        IgnoreCollision(false);
         LookAtPlayer();
 
         if (EnemyToSpot.magnitude < 1f)
@@ -272,9 +270,8 @@ public class SmallFlyer : Enemy
         hp -= inputDamage;
     }
 
-    protected void IgnoreLayerCollision(bool ignore)
+    protected void IgnoreCollision(bool ignore)
     {
-        Physics2D.IgnoreLayerCollision(EnemyLayer, BorderLayer, ignore);
-        Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerBulletLayer, ignore);
+        GetComponent<Collider2D>().enabled = !ignore;
     }
 }

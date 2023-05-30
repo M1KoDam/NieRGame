@@ -5,13 +5,13 @@ public class SmallFlyerSideSupport : SmallFlyerSide
     protected override IState State
         => hp <= 0
             ? new DeadState()
-            : OnFlyScene
+            : OnFlightScene
                 ? new AttackState()
                 : new GoToSceneState();
     
     public override void Attack()
     {
-        IgnoreLayerCollision(false);
+        IgnoreCollision(false);
         LookAtPlayer();
         
         if (EnemyToSpot.magnitude < 1f)

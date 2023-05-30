@@ -11,7 +11,7 @@ public class BigFlyerTop: SmallFlyerTop
     protected override IState State
         => hp <= 0
             ? new DeadState()
-            : OnFlyScene
+            : OnFlightScene
                 ? new AttackState()
                 : new GoToSceneState();
     
@@ -66,7 +66,7 @@ public class BigFlyerTop: SmallFlyerTop
         Debug.Log($"третья стадия, {hp}");
         if (_stageTime > 500 && _stageTime < 1000)
             SupportAttack();
-        if (_stageTime <= 500)
+        else if (_stageTime <= 500)
             RushAttack();
         
         _stageTime += 1;

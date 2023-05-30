@@ -1,3 +1,3 @@
-public class SmallFlyerSide : SmallFlyerFlightScene
+public abstract class SmallFlyerSide : SmallFlyerFlightScene
 {
 }

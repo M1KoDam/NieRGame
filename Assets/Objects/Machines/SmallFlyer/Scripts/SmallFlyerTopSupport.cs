@@ -5,7 +5,7 @@ public class SmallFlyerTopSupport: SmallFlyerTop
     protected override IState State
         => hp <= 0
             ? new DeadState()
-            : OnFlyScene
+            : OnFlightScene
                 ? new AttackState()
                 : new GoToSceneState();
     

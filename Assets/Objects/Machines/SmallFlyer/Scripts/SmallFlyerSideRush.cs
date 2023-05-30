@@ -5,7 +5,7 @@ public class SmallFlyerSideRush : SmallFlyerSide
     protected override IState State
         => hp <= 0
             ? new DeadState()
-            : OnFlyScene
+            : OnFlightScene
                 ? EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position,
         EnemyToPlayer, EnemyToPlayer.magnitude, layerGround).collider is null
                     ? new AttackState()

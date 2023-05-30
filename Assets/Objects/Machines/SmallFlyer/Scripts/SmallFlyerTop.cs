@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SmallFlyerTop : SmallFlyerFlightScene
+public abstract class SmallFlyerTop : SmallFlyerFlightScene
 {
     protected override void Wait()
     {

@@ -8,6 +8,7 @@ public abstract class Enemy : MonoBehaviour
 
     [Header("Basic Settings")]
     protected Rigidbody2D Rb;
+    protected Collider2D Collider;
     protected Animator Animator;
     protected string CurrentAnimation;
     public Player player;

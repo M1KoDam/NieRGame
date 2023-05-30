@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -12,7 +13,7 @@ public class SmallFlyer : Enemy
     [SerializeField] protected Bullet bullet; //<---------------------------------------------- переписать shoot
     [SerializeField] protected SpringyBullet springyBullet;
     [SerializeField] protected Transform gun;
-    [SerializeField] private int springyBulletRate = 5;
+    [SerializeField] private int springyBulletRate = 4;
 
     protected const int EnemyLayer = 7;
     protected const int PlayerLayer = 11;
@@ -135,8 +136,7 @@ public class SmallFlyer : Enemy
 
     protected void Shoot()
     {
-        _bulletCounter = (_bulletCounter + 1) % springyBulletRate;
-        var bulletPrefab = _bulletCounter == 0 ? springyBullet : bullet;
+        var bulletPrefab = Random.Range(1, springyBulletRate) == 1 ? springyBullet : bullet;
         var bul = Instantiate(bulletPrefab, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
         Destroy(bul.gameObject, 5f);

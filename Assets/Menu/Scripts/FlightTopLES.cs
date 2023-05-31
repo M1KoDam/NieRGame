@@ -22,7 +22,7 @@ public class FlightTopLES : LevelEventSystem
             dialogueEventIsHappening = true;
             StartNextDialogue();
         }
-        else if (CurrentEvent == 2 && EventCompleted)
+        else if (CurrentEvent == 1 && EventCompleted)
         {
             SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
             SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
@@ -78,7 +78,7 @@ public class FlightTopLES : LevelEventSystem
             dialogueEventIsHappening = true;
             StartNextDialogue();
         }
-        else if (CurrentEvent == 1 && EventCompleted)
+        else if (CurrentEvent == 6 && EventCompleted)
         {
             SpawnFlyer(bigFlyer, spawnSpots[7], new[] { moveSpots[2] });
             SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });

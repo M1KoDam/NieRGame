@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuMusic : MonoBehaviour
 {
-    public Sounds sounds;
+    public Musics musics;
 
     private bool _isSoundPlaying;
     // Start is called before the first frame update
@@ -16,10 +16,10 @@ public class MenuMusic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (sounds.AllSounds is not null && !_isSoundPlaying)
+        if (musics.AllMusics is not null && !_isSoundPlaying)
         {
             _isSoundPlaying = true;   
-            sounds.AllSounds["MenuMusic"].PlaySoundLoop();
+            musics.AllMusics["MenuMusic"].PlaySoundLoop();
         }
         
     }

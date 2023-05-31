@@ -6,11 +6,11 @@ public class Sound : MonoBehaviour
 {
     public float volume;
     public GameObject audioObject;
-    private readonly float _length;
+    private float _length;
     public float maxVolume;
     public AudioSource audioSource;
     // Start is called before the first frame update
-    public Sound(string soundName, float volume, AudioClip explosionClip)
+    public Sound InitializationSounds(string soundName, float volume, AudioClip explosionClip)
     {
         audioObject = new GameObject(soundName);
         audioSource = audioObject.AddComponent<AudioSource>();
@@ -18,6 +18,7 @@ public class Sound : MonoBehaviour
         maxVolume = volume;
         audioSource.volume = maxVolume;
         _length = explosionClip.length;
+        return this;
     }
 
     public void PlaySound()

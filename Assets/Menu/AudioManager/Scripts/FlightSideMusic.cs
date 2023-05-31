@@ -4,7 +4,7 @@ namespace Menu.AudioManager.Scripts
 {
     public class FlightSideMusic: MonoBehaviour
     {
-        public Sounds sounds;
+        public Musics musics;
 
         private bool _isSoundPlaying;
         // Start is called before the first frame update
@@ -16,10 +16,10 @@ namespace Menu.AudioManager.Scripts
         // Update is called once per frame
         void Update()
         {
-            if (sounds.AllSounds is not null && !_isSoundPlaying)
+            if (musics.AllMusics is not null && !_isSoundPlaying)
             {
                 _isSoundPlaying = true;   
-                sounds.AllSounds["FlightSideMusic"].PlaySoundLoop();
+                musics.AllMusics["FlightSideMusic"].PlaySoundLoop();
             }
         }
     }

@@ -16,9 +16,7 @@ public class LevelEventSystem : MonoBehaviour
 
     [Header("UIController")]
     [SerializeField] private UIController uiController;
-
-    private static float _soundVolume;
-    private static float _musicVolume;
+    
     private GameDifficulty _gameDifficulty;
     
     private Queue<DialogueTrigger> _dialogues;

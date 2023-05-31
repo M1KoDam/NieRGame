@@ -3,9 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Sounds : MonoBehaviour
 {
+    [SerializeField] private Slider _musicSlider;
+    [SerializeField] private Slider _soundSlider;
+    
+    private static float _musicVolume = 1;
+    private static float _soundVolume = 1;
+
     [SerializeField] public AudioClip explosionSound;
     [SerializeField] public AudioClip flightUnitShotSound;
     [SerializeField] public AudioClip backGroundFlightSound;
@@ -36,6 +43,21 @@ public class Sounds : MonoBehaviour
             { "PodShot", new Sound("PodShot", 0.2f, podShot) },
         };
     }
+
+    private void Update()
+    {
+        if (Math.Abs(_soundVolume - _soundSlider.value) > 0.01f)
+        {
+            _soundVolume = _soundSlider.value;
+            ChangedVolume(_soundVolume);
+        }
+        if (Math.Abs(_musicVolume - _musicSlider.value) > 0.01f)
+        {
+            _musicVolume = _musicSlider.value;
+            ChangedVolume(_musicVolume);
+        }
+    }
+
     public void ChangedVolume(float soundVolume)
     {
         soundVolume = Math.Max(Math.Min(1, soundVolume), 0);
@@ -43,11 +65,5 @@ public class Sounds : MonoBehaviour
         {
             sound.Value.audioSource.volume = sound.Value.maxVolume*soundVolume;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

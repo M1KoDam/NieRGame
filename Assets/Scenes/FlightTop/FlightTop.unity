@@ -720,6 +720,7 @@ MonoBehaviour:
   explosionScale: 1
   radius: 20
   force: 30000
+  sounds: {fileID: 2020661202}
 --- !u!95 &113088954
 Animator:
   serializedVersion: 5
@@ -4522,6 +4523,7 @@ MonoBehaviour:
   springyBullet: {fileID: 117726765}
   gun: {fileID: 1500001422}
   springyBulletRate: 5
+  sounds: {fileID: 2020661202}
   fallDirection: {x: -1, y: 0}
 --- !u!58 &448028114
 CircleCollider2D:
@@ -6292,6 +6294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 520894209}
   - component: {fileID: 520894208}
+  - component: {fileID: 520894222}
   - component: {fileID: 520894211}
   - component: {fileID: 520894210}
   - component: {fileID: 520894216}
@@ -6429,6 +6432,7 @@ MonoBehaviour:
   engines:
   - {fileID: 575976030}
   - {fileID: 134458261}
+  sounds: {fileID: 2020661202}
 --- !u!61 &520894212
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7253,6 +7257,19 @@ PolygonCollider2D:
       - {x: 1.2099999, y: 1}
       - {x: 1.2099999, y: 0.98999995}
       - {x: 1.03, y: 0.98999995}
+--- !u!114 &520894222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520894207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eeb2dfcdaf17c542916314a1d69a35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds: {fileID: 2020661202}
 --- !u!1 &528254392
 GameObject:
   m_ObjectHideFlags: 0
@@ -11129,6 +11146,7 @@ Transform:
   - {fileID: 176928287}
   - {fileID: 922891369}
   - {fileID: 846411686}
+  - {fileID: 2020661201}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13930,6 +13948,7 @@ MonoBehaviour:
   springyBullet: {fileID: 117726765}
   gun: {fileID: 100852413}
   springyBulletRate: 5
+  sounds: {fileID: 2020661202}
   fallDirection: {x: -1, y: 0}
   supportingGuns:
   - {fileID: 1429919613}
@@ -18514,6 +18533,61 @@ PolygonCollider2D:
       - {x: -0.79999995, y: -1.42}
       - {x: -0.61, y: -1.43}
       - {x: -0.59, y: -1.39}
+--- !u!1 &2020661200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2020661201}
+  - component: {fileID: 2020661202}
+  m_Layer: 0
+  m_Name: Sounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2020661201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020661200}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1044288797}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2020661202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020661200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d57b265d5d4e7846a3c6e7076df8dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionSound: {fileID: 8300000, guid: 1ab7722a820567346b7c03dac6afbf42, type: 3}
+  flightUnitShotSound: {fileID: 8300000, guid: 252d100094f908b469dc0825ab0a8424, type: 3}
+  backGroundFlightSound: {fileID: 8300000, guid: ca473af7586f82e4e87a199cea8b357a, type: 3}
+  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
+  enemyShotSound: {fileID: 8300000, guid: 2078fa87550259e4281566a1d9d542d3, type: 3}
+  checkPoints: {fileID: 8300000, guid: e2820fc82bf52374a9efdfc5700915bb, type: 3}
+  attack2B: {fileID: 8300000, guid: fcf08f8beb16ba549bb2cc43e8966b40, type: 3}
+  getDamage2B: {fileID: 8300000, guid: 68acccf20b29d84418e192d2a2a30ae0, type: 3}
+  podShot: {fileID: 8300000, guid: 18ae4308341531a4c9c248d2b162855e, type: 3}
+  enemyAttack: {fileID: 8300000, guid: c777beefe781bad4096a557dc5759d46, type: 3}
 --- !u!1 &2026896210
 GameObject:
   m_ObjectHideFlags: 0
@@ -19584,6 +19658,7 @@ MonoBehaviour:
   springyBullet: {fileID: 117726765}
   gun: {fileID: 1241489713}
   springyBulletRate: 5
+  sounds: {fileID: 2020661202}
   fallDirection: {x: -1, y: 0}
 --- !u!50 &2133059845
 Rigidbody2D:

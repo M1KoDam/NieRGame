@@ -839,6 +839,7 @@ MonoBehaviour:
   springyBullet: {fileID: 1262443376}
   gun: {fileID: 1458219550}
   springyBulletRate: 5
+  sounds: {fileID: 1541217412}
   fallDirection: {x: -1, y: -0.25}
 --- !u!1 &154344554
 GameObject:
@@ -6598,6 +6599,7 @@ MonoBehaviour:
   springyBullet: {fileID: 1262443376}
   gun: {fileID: 375127703}
   springyBulletRate: 5
+  sounds: {fileID: 1541217412}
   fallDirection: {x: -1, y: -0.25}
 --- !u!1 &1414410646
 GameObject:
@@ -7423,6 +7425,61 @@ Transform:
   m_Father: {fileID: 654785515}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1541217411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1541217413}
+  - component: {fileID: 1541217412}
+  m_Layer: 0
+  m_Name: Sounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1541217412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541217411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d57b265d5d4e7846a3c6e7076df8dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionSound: {fileID: 8300000, guid: 1ab7722a820567346b7c03dac6afbf42, type: 3}
+  flightUnitShotSound: {fileID: 8300000, guid: 252d100094f908b469dc0825ab0a8424, type: 3}
+  backGroundFlightSound: {fileID: 8300000, guid: ca473af7586f82e4e87a199cea8b357a, type: 3}
+  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
+  enemyShotSound: {fileID: 8300000, guid: 2078fa87550259e4281566a1d9d542d3, type: 3}
+  checkPoints: {fileID: 8300000, guid: e2820fc82bf52374a9efdfc5700915bb, type: 3}
+  attack2B: {fileID: 8300000, guid: fcf08f8beb16ba549bb2cc43e8966b40, type: 3}
+  getDamage2B: {fileID: 8300000, guid: 68acccf20b29d84418e192d2a2a30ae0, type: 3}
+  podShot: {fileID: 8300000, guid: 18ae4308341531a4c9c248d2b162855e, type: 3}
+  enemyAttack: {fileID: 8300000, guid: c777beefe781bad4096a557dc5759d46, type: 3}
+--- !u!4 &1541217413
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541217411}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1875194982}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1541801495
 GameObject:
   m_ObjectHideFlags: 0
@@ -7472,6 +7529,7 @@ MonoBehaviour:
   explosionScale: 1
   radius: 20
   force: 30000
+  sounds: {fileID: 1541217412}
 --- !u!95 &1541801498
 Animator:
   serializedVersion: 5
@@ -8382,6 +8440,7 @@ GameObject:
   - component: {fileID: 1771751522}
   - component: {fileID: 1771751521}
   - component: {fileID: 1771751520}
+  - component: {fileID: 1771751523}
   - component: {fileID: 1771751519}
   - component: {fileID: 1771751518}
   m_Layer: 11
@@ -8645,6 +8704,7 @@ MonoBehaviour:
   - {fileID: 1606327037}
   engines:
   - {fileID: 878631142}
+  sounds: {fileID: 1541217412}
 --- !u!212 &1771751521
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8715,6 +8775,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1771751523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771751517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eeb2dfcdaf17c542916314a1d69a35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds: {fileID: 1541217412}
 --- !u!1 &1826655892
 GameObject:
   m_ObjectHideFlags: 0
@@ -8943,6 +9016,7 @@ Transform:
   - {fileID: 1274347158}
   - {fileID: 483948802}
   - {fileID: 1323880319}
+  - {fileID: 1541217413}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

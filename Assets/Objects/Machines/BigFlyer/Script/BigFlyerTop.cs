@@ -155,10 +155,10 @@ public class BigFlyerTop: SmallFlyerTop
             Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
 
             StartCoroutine(CreateExplosion(explosionCenter.position, tempRotation));
-            StartCoroutine(CreateExplosion(supportingGuns[0].position, tempRotation));
-            StartCoroutine(CreateExplosion(supportingGuns[1].position, tempRotation));
-            StartCoroutine(CreateExplosion(supportingGuns[2].position, tempRotation));
-            StartCoroutine(CreateExplosion(supportingGuns[3].position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGunsStart[0].position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGunsStart[1].position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGunsStart[2].position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGunsStart[3].position, tempRotation));
         }
         else
             CurDestructionTime -= Time.deltaTime;
@@ -167,10 +167,10 @@ public class BigFlyerTop: SmallFlyerTop
     private IEnumerator CreateExplosion(Vector3 position, Quaternion rotation)
     {
         var smallFlyerExplosion = Instantiate(explosion, position, rotation);
-        smallFlyerExplosion.force = 150000;
+        smallFlyerExplosion.force = 100000;
         smallFlyerExplosion.explosionScale = 1.5f;
         smallFlyerExplosion.Explode();
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.01f);
     }
     
     public override void GetDamage(int inputDamage, Transform attackVector)

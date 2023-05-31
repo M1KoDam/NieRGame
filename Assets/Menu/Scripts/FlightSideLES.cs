@@ -5,10 +5,11 @@ using UnityEngine.Serialization;
 
 public class FlightSideLES : LevelEventSystem
 {
+    [Header("Enemies")]
     [SerializeField] private SmallFlyerSideRush smallFlyerRush;
     [SerializeField] private SmallFlyerSideSupport smallFlyerSupport;
 
-    public override void CreateEvent()
+    protected override void CreateEvent()
     {
         if (CurrentEvent == 0 && EventCompleted)
         {

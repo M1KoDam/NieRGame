@@ -6,14 +6,16 @@ using UnityEngine;
 
 public class FlightTopLES : LevelEventSystem
 {
+    [Header("Boss Spots")]
     [SerializeField] private Transform bigFlyerSpot;
     [SerializeField] private Transform spawnSpot;
     
+    [Header("Enemies")]
     [SerializeField] private BigFlyerTop bigFlyer;
     [SerializeField] private SmallFlyerTopRush smallFlyerRush;
     [SerializeField] private SmallFlyerTopSupport smallFlyerSupport;
 
-    public override void CreateEvent()
+    protected override void CreateEvent()
     {
         if (CurrentEvent == 0 && EventCompleted)
         {

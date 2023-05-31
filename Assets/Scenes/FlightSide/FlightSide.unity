@@ -1398,7 +1398,7 @@ GameObject:
   - component: {fileID: 288682141}
   - component: {fileID: 288682140}
   m_Layer: 5
-  m_Name: HealthBarBackground
+  m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2097,7 +2097,7 @@ Transform:
   - {fileID: 981739389}
   - {fileID: 1011591321}
   m_Father: {fileID: 1875194982}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &508908169
 GameObject:
@@ -4226,8 +4226,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1274347160}
-        m_TargetAssemblyTypeName: LevelEventSystem, Assembly-CSharp
+      - m_Target: {fileID: 1257474081}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: BackToMenu
         m_Mode: 1
         m_Arguments:
@@ -5175,6 +5175,55 @@ Transform:
   m_Father: {fileID: 654785515}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1257474080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1257474082}
+  - component: {fileID: 1257474081}
+  m_Layer: 0
+  m_Name: UIController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1257474081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1257474080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 364ae4f288ba1a84f981e67c2f641e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueAnimator: {fileID: 752559108}
+  pauseAnimator: {fileID: 1853054918}
+  healthBarAnimator: {fileID: 288682139}
+  transitionWindowLR: {fileID: 566291098}
+  transitionWindowRL: {fileID: 1192878513}
+--- !u!4 &1257474082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1257474080}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -5.1164837, y: -10.238586, z: 23.42729}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1875194982}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1259189793
 GameObject:
   m_ObjectHideFlags: 0
@@ -5476,7 +5525,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1875194982}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1274347160
 MonoBehaviour:
@@ -5510,11 +5559,7 @@ MonoBehaviour:
   - {fileID: 2083055310}
   - {fileID: 981739389}
   - {fileID: 1011591321}
-  windowAnimator: {fileID: 752559108}
-  pauseAnimator: {fileID: 1853054918}
-  healthBarAnimator: {fileID: 288682139}
-  transitionWindowLR: {fileID: 566291098}
-  transitionWindowRL: {fileID: 1192878513}
+  uiController: {fileID: 1257474081}
   dialogueEventIsHappening: 0
   smallFlyerRush: {fileID: 1403489633}
   smallFlyerSupport: {fileID: 149708154}
@@ -5896,7 +5941,7 @@ Transform:
   - {fileID: 1379355317}
   - {fileID: 1131736618}
   m_Father: {fileID: 1875194982}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1338123976
 GameObject:
@@ -7139,8 +7184,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1274347160}
-        m_TargetAssemblyTypeName: LevelEventSystem, Assembly-CSharp
+      - m_Target: {fileID: 1257474081}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: SetPaused
         m_Mode: 1
         m_Arguments:
@@ -8894,6 +8939,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1257474082}
   - {fileID: 1274347158}
   - {fileID: 483948802}
   - {fileID: 1323880319}

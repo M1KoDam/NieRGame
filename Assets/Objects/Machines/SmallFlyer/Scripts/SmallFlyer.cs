@@ -23,6 +23,7 @@ public class SmallFlyer : Enemy
     private bool _swayDown;
     private int _swayCount;
 
+    public Sounds sounds;
     private Vector2 BulletPosition => gun.transform.position;
 
     private Vector2 ShootingPositionToPlayer => FaceOrientation is Side.Left
@@ -97,6 +98,7 @@ public class SmallFlyer : Enemy
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
+        sounds.AllSounds["EnemyShot"].PlaySound();
         Destroy(bul.gameObject, 5f);
     }
 

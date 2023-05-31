@@ -11,6 +11,8 @@ public class SmallStubby: Enemy
     [Header("Step Climb Settings")]
     [SerializeField] private GameObject stayRayUpper;
     [SerializeField] private GameObject stayRayLower;
+    
+    public Sounds sounds;
 
     // Update is called once per frame
     private void Update()
@@ -66,6 +68,7 @@ public class SmallStubby: Enemy
     {
         if (CanAttack)
         {
+            sounds.AllSounds["EnemyAttack"].PlaySound();
             CanAttack = false;
             ChangeAnimation("StubbyStartAttack");
             Invoke(nameof(WaitForAttack), attackRate);

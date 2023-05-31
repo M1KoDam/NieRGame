@@ -344,6 +344,61 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &57029923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 57029925}
+  - component: {fileID: 57029924}
+  m_Layer: 0
+  m_Name: Sounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &57029924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57029923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d57b265d5d4e7846a3c6e7076df8dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionSound: {fileID: 8300000, guid: 1ab7722a820567346b7c03dac6afbf42, type: 3}
+  flightUnitShotSound: {fileID: 8300000, guid: 252d100094f908b469dc0825ab0a8424, type: 3}
+  backGroundFlightSound: {fileID: 8300000, guid: ca473af7586f82e4e87a199cea8b357a, type: 3}
+  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
+  enemyShotSound: {fileID: 8300000, guid: 2078fa87550259e4281566a1d9d542d3, type: 3}
+  checkPoints: {fileID: 8300000, guid: e2820fc82bf52374a9efdfc5700915bb, type: 3}
+  attack2B: {fileID: 8300000, guid: fcf08f8beb16ba549bb2cc43e8966b40, type: 3}
+  getDamage2B: {fileID: 8300000, guid: 68acccf20b29d84418e192d2a2a30ae0, type: 3}
+  podShot: {fileID: 8300000, guid: 18ae4308341531a4c9c248d2b162855e, type: 3}
+  enemyAttack: {fileID: 8300000, guid: c777beefe781bad4096a557dc5759d46, type: 3}
+--- !u!4 &57029925
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57029923}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.1561446, y: -8.441443, z: 0.009678468}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 24
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &71247138
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +480,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &71791418
@@ -911,6 +966,7 @@ MonoBehaviour:
   attackRadius: {x: 3, y: 1}
   stayRayUpper: {fileID: 1153197418}
   stayRayLower: {fileID: 244423072}
+  sounds: {fileID: 57029924}
 --- !u!50 &112473230
 Rigidbody2D:
   serializedVersion: 4
@@ -1349,6 +1405,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9390ac1a00ffc4a46ab15b7ce1082b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 1000
+  maxHealth: 100
   lightSword: {fileID: 715539202}
   heavySword: {fileID: 71791422}
   spinningSword: {fileID: 393912464}
@@ -1371,8 +1429,6 @@ MonoBehaviour:
   stayRayLower: {fileID: 655511927}
   stepHeight: 0.05
   stepLenght: 0.025
-  health: 1000
-  maxHealth: 100
   attackDelay1: 0.5
   attackDelay2: 0.5
   attackDelay3: 1.5
@@ -1385,6 +1441,7 @@ MonoBehaviour:
   heavyAttackDamage: 60
   faceOrientation: 1
   checkpoint: {fileID: 155640715}
+  sounds: {fileID: 57029924}
 --- !u!95 &231469659
 Animator:
   serializedVersion: 5
@@ -1778,7 +1835,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &306121019
@@ -3155,6 +3212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 231469658}
+  alpha: 0.1
 --- !u!1 &536671020
 GameObject:
   m_ObjectHideFlags: 0
@@ -3282,6 +3340,7 @@ MonoBehaviour:
   gun: {fileID: 1643171028}
   fireRate: 8
   obstacleDistance: 0
+  sounds: {fileID: 57029924}
 --- !u!50 &536671025
 Rigidbody2D:
   serializedVersion: 4
@@ -4365,7 +4424,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &799399408
@@ -5154,7 +5213,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &995245333
@@ -5238,7 +5297,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1018730303
@@ -6317,6 +6376,7 @@ MonoBehaviour:
   gun: {fileID: 701105844}
   stayRayUpper: {fileID: 306121019}
   stayRayLower: {fileID: 203152835}
+  sounds: {fileID: 57029924}
 --- !u!1 &1153197418
 GameObject:
   m_ObjectHideFlags: 0
@@ -6429,7 +6489,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1196016246
@@ -7500,6 +7560,7 @@ MonoBehaviour:
   explosionScale: 1
   radius: 20
   force: 30000
+  sounds: {fileID: 57029924}
 --- !u!1 &1484857268
 GameObject:
   m_ObjectHideFlags: 0
@@ -8005,8 +8066,11 @@ MonoBehaviour:
   layerGround:
     serializedVersion: 2
     m_Bits: 8
+  LeftOrientationShootingPosition: {x: 9, y: 4}
+  RightOrientationShootingPosition: {x: -9, y: 4}
   bullet: {fileID: 405301099}
   gun: {fileID: 1629370392}
+  sounds: {fileID: 57029924}
 --- !u!50 &1531901556
 Rigidbody2D:
   serializedVersion: 4
@@ -10824,7 +10888,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1935550150
@@ -11531,6 +11595,7 @@ MonoBehaviour:
   attackRadius: {x: 3, y: 1}
   stayRayUpper: {fileID: 2025974760}
   stayRayLower: {fileID: 1081107160}
+  sounds: {fileID: 57029924}
 --- !u!70 &2019174486
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -12871,7 +12936,7 @@ SpriteRenderer:
   m_Size: {x: 2.08, y: 4.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &2137765753

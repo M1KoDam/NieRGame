@@ -54,6 +54,8 @@ public class Pod : MonoBehaviour
                 ? player.transform.position + RightPosition
                 : player.transform.position + LeftPosition;
 
+    public Sounds sounds;
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -84,7 +86,10 @@ public class Pod : MonoBehaviour
             LookAtMouse();
 
             if (_canShoot)
+            {
+                sounds.AllSounds["PodShot"].PlaySound();
                 Shoot();
+            }
         }
         else
         {

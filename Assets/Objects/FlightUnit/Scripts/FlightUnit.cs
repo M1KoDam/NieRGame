@@ -1,34 +1,32 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class FlightUnit : Player
 {
-    [Header("Main Settings")] [SerializeField]
-    private float speed = 0.5f;
-
+    [Header("Main Settings")]
+    [SerializeField] private float speed = 0.5f;
     [SerializeField, Range(0, 20)] private float maxSway = 5;
     [SerializeField, Range(0, 10)] private float rotationSpeed = 2.5f;
     [SerializeField] private float fireRate = 5;
     [SerializeField] private ViewType view;
 
-    [Header("Objects")] [SerializeField] private PlayerBullet bullet;
+    [Header("Objects")]
+    [SerializeField] private PlayerBullet bullet;
     [SerializeField] private Transform[] gunPositions;
     [SerializeField] private GameObject[] engines;
-
+    
     private bool _canShoot;
     private bool _swayDown;
     private float _fireTimer;
     private float _rotationTimer;
     private int _swayCount;
+
     private float MaxSway => maxSway * Mathf.Deg2Rad;
     private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     private Vector2? _target;
     private Vector2? CustomMovementDelta => _target is null ? null : _target - transform.position;
     private double FireDelay => 1 / fireRate;
     private float RotationSpeed => rotationSpeed * Mathf.Deg2Rad;
-
-    [SerializeField] protected LevelEventSystem levelEventSystem;
 
     private void FixedUpdate()
     {

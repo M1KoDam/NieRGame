@@ -1,18 +1,21 @@
-using UnityEditor.Experimental.Rendering;
 using UnityEngine;
 
-public class SmallFlyerTopRush : SmallFlyerSideRush
+public class SmallFlyerTopRush : SmallFlyerTop
 {
-    protected override void Wait()
-    {
-        Rb.velocity = Vector2.zero;
-    }
+    protected override IState State
+        => hp <= 0
+            ? new DeadState()
+            : moveSpot.Count == 0
+                ? new IdleState()
+                : OnFlightScene
+                    ? EnemyToPlayer.magnitude <= maxAttackRaduis && Physics2D.Raycast(transform.position,
+                        EnemyToPlayer, EnemyToPlayer.magnitude, layerGround).collider is null
+                        ? new AttackState()
+                        : new ChaseState()
+                    : new GoToSceneState();
 
-    public override void Die()
+    public override void Attack()
     {
-        base.Die();
-        //Animator.Play("SmallFlyerTopDestroy");
-        if (((Vector2)transform.localScale).magnitude >= 0.01f)
-            transform.localScale -= new Vector3(0.005f, 0.005f, 0);
+        RushAttack();
     }
 }

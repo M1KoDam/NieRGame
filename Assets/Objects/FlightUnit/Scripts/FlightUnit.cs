@@ -1,3 +1,4 @@
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -12,13 +13,15 @@ public class FlightUnit : Player
     [SerializeField] private ViewType view;
 
     [Header("Objects")]
-    [SerializeField] private Bullet bullet;
+    [SerializeField] private PlayerBullet bullet;
     [SerializeField] private Transform[] gunPositions;
     [SerializeField] private GameObject[] engines;
     
     private bool _canShoot;
+    private bool _swayDown;
     private float _fireTimer;
     private float _rotationTimer;
+    private int _swayCount;
 
     private float MaxSway => maxSway * Mathf.Deg2Rad;
     private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -47,7 +50,7 @@ public class FlightUnit : Player
         }
         return false;
     }
-
+    
     private void ManageEngines()
     {
         var enginesStatus = !(Input.GetKey(KeyCode.A));
@@ -78,10 +81,12 @@ public class FlightUnit : Player
     private void HandleMovement()
     {
         Rb.MovePosition(Rb.position + MovementDelta.normalized * speed);
-        HandleSways();
+        HandleAngleSways();
+        if (MovementDelta.magnitude < 0.01f)
+            HandleMovementSways();
     }
 
-    private void HandleSways()
+    private void HandleAngleSways()
     {
         var rot = transform.rotation;
         
@@ -134,5 +139,20 @@ public class FlightUnit : Player
         }
 
         _canShoot = false;
+    }
+
+    private void HandleMovementSways()
+    {
+        _swayCount++;
+        if (_swayCount > 60)
+        {
+            _swayCount = 0;
+            _swayDown = !_swayDown;
+        }
+
+        if (_swayCount < 30)
+            return;
+        
+        transform.position += _swayDown ? Vector3.down / 100f : Vector3.up / 100f;
     }
 }

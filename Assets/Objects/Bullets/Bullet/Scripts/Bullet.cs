@@ -1,58 +1,32 @@
-using System;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private Rigidbody2D _rb;
-    private Animator _animator;
-    private Collider2D _collider2D;
-    private string _currentAnimation;
-    
+    protected Rigidbody2D Rb;
+    protected Animator Animator;
+    protected Collider2D Collider2D;
+    protected string CurrentAnimation;
+
     public int bulletSpeed;
-    [SerializeField] private int damage;
-    
-    private void Awake()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-        _collider2D = GetComponent<Collider2D>();
+    [SerializeField] protected int damage;
 
-        _rb.useAutoMass = true;
-    }
-    
-    private void FixedUpdate()
+    protected void Awake()
     {
-        if (_currentAnimation is "BulletExploding")
-        {
-            if (AnimCompleted())
-                Destroy(gameObject);
-            if (AnimPlaying())
-                _rb.velocity = Vector2.zero;
-        }
+        Rb = GetComponent<Rigidbody2D>();
+        Animator = GetComponent<Animator>();
+        Collider2D = GetComponent<Collider2D>();
+        
+        Rb.useAutoMass = true;
     }
 
-    private void Destroy()
+    protected bool AnimCompleted()
     {
-        _rb.velocity = Vector2.zero;
-        _collider2D.enabled = false;
-        _animator.Play("BulletExploding");
-        _currentAnimation = "BulletExploding";
-    }
-    
-    private bool AnimCompleted()
-    {
-        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
-    }
-    
-    private bool AnimPlaying(float time = 1)
-    {
-        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < time;
+        return Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected bool AnimPlaying(float time = 1)
     {
-        if (collision.gameObject.CompareTag("Enemy") && _currentAnimation is not "BulletExploding")
-            collision.gameObject.GetComponent<Enemy>().GetDamage(damage, transform);
-        Destroy();
+        return Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < time;
     }
+
 }

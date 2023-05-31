@@ -122,10 +122,15 @@ public class SmallStubby: Enemy
 
     public override void GoToScene()
     {
-        throw new Exception("this type of smallFlyer don't support 'GoToScene' work mode");
+        throw new Exception("this type of enemy don't support 'GoToScene' work mode");
     }
 
     #endregion
+    
+    public override void DoIdle()
+    {
+        throw new Exception("this type of enemy don't support 'DoIdle' work mode");
+    }
 
     #region GetDamage
 

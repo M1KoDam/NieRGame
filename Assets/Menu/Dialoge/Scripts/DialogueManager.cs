@@ -14,7 +14,7 @@ public class DialogueManager : MonoBehaviour
     public Animator windowAnimator;
     public Animator speakerAnimator;
 
-    public LevelEventSystem levelEventSystem;
+    public FlightLES levelEventSystem;
 
     private Queue<string> _sentences;
     private Queue<string> _speakers;

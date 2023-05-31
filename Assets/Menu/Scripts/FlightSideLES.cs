@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class FlightSideLES : LevelEventSystem
+public class FlightSideLES : FlightLES
 {
     [Header("Enemies")]
     [SerializeField] private SmallFlyerSideRush smallFlyerRush;

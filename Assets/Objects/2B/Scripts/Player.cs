@@ -18,6 +18,12 @@ public class Player : MonoBehaviour
         Rb = GetComponent<Rigidbody2D>();
     }
 
+    public void SetHealth(float inputHealth)
+    {
+        maxHealth = inputHealth;
+        health = maxHealth;
+    }
+
     public virtual void GetDamage(int inputDamage, Transform attackVector)
     {
         health -= inputDamage;

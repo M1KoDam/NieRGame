@@ -6,98 +6,60 @@ using UnityEngine.SceneManagement;
 
 public class LevelEventSystem : MonoBehaviour
 {
-    [Header("Triggers")]
-    [SerializeField] private DialogueTrigger[] dialogueTriggers;
-    
-    [Header("Spots")]
-    [SerializeField] protected Transform[] moveSpots;
-    [SerializeField] protected Transform[] spawnSpots;
+    private static GameDifficulty _gameDifficulty;
 
-    [Header("UIController")]
-    [SerializeField] private UIController uiController;
-    
-    private GameDifficulty _gameDifficulty;
-
-    private float PlayerHealth => _gameDifficulty switch
+    protected static float PlayerHealth => _gameDifficulty switch
     {
         GameDifficulty.Easy => 1000,
         GameDifficulty.Medium => 500,
         _ => 100
     };
-    
-    private Queue<DialogueTrigger> _dialogues;
 
-    protected int CurrentEvent;
-    public bool dialogueEventIsHappening;
-    protected bool AttackEventIsHappening;
-    protected bool EventCompleted => !dialogueEventIsHappening && !AttackEventIsHappening;
-    private List<SmallFlyer> _smallFlyers;
-    
     private void Start()
     {
-        Invoke(nameof(OpenLevel), 1);
-        CurrentEvent = -1;
-        _smallFlyers = new List<SmallFlyer>();
-        _dialogues = new Queue<DialogueTrigger>();
-        foreach (var dialogueTrigger in dialogueTriggers)
-            _dialogues.Enqueue(dialogueTrigger);
+        StartLES();
     }
 
-    private void OpenLevel()
+    protected virtual void StartLES()
     {
-        uiController.OpenLevel();
     }
 
     private void FixedUpdate()
     {
-        UpdateEnemies();
-        if (EventCompleted)
-            NextEvent();
-        CreateEvent();
+        UpdateLES();
     }
 
-    protected virtual void CreateEvent()
+    protected virtual void UpdateLES()
     {
     }
 
-    private void UpdateEnemies()
+    public virtual void NextLevel()
     {
-        _smallFlyers = _smallFlyers.Where(c => !c.IsUnityNull()).ToList();
-        if (_smallFlyers.Count == 0)
-            AttackEventIsHappening = false;
-    }
-    
-    protected void SpawnFlyer(SmallFlyerFlightScene flyerType, Transform spawnPosition, IEnumerable<Transform> moveSpots)
-    {
-        var enemy = Instantiate(flyerType, spawnPosition.position, transform.rotation);
-        foreach (var moveSpot in moveSpots)
-        {
-            enemy.GiveMoveSpot(moveSpot);
-        }
-        _smallFlyers.Add(enemy);
+        OpenNextLevel();
     }
 
-    protected void StartNextDialogue()
-    {
-        var dialogue = _dialogues.Dequeue();
-        dialogue.TriggerDialogue();
-    }
-
-    private void NextEvent()
-    {
-        AttackEventIsHappening = false;
-        dialogueEventIsHappening = false;
-        CurrentEvent++;
-    }
-    
-    protected void NextLevel()
-    {
-        uiController.CloseLevel();
-        Invoke(nameof(OpenNextLevel), 1);
-    }
-
-    private void OpenNextLevel()
+    protected void OpenNextLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void SetEasyDifficulty()
+    {
+        _gameDifficulty = GameDifficulty.Easy;
+    }
+
+    public void SetMediumDifficulty()
+    {
+        _gameDifficulty = GameDifficulty.Medium;
+    }
+    
+    public void SetHardDifficulty()
+    {
+        _gameDifficulty = GameDifficulty.Hard;
     }
 }

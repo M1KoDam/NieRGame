@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class FlightTopLES : LevelEventSystem
+public class FlightTopLES : FlightLES
 {
     [Header("Boss Spots")]
     [SerializeField] private Transform bigFlyerSpot;

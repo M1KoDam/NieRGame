@@ -76,6 +76,26 @@ public class LevelEventSystem : MonoBehaviour
         if (SmallFlyers.Count == 0)
             AttackEventIsHappening = false;
     }
+    
+    protected void SpawnFlyerTop(SmallFlyerTop flyerType, Transform spawnPosition, IEnumerable<Transform> moveSpots)
+    {
+        var enemy = Instantiate(flyerType, spawnPosition.position, transform.rotation);
+        foreach (var moveSpot in moveSpots)
+        {
+            enemy.GiveMoveSpot(moveSpot);
+        }
+        SmallFlyers.Add(enemy);
+    }
+    
+    protected void SpawnFlyerSide(SmallFlyerSide flyerType, Transform spawnPosition, IEnumerable<Transform> moveSpots)
+    {
+        var enemy = Instantiate(flyerType, spawnPosition.position, transform.rotation);
+        foreach (var moveSpot in moveSpots)
+        {
+            enemy.GiveMoveSpot(moveSpot);
+        }
+        SmallFlyers.Add(enemy);
+    }
 
     protected void StartNextDialogue()
     {

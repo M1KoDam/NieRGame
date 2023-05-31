@@ -27,6 +27,7 @@ public class FlightUnit : Player
     private static Vector2 MovementDelta => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     private double FireDelay => 1 / fireRate;
     private float RotationSpeed => rotationSpeed * Mathf.Deg2Rad;
+    public Sounds sounds;
 
     private void FixedUpdate()
     {
@@ -122,7 +123,10 @@ public class FlightUnit : Player
     private void HandleShooting()
     {
         if (Input.GetKey(KeyCode.LeftShift) && _canShoot)
+        {
+            sounds.AllSounds["FlightUnitShot"].PlaySound();
             Shoot();
+        }
     }
 
     private void Shoot()

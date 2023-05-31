@@ -11,11 +11,14 @@ public class Explosion : MonoBehaviour
 
     private Animator _animator;
     private bool _exploding;
+    public Sounds sounds; 
     
     private void Update()
     {
         if (_exploding && AnimCompleted())
+        {
             Destroy(gameObject);
+        }
     }
 
     public void Explode()
@@ -34,10 +37,12 @@ public class Explosion : MonoBehaviour
                 attachedRigidbody.AddExplosionForce(force, transform.position, radius);
             }
         }
+        sounds.AllSounds["Explosion"].PlaySound();
     }
     
     private bool AnimCompleted()
     {
         return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.01f;
     }
+
 }

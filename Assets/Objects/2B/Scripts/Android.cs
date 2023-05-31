@@ -61,6 +61,8 @@ public class Android : Player
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
+    
+    public Sounds sounds;
 
     private static float MovementAxis => Input.GetAxis("Horizontal");
 
@@ -201,6 +203,7 @@ public class Android : Player
             var hitCheckpoint = Physics2D.OverlapCircleAll(transform.position, 5, checkpoints);
             if (hitCheckpoint.Length > 0)
             {
+                sounds.AllSounds["CheckPoints"].PlaySound();
                 checkpoint = hitCheckpoint[0].GetComponent<Checkpoint>();
             }
         }
@@ -288,8 +291,10 @@ public class Android : Player
     {
         if (Input.GetMouseButtonDown(0) && _onFoot)
         {
+            
             if (_currentAnimation == Animation.Attack1 && CheckAnimTime(0.5f))
             {
+                sounds.AllSounds["Attack2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 ChangeAttack(attackDelay2);
                 ChangeAnimation(Animation.Attack2);
@@ -299,6 +304,7 @@ public class Android : Player
 
             if (_currentAnimation == Animation.Attack2 && CheckAnimTime(0.5f))
             {
+                sounds.AllSounds["Attack2B"].PlaySound();
                 ChangeAttack(attackDelay3);
                 ChangeAnimation(Animation.Attack3);
                 Rb.velocity = new Vector2(7 * (int)faceOrientation, Rb.velocity.y);
@@ -308,6 +314,7 @@ public class Android : Player
 
             if (_canAttack)
             {
+                sounds.AllSounds["Attack2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 _canAttack = false;
                 ChangeAttack(attackDelay1);
@@ -322,6 +329,7 @@ public class Android : Player
         {
             if (_canAttackInAir)
             {
+                sounds.AllSounds["Attack2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 ChangeAnimation(Animation.AttackInAir1);
                 Rb.velocity = new Vector2(0, 0.5f);
@@ -331,6 +339,7 @@ public class Android : Player
 
             if (Input.GetMouseButtonDown(0) && _currentAnimation is Animation.AttackInAir1 && CheckAnimTime(0.5f))
             {
+                sounds.AllSounds["Attack2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 ChangeAnimation(Animation.AttackInAir2);
                 Rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
@@ -339,6 +348,7 @@ public class Android : Player
 
             if (Input.GetMouseButtonDown(0) && _currentAnimation == Animation.AttackInAir2 && CheckAnimTime(0.5f))
             {
+                sounds.AllSounds["Attack2B"].PlaySound();
                 ChangeAnimation(Animation.AttackInAir3);
                 Rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
                 spinningSword.Create();
@@ -501,6 +511,7 @@ public class Android : Player
 
     public override void GetDamage(int inputDamage, Transform attackVector)
     {
+        sounds.AllSounds["GetDamage2B"].PlaySound();
         health -= inputDamage;
         var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
         spinningSword.Destroy();

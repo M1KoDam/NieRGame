@@ -15,6 +15,8 @@ public class SmallGunner : Enemy
     [SerializeField] private GameObject stayRayUpper;
     [SerializeField] private GameObject stayRayLower;
     
+    public Sounds sounds;
+    
     private Vector2 BulletPosition => gun.transform.position;
 
     // Update is called once per frame
@@ -73,6 +75,7 @@ public class SmallGunner : Enemy
     {
         var bul = Instantiate(bullet, BulletPosition, transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = EnemyToPlayer.normalized * bul.bulletSpeed;
+        sounds.AllSounds["EnemyShot"].PlaySound();
         Destroy(bul.gameObject, 5f); ;
     }
 

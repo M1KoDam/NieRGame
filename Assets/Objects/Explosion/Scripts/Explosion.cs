@@ -39,10 +39,10 @@ public class Explosion : MonoBehaviour
         }
         sounds.AllSounds["Explosion"].PlaySound();
     }
-    
+
     private bool AnimCompleted()
     {
-        return Math.Abs(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime - 1) < 0.1f;
+        return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
     }
 
 }

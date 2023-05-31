@@ -240,9 +240,7 @@ public class SmallFlyer : Enemy
 
     public override void Die()
     {
-        Animator.Play(this is BigFlyerTop 
-            ? "BigFlyerTopDestroy"
-            : this is SmallFlyerTop
+        Animator.Play(this is SmallFlyerTop
                 ? "SmallFlyerTopDestroy"
                 :"FlyerDestroy");
 

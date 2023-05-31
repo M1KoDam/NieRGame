@@ -63,17 +63,7 @@ public class LevelEventSystem : MonoBehaviour
             AttackEventIsHappening = false;
     }
     
-    protected void SpawnFlyerTop(SmallFlyerTop flyerType, Transform spawnPosition, IEnumerable<Transform> moveSpots)
-    {
-        var enemy = Instantiate(flyerType, spawnPosition.position, transform.rotation);
-        foreach (var moveSpot in moveSpots)
-        {
-            enemy.GiveMoveSpot(moveSpot);
-        }
-        _smallFlyers.Add(enemy);
-    }
-    
-    protected void SpawnFlyerSide(SmallFlyerSide flyerType, Transform spawnPosition, IEnumerable<Transform> moveSpots)
+    protected void SpawnFlyer(SmallFlyerFlightScene flyerType, Transform spawnPosition, IEnumerable<Transform> moveSpots)
     {
         var enemy = Instantiate(flyerType, spawnPosition.position, transform.rotation);
         foreach (var moveSpot in moveSpots)

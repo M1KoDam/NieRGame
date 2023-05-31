@@ -18,49 +18,49 @@ public class FlightSideLES : LevelEventSystem
         }
         else if (CurrentEvent == 1 && EventCompleted)
         {
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[1], new[] { moveSpots[0] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[3], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[1], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[3], new[] { moveSpots[4] });
             
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
             
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 2 && EventCompleted)
         {
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[1], new[] { moveSpots[1] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[3], new[] { moveSpots[3] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[1], new[] { moveSpots[1] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[3], new[] { moveSpots[3] });
 
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0] });
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1] });
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[7], new[] { moveSpots[2] });
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3] });
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[9], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[7], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[9], new[] { moveSpots[4] });
 
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 3 && EventCompleted)
         {
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[0], new[] { moveSpots[4] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[1], new[] { moveSpots[3] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[3], new[] { moveSpots[1] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[4], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[1], new[] { moveSpots[3] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[3], new[] { moveSpots[1] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[4], new[] { moveSpots[0] });
             
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[4], moveSpots[0] });
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3], moveSpots[2], moveSpots[1] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[4], moveSpots[0] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3], moveSpots[2], moveSpots[1] });
             
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 4 && EventCompleted)
         {
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
-            SpawnFlyerSide(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
             
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
-            SpawnFlyerSide(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
             
             AttackEventIsHappening = true;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class BigFlyerTop: SmallFlyerTop
@@ -127,6 +128,49 @@ public class BigFlyerTop: SmallFlyerTop
         if (Angle <= -360)
             Angle += 360;
         Rb.velocity = Vector2.zero;
+    }
+    
+    public override void Die()
+    {
+        IgnoreCollision(true);
+        Rb.velocity += fallDirection;
+        Animator.Play("BigFlyerTopDestroy");
+
+        if (CurDestructionTime <= 0)
+        {
+            if (FaceOrientation is Side.Right)
+            {
+                transform.Rotate(new Vector3(0, 180, 0));
+            }
+
+            var tempPosition = transform.position;
+            var tempRotation = transform.rotation;
+            var tempLocalScale = transform.localScale;
+
+            Destroy(gameObject);
+
+            var smallFlyerDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
+            smallFlyerDestroyingCopy.transform.localScale = tempLocalScale;
+            smallFlyerDestroyingCopy.Activate();
+            Destroy(smallFlyerDestroyingCopy.gameObject, 5f);
+
+            StartCoroutine(CreateExplosion(explosionCenter.position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGuns[0].position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGuns[1].position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGuns[2].position, tempRotation));
+            StartCoroutine(CreateExplosion(supportingGuns[3].position, tempRotation));
+        }
+        else
+            CurDestructionTime -= Time.deltaTime;
+    }
+
+    private IEnumerator CreateExplosion(Vector3 position, Quaternion rotation)
+    {
+        var smallFlyerExplosion = Instantiate(explosion, position, rotation);
+        smallFlyerExplosion.force = 150000;
+        smallFlyerExplosion.explosionScale = 1.5f;
+        smallFlyerExplosion.Explode();
+        yield return new WaitForSeconds(0.1f);
     }
     
     public override void GetDamage(int inputDamage, Transform attackVector)

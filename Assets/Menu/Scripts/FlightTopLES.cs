@@ -22,54 +22,54 @@ public class FlightTopLES : LevelEventSystem
             dialogueEventIsHappening = true;
             StartNextDialogue();
         }
-        else if (CurrentEvent == 1 && EventCompleted)
+        else if (CurrentEvent == 2 && EventCompleted)
         {
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
             
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
             
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 2 && EventCompleted)
         {
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[0], new[] { moveSpots[4] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[1], new[] { moveSpots[2] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[2], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[1], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[0] });
             
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0],  moveSpots[4] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[3] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[7], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0],  moveSpots[4] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[3] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[7], new[] { moveSpots[2] });
             
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 3 && EventCompleted)
         {
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[1], new[] { moveSpots[1] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[3], new[] { moveSpots[3] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[1], new[] { moveSpots[1] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[3], new[] { moveSpots[3] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
 
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0], moveSpots[2], moveSpots[4] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0], moveSpots[2], moveSpots[4] });
             
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 4 && EventCompleted)
         {
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[1], new[] { moveSpots[1] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[3], new[] { moveSpots[3] });
-            SpawnFlyerTop(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[1], new[] { moveSpots[1] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[3], new[] { moveSpots[3] });
+            SpawnFlyer(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
 
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[7], new[] { moveSpots[2] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[9], new[] { moveSpots[4] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[5], new[] { moveSpots[0] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[7], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[9], new[] { moveSpots[4] });
 
             AttackEventIsHappening = true;
         }
@@ -78,11 +78,11 @@ public class FlightTopLES : LevelEventSystem
             dialogueEventIsHappening = true;
             StartNextDialogue();
         }
-        else if (CurrentEvent == 6 && EventCompleted)
+        else if (CurrentEvent == 1 && EventCompleted)
         {
-            SpawnFlyerTop(bigFlyer, spawnSpots[7], new[] { moveSpots[2] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
-            SpawnFlyerTop(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
+            SpawnFlyer(bigFlyer, spawnSpots[7], new[] { moveSpots[2] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
+            SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 7 && EventCompleted)

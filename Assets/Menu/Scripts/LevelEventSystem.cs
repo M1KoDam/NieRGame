@@ -3,7 +3,6 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class LevelEventSystem : MonoBehaviour
 {
@@ -18,6 +17,13 @@ public class LevelEventSystem : MonoBehaviour
     [SerializeField] private UIController uiController;
     
     private GameDifficulty _gameDifficulty;
+
+    private float PlayerHealth => _gameDifficulty switch
+    {
+        GameDifficulty.Easy => 1000,
+        GameDifficulty.Medium => 500,
+        _ => 100
+    };
     
     private Queue<DialogueTrigger> _dialogues;
 

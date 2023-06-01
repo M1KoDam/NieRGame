@@ -7,6 +7,7 @@ public class Trigger : MonoBehaviour
 {
     [SerializeField] private PlatformerLES platformerLES;
     [SerializeField] private int triggerSignal;
+    [SerializeField] private bool blockPlayer;
     
     private bool _isTriggered;
 
@@ -15,7 +16,7 @@ public class Trigger : MonoBehaviour
         if (!otherCollider.gameObject.CompareTag("Player")) return;
         
         if (!_isTriggered)
-            platformerLES.GetTriggerSignal(triggerSignal);
+            platformerLES.GetTriggerSignal(triggerSignal, blockPlayer);
         _isTriggered = true;
     }
 }

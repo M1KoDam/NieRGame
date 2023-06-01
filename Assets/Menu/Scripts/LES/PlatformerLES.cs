@@ -1,22 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlatformerLES : GameLES
 {
-    public void GetTriggerSignal(int signal)
+    public void GetTriggerSignal(int signal, bool blockPlayer)
     {
+        if (blockPlayer)
+            player.UnActivePlayer();
+        
         if (signal is 1)
         {
             StartDialogue(0);
-            player.UnActivePlayer();
         }
     }
     
     public override void Respawn()
     {
-        base.Respawn();
-        transform.position = Checkpoint.transform.position;
+        if (Checkpoint.IsUnityNull())
+        {
+            base.Respawn();
+            return;
+        }
+        Time.timeScale = 1;
+        player.SetHealth(PlayerHealth);
+        player.ActivePlayer();
+        player.transform.position = Checkpoint.transform.position;
+        uiController.SetPaused();
     }
 
     private void StartDialogue(int index)

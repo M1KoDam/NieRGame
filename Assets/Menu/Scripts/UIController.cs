@@ -6,13 +6,15 @@ using UnityEngine.Serialization;
 
 public class UIController : MonoBehaviour
 {
-    [FormerlySerializedAs("windowAnimator")]
     [Header("Animators")]
     [SerializeField] protected Animator dialogueAnimator;
     [SerializeField] protected Animator pauseAnimator;
     [SerializeField] protected Animator healthBarAnimator;
     [SerializeField] protected Animator transitionWindowLR;
     [SerializeField] protected Animator transitionWindowRL;
+    
+    [Header("Dialogue Manager")] 
+    [SerializeField] protected DialogueManager dialogueManager;
     
     private bool _isPaused;
     private float _pauseDelay;
@@ -73,7 +75,8 @@ public class UIController : MonoBehaviour
         
         Time.timeScale = 1;
         pauseAnimator.SetBool("Paused", false);
-        dialogueAnimator.SetBool("StartOpen", true);
+        if (dialogueManager.DialogueIsHappening)
+            dialogueAnimator.SetBool("StartOpen", true);
         healthBarAnimator.SetBool("Show", true);
     }
 }

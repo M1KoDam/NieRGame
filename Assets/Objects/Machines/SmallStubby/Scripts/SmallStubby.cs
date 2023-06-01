@@ -32,7 +32,6 @@ public class SmallStubby: Enemy
     
     private void FixedUpdate()
     {
-        Debug.Log(FaceOrientation);
         if (CurrentAnimation is "StubbyStartAttack" or "StubbyAttack")
         {
             Attack();

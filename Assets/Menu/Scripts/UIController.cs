@@ -12,6 +12,10 @@ public class UIController : MonoBehaviour
     [SerializeField] protected Animator healthBarAnimator;
     [SerializeField] protected Animator transitionWindowLR;
     [SerializeField] protected Animator transitionWindowRL;
+
+    [SerializeField] protected GameObject PauseWindow;
+    [SerializeField] protected GameObject SettingsWindow;
+    [SerializeField] protected GameObject ExitWindow;
     
     [Header("Dialogue Manager")] 
     [SerializeField] protected DialogueManager dialogueManager;
@@ -78,5 +82,8 @@ public class UIController : MonoBehaviour
         if (dialogueManager.DialogueIsHappening)
             dialogueAnimator.SetBool("StartOpen", true);
         healthBarAnimator.SetBool("Show", true);
+        PauseWindow.SetActive(true);
+        SettingsWindow.SetActive(false);
+        ExitWindow.SetActive(false);
     }
 }

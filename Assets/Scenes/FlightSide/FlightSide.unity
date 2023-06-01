@@ -6387,6 +6387,9 @@ MonoBehaviour:
   healthBarAnimator: {fileID: 1294227173}
   transitionWindowLR: {fileID: 2142127869}
   transitionWindowRL: {fileID: 801086937}
+  PauseWindow: {fileID: 247023787}
+  SettingsWindow: {fileID: 660725776}
+  ExitWindow: {fileID: 1215979869}
   dialogueManager: {fileID: 1057570488}
 --- !u!4 &1257474082
 Transform:

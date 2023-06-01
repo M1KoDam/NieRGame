@@ -9084,8 +9084,8 @@ Transform:
   - {fileID: 1663120708}
   - {fileID: 868652999}
   - {fileID: 1290255699}
-  - {fileID: 1772848864}
   - {fileID: 1127793733}
+  - {fileID: 1830900675}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10461,7 +10461,7 @@ Transform:
   - {fileID: 94021014}
   - {fileID: 773983269}
   m_Father: {fileID: 989047427}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1128724603
 GameObject:
@@ -12006,7 +12006,8 @@ MonoBehaviour:
   backGroundFlightSound: {fileID: 8300000, guid: ca473af7586f82e4e87a199cea8b357a, type: 3}
   enemyShotSound: {fileID: 8300000, guid: 2078fa87550259e4281566a1d9d542d3, type: 3}
   checkPoints: {fileID: 8300000, guid: e2820fc82bf52374a9efdfc5700915bb, type: 3}
-  attack2B: {fileID: 8300000, guid: c0863f43f3a589f4dbab2de7a21a41ca, type: 3}
+  attackLightSword2B: {fileID: 0}
+  attackHeavySword2B: {fileID: 0}
   getDamage2B: {fileID: 8300000, guid: 68acccf20b29d84418e192d2a2a30ae0, type: 3}
   podShot: {fileID: 8300000, guid: 18ae4308341531a4c9c248d2b162855e, type: 3}
   enemyAttack: {fileID: 8300000, guid: c777beefe781bad4096a557dc5759d46, type: 3}
@@ -15615,67 +15616,6 @@ RectTransform:
   m_AnchoredPosition: {x: -7.999939, y: 148}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1772848863
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1772848864}
-  - component: {fileID: 1772848866}
-  - component: {fileID: 1772848865}
-  m_Layer: 0
-  m_Name: Musics
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1772848864
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772848863}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 989047427}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1772848865
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772848863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f74527e62714e5fa24e76c90d3e1cc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _musicSlider: {fileID: 1098438073}
-  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
-  menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
---- !u!114 &1772848866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772848863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ff485367bf24c51ae4d8e6e2b60496f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  musics: {fileID: 1772848865}
 --- !u!1 &1781582301
 GameObject:
   m_ObjectHideFlags: 0
@@ -16524,6 +16464,71 @@ Transform:
   m_Father: {fileID: 1715616526}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1830900674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1830900675}
+  - component: {fileID: 1830900677}
+  - component: {fileID: 1830900676}
+  m_Layer: 0
+  m_Name: Musics
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1830900675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830900674}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 989047427}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1830900676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830900674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded195eeccd61541bc4864b3ff9e5a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musics: {fileID: 1830900677}
+--- !u!114 &1830900677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830900674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f74527e62714e5fa24e76c90d3e1cc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _musicSlider: {fileID: 1098438073}
+  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  flightTopMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  depoMusic: {fileID: 8300000, guid: e471cb5eef0fc4745af9b1acd6b2f6f4, type: 3}
+  factoryMusic: {fileID: 8300000, guid: 99d769fe6c95b6c469b2501f72402eea, type: 3}
+  bossMusic: {fileID: 8300000, guid: aee12fdefecbddf4696ae50ca353a3bc, type: 3}
+  menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
 --- !u!1 &1838173710
 GameObject:
   m_ObjectHideFlags: 0

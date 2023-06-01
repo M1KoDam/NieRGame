@@ -44,6 +44,7 @@ public class Lift : MonoBehaviour
     {
         if (_state != LiftState.Idle && DistanceToTarget < speed)
         {
+            sounds.AllSounds["LiftUpDown"].audioSource.Pause();
             _currentMovePointIndex += (int)_state;
             _state = LiftState.Idle;
         }
@@ -57,9 +58,15 @@ public class Lift : MonoBehaviour
     private void HandleControls()
     {
         if (_state == LiftState.Idle && Input.GetAxis("Vertical") > 0 && _currentMovePointIndex + 1 < movePoints.Length)
+        {
+            sounds.AllSounds["LiftUpDown"].PlaySound();
             _state = LiftState.MovingUp;
+        }
         else if (_state == LiftState.Idle && Input.GetAxis("Vertical") < 0 && _currentMovePointIndex - 1 >= 0)
+        {
+            sounds.AllSounds["LiftUpDown"].PlaySound();
             _state = LiftState.MovingDown;
+        }
     }
 
     private void HandleMovement()

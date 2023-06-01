@@ -218,6 +218,7 @@ public class Android : Player
     {
         if (Input.GetMouseButtonDown(1) && _fallAttack && !_onFoot)
         {
+            sounds.AllSounds["AttackHeavySword2B"].PlaySound();
             Damage(heavyAttackDamage, heavyAttackRange);
             ChangeAnimation(Animation.FallAttackStart);
             Rb.velocity = new Vector2(0, 0.25f);
@@ -268,7 +269,7 @@ public class Android : Player
             
             if (_currentAnimation == Animation.Attack1 && CheckAnimTime(0.5f))
             {
-                sounds.AllSounds["Attack2B"].PlaySound();
+                sounds.AllSounds["AttackLightSword2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 ChangeAttack(attackDelay2);
                 ChangeAnimation(Animation.Attack2);
@@ -278,7 +279,7 @@ public class Android : Player
 
             if (_currentAnimation == Animation.Attack2 && CheckAnimTime(0.5f))
             {
-                sounds.AllSounds["Attack2B"].PlaySound();
+                sounds.AllSounds["AttackLightSword2B"].PlaySound();
                 ChangeAttack(attackDelay3);
                 ChangeAnimation(Animation.Attack3);
                 Rb.velocity = new Vector2(7 * (int)faceOrientation, Rb.velocity.y);
@@ -288,7 +289,7 @@ public class Android : Player
 
             if (_canAttack)
             {
-                sounds.AllSounds["Attack2B"].PlaySound();
+                sounds.AllSounds["AttackLightSword2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 _canAttack = false;
                 ChangeAttack(attackDelay1);
@@ -303,7 +304,7 @@ public class Android : Player
         {
             if (_canAttackInAir)
             {
-                sounds.AllSounds["Attack2B"].PlaySound();
+                sounds.AllSounds["AttackLightSword2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 ChangeAnimation(Animation.AttackInAir1);
                 Rb.velocity = new Vector2(0, 0.5f);
@@ -313,7 +314,7 @@ public class Android : Player
 
             if (Input.GetMouseButtonDown(0) && _currentAnimation is Animation.AttackInAir1 && CheckAnimTime(0.5f))
             {
-                sounds.AllSounds["Attack2B"].PlaySound();
+                sounds.AllSounds["AttackLightSword2B"].PlaySound();
                 Damage(lightAttackDamage, lightAttackRange);
                 ChangeAnimation(Animation.AttackInAir2);
                 Rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
@@ -322,7 +323,7 @@ public class Android : Player
 
             if (Input.GetMouseButtonDown(0) && _currentAnimation == Animation.AttackInAir2 && CheckAnimTime(0.5f))
             {
-                sounds.AllSounds["Attack2B"].PlaySound();
+                sounds.AllSounds["AttackLightSword2B"].PlaySound();
                 ChangeAnimation(Animation.AttackInAir3);
                 Rb.velocity = new Vector2(4 * (int)faceOrientation, 0.5f);
                 spinningSword.Create();

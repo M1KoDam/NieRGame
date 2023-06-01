@@ -35,7 +35,8 @@ public class SmallGunner : Enemy
     private void FixedUpdate()
     {
         State.Execute(this);
-        FaceOrientation = GetFaceOrientation();
+        if (State is not DeadState)
+            FaceOrientation = GetFaceOrientation();
     }
 
     public override void Patrol()
@@ -129,6 +130,11 @@ public class SmallGunner : Enemy
         ChangeAnimation("GunnerDestroy");
         if (CurDestructionTime <= 0)
         {
+            if (FaceOrientation is Side.Right)
+            {
+                transform.Rotate(new Vector3(0, 180, 0));
+            }
+            
             var tempPosition = transform.position;
             var tempRotation = transform.rotation;
             

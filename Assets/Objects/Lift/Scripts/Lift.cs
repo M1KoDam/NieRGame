@@ -14,6 +14,8 @@ public class Lift : MonoBehaviour
     // private SpriteRenderer _buttonsRenderer;
     private Collider2D _collider;
 
+    public Sounds sounds;
+
     private Transform TargetMovePoint => movePoints[_currentMovePointIndex + (int)_state];
     private float DistanceToTarget => Mathf.Abs(transform.position.y - TargetMovePoint.position.y);
 
@@ -63,7 +65,7 @@ public class Lift : MonoBehaviour
     private void HandleMovement()
     {
         if (_state == LiftState.MovingDown)
-            player.transform.position += Vector3.up * (speed * (int)_state); 
+            player.transform.position += Vector3.up * (speed * (int)_state);
         transform.position += Vector3.up * (speed * (int)_state);
     }
 

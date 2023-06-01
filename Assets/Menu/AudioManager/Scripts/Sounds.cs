@@ -21,6 +21,7 @@ public class Sounds : MonoBehaviour
     [SerializeField] public AudioClip getDamage2B;
     [SerializeField] public AudioClip podShot;
     [SerializeField] public AudioClip enemyAttack;
+    [SerializeField] public AudioClip liftUpDown;
     public Dictionary<string, Sound> AllSounds;
     // Start is called before the first frame update
     void Awake()
@@ -37,6 +38,7 @@ public class Sounds : MonoBehaviour
             { "AttackHeavySword2B", gameObject.AddComponent<Sound>().InitializationSounds("Attack2B", 0.2f, attackHeavySword2B) },
             { "GetDamage2B", gameObject.AddComponent<Sound>().InitializationSounds("GetDamage2B", 0.2f, getDamage2B) },
             { "PodShot", gameObject.AddComponent<Sound>().InitializationSounds("PodShot", 0.2f, podShot) },
+            { "LiftUpDown", gameObject.AddComponent<Sound>().InitializationSounds("LiftUpDown", 0.2f, liftUpDown) },
         };
         /*AllSounds1 = new Dictionary<string, Sound>()
         {

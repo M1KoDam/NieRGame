@@ -17958,6 +17958,7 @@ MonoBehaviour:
   healthBarAnimator: {fileID: 85141498}
   transitionWindowLR: {fileID: 770762610}
   transitionWindowRL: {fileID: 396420257}
+  dialogueManager: {fileID: 1428501014}
 --- !u!1 &2008071044
 GameObject:
   m_ObjectHideFlags: 0

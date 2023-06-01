@@ -32,6 +32,7 @@ public class SmallStubby: Enemy
     
     private void FixedUpdate()
     {
+        Debug.Log(FaceOrientation);
         if (CurrentAnimation is "StubbyStartAttack" or "StubbyAttack")
         {
             Attack();
@@ -39,7 +40,8 @@ public class SmallStubby: Enemy
         }
 
         State.Execute(this);
-        FaceOrientation = GetFaceOrientation();
+        if (State is not DeadState)
+            FaceOrientation = GetFaceOrientation();
     }
 
     public override void Patrol()

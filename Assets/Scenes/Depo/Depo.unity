@@ -11002,7 +11002,7 @@ MonoBehaviour:
   explosionScale: 1
   radius: 20
   force: 30000
-  sounds: {fileID: 0}
+  sounds: {fileID: 670960474}
 --- !u!1 &1410835173
 GameObject:
   m_ObjectHideFlags: 0

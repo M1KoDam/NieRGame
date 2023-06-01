@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class SmallGunner : Enemy
 {
     [Header("Gun Settings")]
-    [SerializeField] private EnemyBullet bullet;
+    [SerializeField] private Bullet bullet;
     [SerializeField] private Transform gun;
 
     [Header("Step Climb Settings")]

@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
     private void Die()
     {
         State = PlayerState.Dead;
-        Invoke(nameof(Respawn), 3);
+        Invoke(nameof(Respawn), 1);
     }
 
     private void Respawn()

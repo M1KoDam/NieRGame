@@ -23,7 +23,9 @@ public class SpringyBullet : Bullet
         if (collision.gameObject.CompareTag("Player") && CurrentAnimation is not "SpringyBulletExploding")
             collision.gameObject.GetComponent<Player>().GetDamage(damage, transform);
         
-        if (!collision.gameObject.CompareTag("Ground"))
+        if (!(collision.gameObject.CompareTag("Platform") 
+              || collision.gameObject.CompareTag("Wall") 
+              || collision.gameObject.CompareTag("Stairs")))
             Destroy();
     }
 }

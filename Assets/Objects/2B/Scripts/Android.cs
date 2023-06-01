@@ -593,7 +593,7 @@ public class Android : Player
         if (collision.gameObject.CompareTag("Wall"))
         {
             _climb = false;
-            Invoke(nameof(ChangeMove), 0.5f);
+            Invoke(nameof(ChangeMove), 0.6f);
             if (!_onFoot)
                 ChangeAnimation(Animation.Fall);
         }

@@ -42,13 +42,8 @@ public class GameLES : LevelEventSystem
     
     public virtual void Respawn()
     {
-        if (Checkpoint.IsUnityNull())
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            return;
-        }
-        player.SetHealth(PlayerHealth);
-        player.ActivePlayer();
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void SaveCheckpoint(Checkpoint checkpoint)

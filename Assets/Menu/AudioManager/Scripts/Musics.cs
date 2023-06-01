@@ -10,6 +10,10 @@ public class Musics : MonoBehaviour
     private static float _musicVolume = 1;
     
     [SerializeField] public AudioClip flightSideMusic;
+    [SerializeField] public AudioClip flightTopMusic;
+    [SerializeField] public AudioClip depoMusic;
+    [SerializeField] public AudioClip factoryMusic;
+    [SerializeField] public AudioClip bossMusic;
     [SerializeField] public AudioClip menuMusic;
     public Dictionary<string, Sound> AllMusics;
     // Start is called before the first frame update
@@ -21,7 +25,11 @@ public class Musics : MonoBehaviour
                 "FlightSideMusic",
                 gameObject.AddComponent<Sound>().InitializationSounds("FlightSideMusic", 0.3f, flightSideMusic)
             },
+            { "FlightTopMusic", gameObject.AddComponent<Sound>().InitializationSounds("MenuMusic", 0.15f, flightTopMusic) },
             { "MenuMusic", gameObject.AddComponent<Sound>().InitializationSounds("MenuMusic", 0.15f, menuMusic) },
+            { "FactoryMusic", gameObject.AddComponent<Sound>().InitializationSounds("MenuMusic", 0.15f, factoryMusic) },
+            { "DepoMusic", gameObject.AddComponent<Sound>().InitializationSounds("MenuMusic", 0.15f, depoMusic) },
+            { "BossMusic", gameObject.AddComponent<Sound>().InitializationSounds("MenuMusic", 0.15f, bossMusic) },
         };
     }
 

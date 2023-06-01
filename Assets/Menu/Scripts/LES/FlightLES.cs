@@ -4,21 +4,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class FlightLES : LevelEventSystem
+public class FlightLES : GameLES
 {
     [Header("Spots")]
     [SerializeField] protected Transform[] moveSpots;
     [SerializeField] protected Transform[] spawnSpots;
-    
-    [Header("UIController")]
-    [SerializeField] protected UIController uiController;
-    
-    [Header("Triggers")]
-    [SerializeField] private DialogueTrigger[] dialogueTriggers;
-    
-    [Header("Player")] 
-    [SerializeField] private Player player;
-    
+
     protected int CurrentEvent;
     public bool dialogueEventIsHappening;
     protected bool AttackEventIsHappening;
@@ -28,18 +19,12 @@ public class FlightLES : LevelEventSystem
     
     protected override void StartLES()
     {
-        player.SetHealth(PlayerHealth);
+        base.StartLES();
         _dialogues = new Queue<DialogueTrigger>();
         foreach (var dialogueTrigger in dialogueTriggers)
             _dialogues.Enqueue(dialogueTrigger);
         CurrentEvent = -1;
-        Invoke(nameof(OpenLevel), 1);
         _smallFlyers = new List<SmallFlyer>();
-    }
-    
-    private void OpenLevel()
-    {
-        uiController.OpenLevel();
     }
 
     protected override void UpdateLES()
@@ -76,17 +61,16 @@ public class FlightLES : LevelEventSystem
         var dialogue = _dialogues.Dequeue();
         dialogue.TriggerDialogue();
     }
-    
+
     private void NextEvent()
     {
         AttackEventIsHappening = false;
         dialogueEventIsHappening = false;
         CurrentEvent++;
     }
-    
-    public override void NextLevel()
+
+    public override void EndDialogue()
     {
-        uiController.CloseLevel();
-        Invoke(nameof(OpenNextLevel), 1);
+        dialogueEventIsHappening = false;
     }
 }

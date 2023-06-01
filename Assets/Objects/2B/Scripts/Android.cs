@@ -52,8 +52,7 @@ public class Android : Player
     [SerializeField] private int lightAttackDamage = 20;
     [SerializeField] private int heavyAttackDamage = 60;
     [SerializeField] private Side faceOrientation;
-
-    [SerializeField] private Checkpoint checkpoint;
+    
     private List<Collider2D> _hitEnemies;
     
     // A variable used to give the animator a frame to update animations called outside the Update method
@@ -72,15 +71,18 @@ public class Android : Player
 
     public override void Start()
     {
-        State = PlayerState.Default;
-        Rb = GetComponent<Rigidbody2D>();
+        base.Start();
         _animator = GetComponent<Animator>();
         _hitEnemies = new List<Collider2D>();
     }
 
     private void Update()
     {
-        if (Dead()) return;
+        if (Dead())
+        {
+            ChangeAnimation(Animation.Idle);
+            return;
+        }
         if (Preprocessing()) return;
         StepClimb();
         if (Climb()) return;
@@ -91,33 +93,6 @@ public class Android : Player
         if (Fall()) return;
         Idle();
     }
-
-    #region Death
-
-    private bool Dead()
-    {
-        if (State is PlayerState.Dead)
-            return true;
-
-        if (health > 0) return false;
-        Die();
-        return true;
-    }
-    
-    private void Die()
-    {
-        State = PlayerState.Dead;
-        Invoke(nameof(Respawn), 5);
-    }
-
-    private void Respawn()
-    {
-        State = PlayerState.Default;
-        health = maxHealth;
-        transform.position = checkpoint.transform.position;
-    }
-
-    #endregion
 
     #region Preprocessing
     
@@ -203,8 +178,7 @@ public class Android : Player
             var hitCheckpoint = Physics2D.OverlapCircleAll(transform.position, 5, checkpoints);
             if (hitCheckpoint.Length > 0)
             {
-                sounds.AllSounds["CheckPoints"].PlaySound();
-                checkpoint = hitCheckpoint[0].GetComponent<Checkpoint>();
+                hitCheckpoint[0].GetComponent<Checkpoint>().SetCheckpoint();
             }
         }
     }

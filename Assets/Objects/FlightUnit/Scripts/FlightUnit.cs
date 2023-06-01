@@ -34,7 +34,7 @@ public class FlightUnit : Player
         ManageEngines();
         if (State is PlayerState.UnActive or PlayerState.Dead)
             return;
-        if (HandleDeath()) return;
+        if (Dead()) return;
         HandleMovement();
         HandleShooting();
         HandleFireRate();

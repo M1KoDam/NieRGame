@@ -26,12 +26,12 @@ public class UIController : MonoBehaviour
             SetPaused();
         }
     }
-    
+
     private void FixedUpdate()
     {
         _pauseDelay += Time.deltaTime;
     }
-    
+
     public void OpenLevel()
     {
         transitionWindowLR.SetBool("Open", false);

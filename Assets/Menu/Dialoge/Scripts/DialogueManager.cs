@@ -14,7 +14,7 @@ public class DialogueManager : MonoBehaviour
     public Animator windowAnimator;
     public Animator speakerAnimator;
 
-    public FlightLES levelEventSystem;
+    public GameLES levelEventSystem;
 
     private Queue<string> _sentences;
     private Queue<string> _speakers;
@@ -101,7 +101,7 @@ public class DialogueManager : MonoBehaviour
     {
         _ds = false;
         CancelInvoke(nameof(DisplayNextSentence));
-        levelEventSystem.dialogueEventIsHappening = false;
+        levelEventSystem.EndDialogue();
         windowAnimator.SetBool("StartOpen", false);
     }
 }

@@ -10,7 +10,7 @@ public enum PlayerState
 {
     Dead = -2,
     UnActive = -1,
-    Default = 0
+    Active = 0
 }
 
 public enum ViewType

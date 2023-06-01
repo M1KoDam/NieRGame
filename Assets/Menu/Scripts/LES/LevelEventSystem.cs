@@ -15,24 +15,6 @@ public class LevelEventSystem : MonoBehaviour
         _ => 100
     };
 
-    private void Start()
-    {
-        StartLES();
-    }
-
-    protected virtual void StartLES()
-    {
-    }
-
-    private void FixedUpdate()
-    {
-        UpdateLES();
-    }
-
-    protected virtual void UpdateLES()
-    {
-    }
-
     public virtual void NextLevel()
     {
         OpenNextLevel();

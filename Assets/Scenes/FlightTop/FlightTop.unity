@@ -8447,6 +8447,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _musicSlider: {fileID: 2133388264}
   flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  flightTopMusic: {fileID: 0}
+  depoMusic: {fileID: 0}
+  factoryMusic: {fileID: 0}
+  bossMusic: {fileID: 0}
   menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
 --- !u!1 &736026201
 GameObject:
@@ -17958,6 +17962,9 @@ MonoBehaviour:
   healthBarAnimator: {fileID: 85141498}
   transitionWindowLR: {fileID: 770762610}
   transitionWindowRL: {fileID: 396420257}
+  PauseWindow: {fileID: 284923695}
+  SettingsWindow: {fileID: 1552947411}
+  ExitWindow: {fileID: 610290838}
   dialogueManager: {fileID: 1428501014}
 --- !u!1 &2008071044
 GameObject:
@@ -18142,7 +18149,8 @@ MonoBehaviour:
   backGroundFlightSound: {fileID: 8300000, guid: ca473af7586f82e4e87a199cea8b357a, type: 3}
   enemyShotSound: {fileID: 8300000, guid: 2078fa87550259e4281566a1d9d542d3, type: 3}
   checkPoints: {fileID: 8300000, guid: e2820fc82bf52374a9efdfc5700915bb, type: 3}
-  attack2B: {fileID: 8300000, guid: c0863f43f3a589f4dbab2de7a21a41ca, type: 3}
+  attackLightSword2B: {fileID: 0}
+  attackHeavySword2B: {fileID: 0}
   getDamage2B: {fileID: 8300000, guid: 68acccf20b29d84418e192d2a2a30ae0, type: 3}
   podShot: {fileID: 8300000, guid: 18ae4308341531a4c9c248d2b162855e, type: 3}
   enemyAttack: {fileID: 8300000, guid: c777beefe781bad4096a557dc5759d46, type: 3}

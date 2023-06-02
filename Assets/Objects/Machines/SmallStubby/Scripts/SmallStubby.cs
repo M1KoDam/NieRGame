@@ -39,7 +39,8 @@ public class SmallStubby: Enemy
         }
 
         State.Execute(this);
-        FaceOrientation = GetFaceOrientation();
+        if (State is not DeadState)
+            FaceOrientation = GetFaceOrientation();
     }
 
     public override void Patrol()

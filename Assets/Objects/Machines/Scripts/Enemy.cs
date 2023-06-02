@@ -118,8 +118,8 @@ public abstract class Enemy : MonoBehaviour
         hp -= inputDamage;
         
         var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
-        Rb.velocity = new Vector2(-Math.Min(inputDamage / 5, 5) * damageVector, 0);
-        Rb.AddForce(new Vector2(0, Math.Min(inputDamage * 500, 20000)));
+        Rb.velocity = new Vector2(-Math.Min(inputDamage / 3, 10) * damageVector, 0);
+        Rb.AddForce(new Vector2(0, Math.Min(inputDamage * 5000, 200000)));
         
         IsDamaged = true;
         Invoke(nameof(RemoveDamaged), 2);

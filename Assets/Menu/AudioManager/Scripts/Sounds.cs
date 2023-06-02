@@ -9,7 +9,6 @@ public class Sounds : MonoBehaviour
 {
     [SerializeField] private Slider _soundSlider;
     
-    private static float _musicVolume = 1;
     private static float _soundVolume = 1;
 
     [SerializeField] public AudioClip explosionSound;
@@ -17,10 +16,12 @@ public class Sounds : MonoBehaviour
     [SerializeField] public AudioClip backGroundFlightSound;
     [SerializeField] public AudioClip enemyShotSound;
     [SerializeField] public AudioClip checkPoints;
-    [SerializeField] public AudioClip attack2B;
+    [SerializeField] public AudioClip attackLightSword2B;
+    [SerializeField] public AudioClip attackHeavySword2B;
     [SerializeField] public AudioClip getDamage2B;
     [SerializeField] public AudioClip podShot;
     [SerializeField] public AudioClip enemyAttack;
+    [SerializeField] public AudioClip liftUpDown;
     public Dictionary<string, Sound> AllSounds;
     // Start is called before the first frame update
     void Awake()
@@ -33,9 +34,11 @@ public class Sounds : MonoBehaviour
             { "EnemyShot", gameObject.AddComponent<Sound>().InitializationSounds("EnemyShot", 0.15f, enemyShotSound) },
             { "EnemyAttack", gameObject.AddComponent<Sound>().InitializationSounds("EnemyAttack", 0.15f, enemyAttack) },
             { "CheckPoints", gameObject.AddComponent<Sound>().InitializationSounds("CheckPoints", 0.2f, checkPoints) },
-            { "Attack2B", gameObject.AddComponent<Sound>().InitializationSounds("Attack2B", 0.2f, attack2B) },
+            { "AttackLightSword2B", gameObject.AddComponent<Sound>().InitializationSounds("Attack2B", 0.2f, attackLightSword2B) },
+            { "AttackHeavySword2B", gameObject.AddComponent<Sound>().InitializationSounds("Attack2B", 0.2f, attackHeavySword2B) },
             { "GetDamage2B", gameObject.AddComponent<Sound>().InitializationSounds("GetDamage2B", 0.2f, getDamage2B) },
             { "PodShot", gameObject.AddComponent<Sound>().InitializationSounds("PodShot", 0.2f, podShot) },
+            { "LiftUpDown", gameObject.AddComponent<Sound>().InitializationSounds("LiftUpDown", 0.2f, liftUpDown) },
         };
         /*AllSounds1 = new Dictionary<string, Sound>()
         {

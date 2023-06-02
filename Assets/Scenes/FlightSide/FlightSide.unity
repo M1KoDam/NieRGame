@@ -5487,6 +5487,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114049045}
   m_CullTransparentMesh: 1
+--- !u!1 &1124292576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1124292577}
+  - component: {fileID: 1124292579}
+  - component: {fileID: 1124292578}
+  m_Layer: 0
+  m_Name: Musics
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1124292577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124292576}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1875194982}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1124292578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124292576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff485367bf24c51ae4d8e6e2b60496f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musics: {fileID: 1124292579}
+--- !u!114 &1124292579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124292576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f74527e62714e5fa24e76c90d3e1cc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _musicSlider: {fileID: 457093608}
+  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  flightTopMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  depoMusic: {fileID: 8300000, guid: e471cb5eef0fc4745af9b1acd6b2f6f4, type: 3}
+  factoryMusic: {fileID: 8300000, guid: 99d769fe6c95b6c469b2501f72402eea, type: 3}
+  bossMusic: {fileID: 8300000, guid: aee12fdefecbddf4696ae50ca353a3bc, type: 3}
+  menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
 --- !u!1 &1131736617
 GameObject:
   m_ObjectHideFlags: 0
@@ -6322,6 +6387,9 @@ MonoBehaviour:
   healthBarAnimator: {fileID: 1294227173}
   transitionWindowLR: {fileID: 2142127869}
   transitionWindowRL: {fileID: 801086937}
+  PauseWindow: {fileID: 247023787}
+  SettingsWindow: {fileID: 660725776}
+  ExitWindow: {fileID: 1215979869}
   dialogueManager: {fileID: 1057570488}
 --- !u!4 &1257474082
 Transform:
@@ -8926,7 +8994,8 @@ MonoBehaviour:
   backGroundFlightSound: {fileID: 8300000, guid: ca473af7586f82e4e87a199cea8b357a, type: 3}
   enemyShotSound: {fileID: 8300000, guid: 2078fa87550259e4281566a1d9d542d3, type: 3}
   checkPoints: {fileID: 8300000, guid: e2820fc82bf52374a9efdfc5700915bb, type: 3}
-  attack2B: {fileID: 8300000, guid: c0863f43f3a589f4dbab2de7a21a41ca, type: 3}
+  attackLightSword2B: {fileID: 0}
+  attackHeavySword2B: {fileID: 0}
   getDamage2B: {fileID: 8300000, guid: 68acccf20b29d84418e192d2a2a30ae0, type: 3}
   podShot: {fileID: 8300000, guid: 18ae4308341531a4c9c248d2b162855e, type: 3}
   enemyAttack: {fileID: 8300000, guid: c777beefe781bad4096a557dc5759d46, type: 3}
@@ -11408,7 +11477,7 @@ Transform:
   - {fileID: 483948802}
   - {fileID: 1323880319}
   - {fileID: 1541217413}
-  - {fileID: 2023795451}
+  - {fileID: 1124292577}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12339,53 +12408,6 @@ Transform:
   m_Father: {fileID: 483948802}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2023795450
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2023795451}
-  - component: {fileID: 2023795452}
-  m_Layer: 0
-  m_Name: Musics
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2023795451
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023795450}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1875194982}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2023795452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023795450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f74527e62714e5fa24e76c90d3e1cc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _musicSlider: {fileID: 457093608}
-  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
-  menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
 --- !u!1 &2062990652
 GameObject:
   m_ObjectHideFlags: 0

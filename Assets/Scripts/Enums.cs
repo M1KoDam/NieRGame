@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public enum Side
 {
     Left = -1,
@@ -53,5 +51,23 @@ public static class Animation
         GetDamagedInAirFromBehind = "GetDamagedInAir2";
     
     public static readonly string[] GetDamagedAnimations = 
-        {GetDamagedClimb, GetDamagedFromFront, GetDamagedFromBehind, GetDamagedInAirFromFront, GetDamagedInAirFromBehind};
+        {
+            GetDamagedClimb,
+            GetDamagedFromFront,
+            GetDamagedFromBehind,
+            GetDamagedInAirFromFront,
+            GetDamagedInAirFromBehind
+        };
+}
+
+public static class GoliathStatics
+{
+    public const float IdleArmAngle = 0;
+    public const float IdleHandAngle = 0;
+
+    public const float SwingArmAngle = -150;
+    public const float SwingHandAngle = -37;
+
+    public const float KickArmAngle = -30;
+    public const float KickHandAngle = 10;
 }

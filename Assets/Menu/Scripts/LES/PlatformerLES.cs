@@ -6,15 +6,30 @@ using UnityEngine.SceneManagement;
 
 public class PlatformerLES : GameLES
 {
+    private bool _dialogueIsHappening;
+    private bool _endIsComing;
+    
     public void GetTriggerSignal(int signal, bool blockPlayer)
     {
         if (blockPlayer)
             player.UnActivePlayer();
+
+        if (signal is 0)
+        {
+            StartDialogue(1);
+            _endIsComing = true;
+        }
         
         if (signal is 1)
         {
             StartDialogue(0);
         }
+    }
+
+    protected override void UpdateLES()
+    {
+        if (!_dialogueIsHappening && _endIsComing)
+            NextLevel();
     }
     
     public override void Respawn()
@@ -33,11 +48,13 @@ public class PlatformerLES : GameLES
 
     private void StartDialogue(int index)
     {
+        _dialogueIsHappening = true;
         dialogueTriggers[index].TriggerDialogue();
     }
     
     public override void EndDialogue()
     {
+        _dialogueIsHappening = false;
         player.ActivePlayer();
     }
 }

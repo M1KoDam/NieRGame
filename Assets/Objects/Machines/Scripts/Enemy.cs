@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    public virtual AttackType[] attackTypes { get; set; }
+
     protected Vector2 RightLocalScale;
     protected Vector2 LeftLocalScale;
 

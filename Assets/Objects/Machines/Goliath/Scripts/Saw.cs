@@ -10,9 +10,9 @@ public class Saw : MonoBehaviour
         transform.Rotate(-Vector3.forward, speed);
     }
 
-    private void OnCollisionStay2D(Collision2D collsion)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collsion.gameObject.CompareTag("Player"))
-            collsion.gameObject.GetComponent<Player>().GetDamage(damage, transform);
+        if (collider.gameObject.CompareTag("Player"))
+            collider.gameObject.GetComponent<Player>().GetDamage(damage, transform);
     }
 }

@@ -73,12 +73,13 @@ public class Goliath : Enemy
             new NoAttack(this),
             new GoliathSpawnEnemiesAttack(this)
         };
-
+        
         targetPosition = 2;
         _attackManager = new AttackManager(this);
         base.Start();
         Collider = head.GetComponent<Collider2D>();
         Activate();
+        sounds.AllSounds["Saw"].PlaySoundLoop();
     }
 
     protected void Update()

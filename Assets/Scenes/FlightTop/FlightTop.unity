@@ -8447,10 +8447,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _musicSlider: {fileID: 2133388264}
   flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
-  flightTopMusic: {fileID: 0}
-  depoMusic: {fileID: 0}
-  factoryMusic: {fileID: 0}
-  bossMusic: {fileID: 0}
+  flightTopMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  depoMusic: {fileID: 8300000, guid: e471cb5eef0fc4745af9b1acd6b2f6f4, type: 3}
+  factoryMusic: {fileID: 8300000, guid: 99d769fe6c95b6c469b2501f72402eea, type: 3}
+  bossMusic: {fileID: 8300000, guid: aee12fdefecbddf4696ae50ca353a3bc, type: 3}
   menuMusic: {fileID: 8300000, guid: bfd8f5c0a8609de49b028bc7abe2810b, type: 3}
 --- !u!1 &736026201
 GameObject:

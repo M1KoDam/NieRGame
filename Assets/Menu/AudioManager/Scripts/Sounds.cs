@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,7 @@ public class Sounds : MonoBehaviour
     [SerializeField] public AudioClip podShot;
     [SerializeField] public AudioClip enemyAttack;
     [SerializeField] public AudioClip liftUpDown;
+    [SerializeField] public AudioClip saw;
     public Dictionary<string, Sound> AllSounds;
     // Start is called before the first frame update
     void Awake()
@@ -39,6 +41,7 @@ public class Sounds : MonoBehaviour
             { "GetDamage2B", gameObject.AddComponent<Sound>().InitializationSounds("GetDamage2B", 0.2f, getDamage2B) },
             { "PodShot", gameObject.AddComponent<Sound>().InitializationSounds("PodShot", 0.2f, podShot) },
             { "LiftUpDown", gameObject.AddComponent<Sound>().InitializationSounds("LiftUpDown", 0.2f, liftUpDown) },
+            { "Saw", gameObject.AddComponent<Sound>().InitializationSounds("Saw", 0.15f, saw)}
         };
         /*AllSounds1 = new Dictionary<string, Sound>()
         {

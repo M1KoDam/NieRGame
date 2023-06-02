@@ -82,12 +82,6 @@ public class Goliath : Enemy
         sounds.AllSounds["Saw"].PlaySoundLoop();
     }
 
-    protected void Update()
-    {
-        if (State is DeadState)
-            return;
-    }
-
     private void HandleHandMovement()
     {
         if (!armOnTarget)

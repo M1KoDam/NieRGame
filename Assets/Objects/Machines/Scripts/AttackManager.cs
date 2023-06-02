@@ -4,7 +4,6 @@ public class AttackManager
 {
     private readonly Enemy _enemy;
     private AttackType _currentAttack;
-    private bool _attackProcessing;
     private float _timer;
 
     public AttackManager(Enemy enemy)
@@ -27,11 +26,17 @@ public class AttackManager
 
     public void ExecuteRandomAttack(out bool finished)
     {
-        var random = new System.Random();
-        ExecuteAttack(_currentAttack ?? _enemy.attackTypes[random.Next(0, _enemy.attackTypes.Length - 1)],
-            out var hasFinished);
-
-        _attackProcessing = !hasFinished;
-        finished = hasFinished;
+        if (_currentAttack is null)
+        {
+            var random = new System.Random();
+            var randomNumber = random.Next(0, _enemy.attackTypes.Length);
+            ExecuteAttack(_enemy.attackTypes[randomNumber], out var hasFinished);
+            finished = hasFinished;
+        }
+        else
+        {
+            ExecuteAttack(_currentAttack, out var hasFinished);
+            finished = hasFinished;
+        }
     }
 }

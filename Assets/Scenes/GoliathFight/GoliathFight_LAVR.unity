@@ -20918,23 +20918,34 @@ MonoBehaviour:
   layerGround:
     serializedVersion: 2
     m_Bits: 0
-  sounds: {fileID: 0}
-  explosionPoints: []
+  sounds: {fileID: 1637988572}
+  explosionPoints:
+  - {fileID: 1503848338}
+  - {fileID: 1788825090}
+  - {fileID: 514930578}
+  - {fileID: 1596541876}
+  - {fileID: 1680644127}
+  - {fileID: 510478062}
+  - {fileID: 1601002971}
+  - {fileID: 1047570890}
   enemyPrefabs: []
   spawnPoints: []
-  bulletPrefab: {fileID: 0}
-  starPrefab: {fileID: 0}
-  springyBulletPrefab: {fileID: 0}
-  bulletPosition: {fileID: 0}
-  head: {fileID: 0}
-  springyBulletRate: 0
-  fireRate: 0
-  speed: 0
-  platformLevels: []
-  armRight: {fileID: 0}
-  handRight: {fileID: 0}
-  elbowRight: {fileID: 0}
-  fistRight: {fileID: 0}
+  bulletPrefab: {fileID: 311161224}
+  starPrefab: {fileID: 1735295200}
+  springyBulletPrefab: {fileID: 11444483}
+  bulletPosition: {fileID: 1136490519}
+  head: {fileID: 1197638741}
+  springyBulletRate: 4
+  fireRate: 2
+  speed: 0.1
+  platformLevels:
+  - {fileID: 1044294561}
+  - {fileID: 1820416854}
+  - {fileID: 1410524461}
+  armRight: {fileID: 1491321795}
+  handRight: {fileID: 1127369049}
+  elbowRight: {fileID: 830941829}
+  fistRight: {fileID: 1295615728}
 --- !u!50 &2090583945
 Rigidbody2D:
   serializedVersion: 4

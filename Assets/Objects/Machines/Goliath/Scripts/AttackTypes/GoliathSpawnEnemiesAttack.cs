@@ -25,9 +25,10 @@ public class GoliathSpawnEnemiesAttack : AttackType
 
     private void SpawnEnemies()
     {
+        Debug.Log("spawn enemies");
         foreach (var spawnpoint in _goliath.spawnPoints)
         {
-            var randomEnemyPrefab = _goliath.enemyPrefabs[Random.Range(0, _goliath.enemyPrefabs.Length-1)];
+            var randomEnemyPrefab = _goliath.enemyPrefabs[Random.Range(0, _goliath.enemyPrefabs.Length)];
             Object.Instantiate(randomEnemyPrefab, spawnpoint.position, _goliath.transform.rotation);
         }
 

@@ -59,7 +59,7 @@ public class GoliathShootingRotatingAttack : AttackType
             : _goliath.bulletPrefab;
         var bul = Object.Instantiate(bulletPrefab, _goliath.bulletPosition.position, _goliath.head.transform.rotation);
         bul.GetComponent<Rigidbody2D>().velocity = -bul.transform.right * bul.bulletSpeed;
-        // sounds.AllSounds["EnemyShot"].PlaySound();
+        _goliath.sounds.AllSounds["EnemyShot"].PlaySound();
         Object.Destroy(bul.gameObject, 5f);
         
         _canShoot = false;

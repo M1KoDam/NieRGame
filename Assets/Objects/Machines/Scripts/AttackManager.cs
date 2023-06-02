@@ -1,5 +1,4 @@
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class AttackManager
 {
@@ -28,7 +27,8 @@ public class AttackManager
 
     public void ExecuteRandomAttack(out bool finished)
     {
-        ExecuteAttack(_currentAttack ?? _enemy.attackTypes[Random.Range(0, _enemy.attackTypes.Length - 1)],
+        var random = new System.Random();
+        ExecuteAttack(_currentAttack ?? _enemy.attackTypes[random.Next(0, _enemy.attackTypes.Length - 1)],
             out var hasFinished);
 
         _attackProcessing = !hasFinished;

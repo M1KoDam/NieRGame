@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Goliath : Enemy
 {
+    [SerializeField] public Sounds sounds;
     [SerializeField] public Transform[] explosionPoints;
     
     [SerializeField] public Enemy[] enemyPrefabs;
@@ -77,6 +78,7 @@ public class Goliath : Enemy
         _attackManager = new AttackManager(this);
         base.Start();
         Collider = head.GetComponent<Collider2D>();
+        Activate();
     }
 
     protected void Update()

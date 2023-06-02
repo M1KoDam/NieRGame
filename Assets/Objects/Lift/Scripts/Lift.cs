@@ -14,6 +14,8 @@ public class Lift : MonoBehaviour
     // private SpriteRenderer _buttonsRenderer;
     private Collider2D _collider;
 
+    public Sounds sounds;
+
     private Transform TargetMovePoint => movePoints[_currentMovePointIndex + (int)_state];
     private float DistanceToTarget => Mathf.Abs(transform.position.y - TargetMovePoint.position.y);
 
@@ -42,6 +44,7 @@ public class Lift : MonoBehaviour
     {
         if (_state != LiftState.Idle && DistanceToTarget < speed)
         {
+            sounds.AllSounds["LiftUpDown"].audioSource.Pause();
             _currentMovePointIndex += (int)_state;
             _state = LiftState.Idle;
         }
@@ -55,15 +58,21 @@ public class Lift : MonoBehaviour
     private void HandleControls()
     {
         if (_state == LiftState.Idle && Input.GetAxis("Vertical") > 0 && _currentMovePointIndex + 1 < movePoints.Length)
+        {
+            sounds.AllSounds["LiftUpDown"].PlaySound();
             _state = LiftState.MovingUp;
+        }
         else if (_state == LiftState.Idle && Input.GetAxis("Vertical") < 0 && _currentMovePointIndex - 1 >= 0)
+        {
+            sounds.AllSounds["LiftUpDown"].PlaySound();
             _state = LiftState.MovingDown;
+        }
     }
 
     private void HandleMovement()
     {
         if (_state == LiftState.MovingDown)
-            player.transform.position += Vector3.up * (speed * (int)_state); 
+            player.transform.position += Vector3.up * (speed * (int)_state);
         transform.position += Vector3.up * (speed * (int)_state);
     }
 

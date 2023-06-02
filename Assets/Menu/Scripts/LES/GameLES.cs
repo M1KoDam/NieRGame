@@ -48,6 +48,7 @@ public class GameLES : LevelEventSystem
 
     public void SaveCheckpoint(Checkpoint checkpoint)
     {
+        player.SetHealth(PlayerHealth);
         Checkpoint = checkpoint;
         StartSaving();
         Invoke(nameof(StopSaving), 1);

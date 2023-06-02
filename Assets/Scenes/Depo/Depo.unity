@@ -16877,8 +16877,8 @@ MonoBehaviour:
   buttons: {fileID: 0}
   speed: 0.1
   movePoints:
-  - {fileID: 1222576491}
   - {fileID: 905724550}
+  - {fileID: 1222576491}
   sounds: {fileID: 670960474}
 --- !u!212 &716060138
 SpriteRenderer:
@@ -16940,7 +16940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 716060134}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 546.27997, y: -11.58, z: -0.60863936}
+  m_LocalPosition: {x: 546.27997, y: -11.2, z: -0.60863936}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

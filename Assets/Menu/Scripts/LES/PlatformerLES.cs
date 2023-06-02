@@ -8,6 +8,7 @@ public class PlatformerLES : GameLES
 {
     private bool _dialogueIsHappening;
     private bool _endIsComing;
+    private bool _gameEndComing;
     
     public void GetTriggerSignal(int signal, bool blockPlayer)
     {
@@ -24,12 +25,28 @@ public class PlatformerLES : GameLES
         {
             StartDialogue(0);
         }
+
+        if (signal is -1)
+        {
+            StartDialogue(0);
+            _gameEndComing = true;
+        }
     }
 
     protected override void UpdateLES()
     {
+        if (!_dialogueIsHappening && _gameEndComing)
+        {
+            uiController.CloseLevel();
+            Invoke(nameof(ToMenu), 1);
+        }
         if (!_dialogueIsHappening && _endIsComing)
             NextLevel();
+    }
+
+    private void ToMenu()
+    {
+        uiController.BackToMenu();
     }
     
     public override void Respawn()

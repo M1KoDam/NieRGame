@@ -51102,6 +51102,7 @@ MonoBehaviour:
   podShot: {fileID: 8300000, guid: 18ae4308341531a4c9c248d2b162855e, type: 3}
   enemyAttack: {fileID: 8300000, guid: c777beefe781bad4096a557dc5759d46, type: 3}
   liftUpDown: {fileID: 8300000, guid: 11032d6e15749a741964c41feed10f98, type: 3}
+  saw: {fileID: 8300000, guid: f27dfcb1a7286b349a3edd9ba29dbc0a, type: 3}
 --- !u!4 &1290255699
 Transform:
   m_ObjectHideFlags: 0

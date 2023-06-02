@@ -28,6 +28,8 @@ public class Goliath : Enemy
     [SerializeField] private GameObject handRight;
     [SerializeField] private Transform elbowRight;
     [SerializeField] private GameObject fistRight;
+    
+    [SerializeField] private PlatformerLES _platformerLes;
 
     private AttackManager _attackManager;
     private Vector3? _targetPosition;
@@ -165,6 +167,8 @@ public class Goliath : Enemy
 
             foreach (var explosionPoint in explosionPoints)
                 StartCoroutine(CreateExplosion(explosionPoint.position, tempRotation));
+
+            _platformerLes.GetTriggerSignal(-1, true);
         }
         else
             CurDestructionTime -= Time.deltaTime;

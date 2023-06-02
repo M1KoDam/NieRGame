@@ -16,10 +16,12 @@ public class GoliathSpawnEnemiesAttack : AttackType
         finished = false;
 
         if (_attackStatus == 0)
-            SpawnEnemies();
+            Sleep(1.5f);
         if (_attackStatus == 1)
-            Sleep(10);
+            SpawnEnemies();
         if (_attackStatus == 2)
+            Sleep(10);
+        if (_attackStatus == 3)
             finished = true;
     }
 

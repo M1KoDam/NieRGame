@@ -1,14 +1,13 @@
 using UnityEngine;
 
-public class GoliathShootingAttack : AttackType
+public class GoliathShootingRotatingAttack : AttackType
 {
     private readonly Goliath _goliath;
     private int _attackStatus;
     private float _fireTimer;
     private bool _canShoot;
-    private float _timer;
 
-    public GoliathShootingAttack(Goliath goliath)
+    public GoliathShootingRotatingAttack(Goliath goliath)
     {
         _goliath = goliath;
     }
@@ -17,18 +16,19 @@ public class GoliathShootingAttack : AttackType
     {
         finished = false;
 
-        if (_attackStatus == 0)
+        if (0 <= _attackStatus && _attackStatus <= 3)
             HandleShooting();
-
+        
         if (_attackStatus == 0)
-            Sleep(10.5f * _goliath.fireDelay);
+            Rotate(45);
         if (_attackStatus == 1)
+            Rotate(-45);
+        if (_attackStatus == 2)
+            Rotate(45);
+        if (_attackStatus == 3)
+            Rotate(0);
+        if (_attackStatus == 4)
             finished = true;
-    }
-
-    public override void Reset()
-    {
-        _attackStatus = 0;
     }
 
     private void HandleShooting()
@@ -41,7 +41,7 @@ public class GoliathShootingAttack : AttackType
     
     private void HandleFireRate()
     {
-        if (_fireTimer < 3 * _goliath.fireDelay)
+        if (_fireTimer < _goliath.fireDelay)
         {
             _fireTimer += Time.fixedDeltaTime;
         }
@@ -54,24 +54,26 @@ public class GoliathShootingAttack : AttackType
 
     private void Shoot()
     {
-        var bulletPrefab = _goliath.starPrefab;
+        var bulletPrefab = Random.Range(1, _goliath.springyBulletRate) == 1
+            ? _goliath.springyBulletPrefab
+            : _goliath.bulletPrefab;
         var bul = Object.Instantiate(bulletPrefab, _goliath.bulletPosition.position, _goliath.head.transform.rotation);
-        foreach (var rb in bul.GetComponentsInChildren<Rigidbody2D>())
-            rb.velocity = -bul.transform.right * 8;
+        bul.GetComponent<Rigidbody2D>().velocity = -bul.transform.right * bul.bulletSpeed;
         // sounds.AllSounds["EnemyShot"].PlaySound();
         Object.Destroy(bul.gameObject, 5f);
         
         _canShoot = false;
     }
-    
-    private void Sleep(float seconds)
-    {
-        _timer += Time.fixedDeltaTime;
 
-        if (_timer >= seconds)
-        {
-            _timer = 0;
+    private void Rotate(float angle)
+    {
+        _goliath.head.targetRotation = angle;
+        if (_goliath.head.rotationOnTarget)
             _attackStatus++;
-        }
+    }
+    
+    public override void Reset()
+    {
+        _attackStatus = 0;
     }
 }

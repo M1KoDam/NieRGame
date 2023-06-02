@@ -27,12 +27,9 @@ public class GoliathSawAttack : AttackType
             Idle();
         if (_attackStatus == 5)
             finished = true;
-
-        if (finished)
-            Reset();
     }
 
-    private void Reset()
+    public override void Reset()
     {
         _attackStatus = 0;
     }

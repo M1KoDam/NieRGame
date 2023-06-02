@@ -5546,7 +5546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _musicSlider: {fileID: 457093608}
-  flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
+  flightSideMusic: {fileID: 8300000, guid: 40f7bc57d3a99164ebca9d997f2c97f4, type: 3}
   flightTopMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
   depoMusic: {fileID: 8300000, guid: e471cb5eef0fc4745af9b1acd6b2f6f4, type: 3}
   factoryMusic: {fileID: 8300000, guid: 99d769fe6c95b6c469b2501f72402eea, type: 3}

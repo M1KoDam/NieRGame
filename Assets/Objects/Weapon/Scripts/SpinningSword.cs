@@ -20,6 +20,8 @@ public class SpinningSword : MonoBehaviour
     private List<Collider2D> _hitEnemies;
     private Vector2 TransformCoord => transform.position + new Vector3(0, 0.18f, 0);
 
+    private float _startVelocityX;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,10 @@ public class SpinningSword : MonoBehaviour
     
     void FixedUpdate()
     {
+        if (_rb.velocity.x * _startVelocityX < 0)
+        {
+            _hitEnemies.Clear();
+        }
         var _tempHitEnemies = Physics2D.OverlapBoxAll(TransformCoord, attackRadius, 0, enemies);
         foreach (var enemy in _tempHitEnemies)
         {
@@ -40,9 +46,9 @@ public class SpinningSword : MonoBehaviour
         }
         
         var hitBullets = Physics2D.OverlapBoxAll(TransformCoord, attackRadius, 0, enemyBullet);
-        foreach (var enemy in hitBullets)
+        foreach (var bullet in hitBullets)
         {
-            enemy.GetComponent<EnemyBullet>().Destroy();
+            bullet.GetComponent<EnemyBullet>().Destroy();
         }
         
         transform.rotation = new Quaternion(0, 0, 0, 0);
@@ -58,6 +64,7 @@ public class SpinningSword : MonoBehaviour
         gameObject.SetActive(true);
         transform.position = player.transform.position + new Vector3(3*(int)player.GetFaceOrientation(), 0,0 );
         _rb.velocity = new Vector2(20*(int)player.GetFaceOrientation(), 0.2f);
+        _startVelocityX = _rb.velocity.x;
     }
 
     public void Destroy()

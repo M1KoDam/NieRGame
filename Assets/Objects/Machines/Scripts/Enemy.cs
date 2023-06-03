@@ -115,6 +115,13 @@ public abstract class Enemy : MonoBehaviour
         if (State is DeadState)
             return;
         
+        if (inputDamage >= 20)
+        {
+            CanAttack = false;
+            CancelInvoke(nameof(WaitForAttack));
+            Invoke(nameof(WaitForAttack), 1);
+        }
+        
         hp -= inputDamage;
         
         var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;

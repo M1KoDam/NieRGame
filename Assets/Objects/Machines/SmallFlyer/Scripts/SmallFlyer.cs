@@ -272,6 +272,13 @@ public class SmallFlyer : Enemy
     
     public override void GetDamage(int inputDamage, Transform attackVector)
     {
+        if (inputDamage >= 20)
+        {
+            CanAttack = false;
+            CancelInvoke(nameof(WaitForAttack));
+            Invoke(nameof(WaitForAttack), 1);
+        }
+        
         Angle -= Math.Min(20, inputDamage / 4);
         hp -= inputDamage;
     }

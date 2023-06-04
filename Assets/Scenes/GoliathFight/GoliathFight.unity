@@ -24257,8 +24257,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1900135436}
-  - component: {fileID: 1900135438}
   - component: {fileID: 1900135437}
+  - component: {fileID: 1900135438}
   m_Layer: 0
   m_Name: Musics
   m_TagString: Untagged
@@ -24309,7 +24309,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1900135435}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ff485367bf24c51ae4d8e6e2b60496f, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a28a362911e1ed4bac652e505a524a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   musics: {fileID: 1900135437}

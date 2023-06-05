@@ -10974,7 +10974,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
-  gameLes: {fileID: 0}
+  gameLes: {fileID: 1274347160}
   speed: 0.5
   maxSway: 5
   rotationSpeed: 2.5

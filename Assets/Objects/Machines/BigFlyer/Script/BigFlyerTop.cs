@@ -47,6 +47,7 @@ public class BigFlyerTop: SmallFlyerTop
                 Stage4();
                 break;
             default:
+                attackRate = 3f;
                 Stage5();
                 break;
         }
@@ -95,7 +96,14 @@ public class BigFlyerTop: SmallFlyerTop
     private void Stage5()
     {
         Debug.Log($"пятая стадия, {hp}");
-        Ult();
+        if (_stageTime >= 500 || (IsUlt && !IsLookingAtPlayer()))
+            Ult();
+        else if (_stageTime <= 500)
+            SupportAttack();
+        
+        _stageTime += 1;
+        if (_stageTime > 1500)
+            _stageTime = 0;
     }
 
     private void Ult()

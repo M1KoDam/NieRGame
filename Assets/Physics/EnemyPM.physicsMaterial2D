@@ -6,6 +6,6 @@ PhysicsMaterial2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TrolleyMaterial
-  friction: 0.6
+  m_Name: EnemyPM
+  friction: 2
   bounciness: 0

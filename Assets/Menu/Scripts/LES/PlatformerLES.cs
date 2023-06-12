@@ -6,10 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class PlatformerLES : GameLES
 {
+    [SerializeField] private PlayerCamera Camera;
     private bool _dialogueIsHappening;
     private bool _endIsComing;
     private bool _gameEndComing;
-    
+
     public void GetTriggerSignal(int signal, bool blockPlayer)
     {
         if (blockPlayer)
@@ -30,6 +31,16 @@ public class PlatformerLES : GameLES
         {
             StartDialogue(0);
             _gameEndComing = true;
+        }
+
+        if (signal is 3)
+        {
+            Camera.SetSize(12.5f);
+        }
+
+        if (signal is 2)
+        {
+            Camera.SetSize(7.5f);
         }
     }
 
@@ -57,6 +68,7 @@ public class PlatformerLES : GameLES
             return;
         }
         Time.timeScale = 1;
+        Camera.RollBack();
         player.SetHealth(PlayerHealth);
         player.ActivePlayer();
         player.transform.position = Checkpoint.transform.position;

@@ -1,10 +1,12 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private Player player;
     [SerializeField, Range(0f, 1f)] private float alpha;
+    [SerializeField] private GameObject background;
     private Vector3 _prevPos;
     private Camera _camera;
     private float _defaultCameraSize;
@@ -20,7 +22,8 @@ public class PlayerCamera : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(_cameraSize);
+        if (!background.IsUnityNull())
+            background.transform.position = new Vector3(transform.position.x, transform.position.y+2, 0);
         var newPosition = _prevPos + alpha * (player.transform.position - _prevPos);
         // var newPosition = (_prevPos + player.transform.position) / 2f;
         newPosition.z = _prevPos.z;

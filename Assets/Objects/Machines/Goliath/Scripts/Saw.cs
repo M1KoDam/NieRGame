@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Saw : MonoBehaviour
 {
-    [SerializeField] private int damage;
     public float speed;
+    public bool attacks;
+    
+    [SerializeField] private int damage;
 
     private void FixedUpdate()
     {
@@ -12,7 +14,7 @@ public class Saw : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (attacks && collider.gameObject.CompareTag("Player"))
             collider.gameObject.GetComponent<Player>().GetDamage(damage, transform);
     }
 }

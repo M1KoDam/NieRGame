@@ -62,6 +62,7 @@ public class PlatformerLES : GameLES
     
     public override void Respawn()
     {
+        Debug.Log("Respawn");
         if (Checkpoint.IsUnityNull())
         {
             base.Respawn();

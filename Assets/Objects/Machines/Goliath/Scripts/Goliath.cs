@@ -16,6 +16,7 @@ public class Goliath : Enemy
     [SerializeField] public SpringyBullet springyBulletPrefab;
     [SerializeField] public Transform bulletPosition;
     [SerializeField] public GoliathHead head;
+    [SerializeField] public Saw saw;
     [SerializeField] public int springyBulletRate;
     [SerializeField] public float fireRate;
 

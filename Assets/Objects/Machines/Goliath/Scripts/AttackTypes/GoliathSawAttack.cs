@@ -14,7 +14,7 @@ public class GoliathSawAttack : AttackType
     public override void Execute(out bool finished)
     {
         finished = false;
-        
+
         if (_attackStatus == 0)
             Swing();
         if (_attackStatus == 1)
@@ -36,6 +36,8 @@ public class GoliathSawAttack : AttackType
 
     private void Swing()
     {
+        _goliath.saw.attacks = true;
+
         _goliath.ArmRotationSpeed = 1;
         _goliath.HandRotationSpeed = 1;
         
@@ -48,6 +50,8 @@ public class GoliathSawAttack : AttackType
     
     private void Kick()
     {
+        _goliath.saw.attacks = true;
+
         _goliath.ArmRotationSpeed = 3;
         _goliath.HandRotationSpeed = 3;
 
@@ -60,6 +64,8 @@ public class GoliathSawAttack : AttackType
     
     private void Idle()
     {
+        _goliath.saw.attacks = false;
+
         _goliath.HandRotationSpeed = 0.25f;
         _goliath.ArmRotationSpeed = 0.25f;
         

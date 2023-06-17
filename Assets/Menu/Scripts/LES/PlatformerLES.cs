@@ -72,7 +72,6 @@ public class PlatformerLES : GameLES
     
     private void HideHints(int signal)
     {
-        Debug.Log(true);
         if (signal > hintAnimators.Length - 1)
             return;
         hintAnimators[signal].SetBool("IsHide", true);

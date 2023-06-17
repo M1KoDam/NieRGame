@@ -26,9 +26,8 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && (CanPause || _isPaused))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            _pauseDelay = 0;
             SetPaused();
         }
     }
@@ -56,6 +55,9 @@ public class UIController : MonoBehaviour
 
     public void SetPaused()
     {
+        if (!(CanPause || _isPaused))
+            return;
+        _pauseDelay = 0;
         _isPaused = !_isPaused;
         if (_isPaused)
         {

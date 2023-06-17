@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 public class PlatformerLES : GameLES
 {
     [SerializeField] private PlayerCamera Camera;
+
+    [Header("Control")] [SerializeField] private Animator[] controlAnimators;
+    [Header("Control")] [SerializeField] private Animator[] hintAnimators;
+    private int _cAIndex;
     private bool _dialogueIsHappening;
     private bool _endIsComing;
     private bool _gameEndComing;
@@ -42,6 +46,48 @@ public class PlatformerLES : GameLES
         {
             Camera.SetSize(7.5f);
         }
+
+        if (signal is >= 10 and < 20)
+        {
+            Invoke(nameof(ShowControll), 1);
+        }
+
+        if (signal is >= 20 and < 25)
+        {
+            ShowHints(signal%5);
+        }
+        
+        if (signal is >= 25 and < 30)
+        {
+            HideHints(signal%5);
+        }
+    }
+
+    private void ShowHints(int signal)
+    {
+        if (signal > hintAnimators.Length - 1)
+            return;
+        hintAnimators[signal].SetBool("IsHide", false);
+    }
+    
+    private void HideHints(int signal)
+    {
+        if (signal > hintAnimators.Length - 1)
+            return;
+        hintAnimators[signal].SetBool("IsHide", true);
+    }
+
+    private void ShowControll()
+    {
+        if (_cAIndex > controlAnimators.Length - 1)
+            return;
+        controlAnimators[_cAIndex].SetBool("IsHide", false);
+        Invoke(nameof(HideControll), 3f);
+    }
+    private void HideControll()
+    {
+        controlAnimators[_cAIndex].SetBool("IsHide", true);
+        _cAIndex++;
     }
 
     protected override void UpdateLES()

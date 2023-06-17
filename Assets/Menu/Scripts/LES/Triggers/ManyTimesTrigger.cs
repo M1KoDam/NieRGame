@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,9 @@ using UnityEngine.Serialization;
 
 public class ManyTimesTrigger : MonoBehaviour
 {
-    [SerializeField] private PlatformerLES platformerLES;
-    [SerializeField] private int triggerSignal;
-    [SerializeField] private bool blockPlayer;
+    [SerializeField] protected PlatformerLES platformerLES;
+    [SerializeField] protected int triggerSignal;
+    [SerializeField] protected bool blockPlayer;
 
     private void OnTriggerEnter2D(Collider2D otherCollider)
     {

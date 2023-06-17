@@ -9,11 +9,15 @@ public class FlightTopLES : FlightLES
     [Header("Boss Spots")]
     [SerializeField] private Transform bigFlyerSpot;
     [SerializeField] private Transform spawnSpot;
+
+    [Header("Control")] 
+    [SerializeField] private Animator controlAnimator;
     
     [Header("Enemies")]
     [SerializeField] private BigFlyerTop bigFlyer;
     [SerializeField] private SmallFlyerTopRush smallFlyerRush;
     [SerializeField] private SmallFlyerTopSupport smallFlyerSupport;
+    private static readonly int IsHide = Animator.StringToHash("IsHide");
 
     protected override void CreateEvent()
     {
@@ -24,6 +28,8 @@ public class FlightTopLES : FlightLES
         }
         else if (CurrentEvent == 1 && EventCompleted)
         {
+            controlAnimator.SetBool(IsHide, false);
+            Invoke(nameof(CloseController), 5f);
             SpawnFlyer(smallFlyerRush, spawnSpots[0], new[] { moveSpots[0] });
             SpawnFlyer(smallFlyerRush, spawnSpots[2], new[] { moveSpots[2] });
             SpawnFlyer(smallFlyerRush, spawnSpots[4], new[] { moveSpots[4] });
@@ -94,5 +100,10 @@ public class FlightTopLES : FlightLES
         {
             NextLevel();
         }
+    }
+
+    private void CloseController()
+    {
+        controlAnimator.SetBool(IsHide, true);
     }
 }

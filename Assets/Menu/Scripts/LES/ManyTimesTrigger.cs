@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,5 +14,12 @@ public class ManyTimesTrigger : MonoBehaviour
     {
         if (!otherCollider.gameObject.CompareTag("Player")) return; 
         platformerLES.GetTriggerSignal(triggerSignal, blockPlayer);
+    }
+
+    private void OnTriggerExit2D(Collider2D otherCollider)
+    {
+        Debug.Log(false);
+        if (!otherCollider.gameObject.CompareTag("Player")) return;
+        platformerLES.GetTriggerSignal(triggerSignal+5, blockPlayer);
     }
 }

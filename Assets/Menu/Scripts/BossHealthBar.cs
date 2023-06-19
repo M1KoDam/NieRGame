@@ -19,7 +19,6 @@ public class BossHealthBar : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log(_slider.value);
         _slider.value = goliath.GetHealth();
     }
 }

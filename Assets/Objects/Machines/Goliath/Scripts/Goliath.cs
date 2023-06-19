@@ -162,16 +162,15 @@ public class Goliath : Enemy
 
             var tempPosition = transform.position;
             var tempRotation = transform.rotation;
-            var tempLocalScale = transform.localScale;
 
             Destroy(gameObject);
 
             var smallFlyerDestroyingCopy = Instantiate(enemyDestroying, tempPosition, tempRotation);
-            smallFlyerDestroyingCopy.transform.localScale = tempLocalScale;
             smallFlyerDestroyingCopy.Activate();
             foreach (var rb in smallFlyerDestroyingCopy.GetComponentsInChildren<Rigidbody2D>())
-                rb.gravityScale = 0.25f;
-            Destroy(smallFlyerDestroyingCopy.gameObject, 10f);
+                rb.gravityScale = 0.75f;
+            
+            Destroy(smallFlyerDestroyingCopy.gameObject, 100f);
 
             foreach (var explosionPoint in explosionPoints)
                 StartCoroutine(CreateExplosion(explosionPoint.position, tempRotation));
@@ -185,8 +184,8 @@ public class Goliath : Enemy
     private IEnumerator CreateExplosion(Vector3 position, Quaternion rotation)
     {
         var smallFlyerExplosion = Instantiate(explosion, position, rotation);
-        smallFlyerExplosion.force = 100000;
-        smallFlyerExplosion.explosionScale = 1.85f;
+        smallFlyerExplosion.force = 1500000f;
+        smallFlyerExplosion.explosionScale = 1.95f;
         smallFlyerExplosion.Explode();
         yield return new WaitForSeconds(0.25f);
     }

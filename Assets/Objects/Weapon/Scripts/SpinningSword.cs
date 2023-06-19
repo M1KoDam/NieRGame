@@ -41,7 +41,10 @@ public class SpinningSword : MonoBehaviour
         {
             if (_hitEnemies.Contains(enemy))
                 continue;
-            enemy.GetComponent<Enemy>().GetDamage(damage, transform);
+            if (enemy.GetComponent<Enemy>() is null)
+                enemy.GetComponentInParent<Enemy>().GetDamage(damage, transform);
+            else
+                enemy.GetComponent<Enemy>().GetDamage(damage, transform);
             _hitEnemies.Add(enemy);
         }
         

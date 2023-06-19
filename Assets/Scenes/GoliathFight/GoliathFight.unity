@@ -26939,7 +26939,7 @@ MonoBehaviour:
   saw: {fileID: 903081469}
   springyBulletRate: 4
   fireRate: 2
-  speed: 0.05
+  speed: 0.01
   platformLevels:
   - {fileID: 1044294561}
   - {fileID: 1820416854}

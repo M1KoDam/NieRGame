@@ -24,6 +24,9 @@ public class PlayerBullet : Bullet
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("GoliathBorder"))
+            return;
+        
         if (collision.gameObject.CompareTag("Enemy") && CurrentAnimation is not "BulletExploding")
             collision.gameObject.GetComponent<Enemy>().GetDamage(damage, transform);
         Destroy();

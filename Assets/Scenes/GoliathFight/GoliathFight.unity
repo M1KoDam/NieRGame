@@ -10571,9 +10571,9 @@ GameObject:
   m_Component:
   - component: {fileID: 764992019}
   - component: {fileID: 764992020}
-  m_Layer: 15
+  m_Layer: 18
   m_Name: RightBorder
-  m_TagString: AttackCollider
+  m_TagString: GoliathBorder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

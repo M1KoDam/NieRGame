@@ -17,6 +17,7 @@ TagManager:
   - Wall
   - DeadZone
   - Trigger
+  - GoliathBorder
   layers:
   - Default
   - TransparentFX
@@ -36,7 +37,7 @@ TagManager:
   - Borders
   - SpringyBullet
   - GoliathParts
-  - GoliathBorders
+  - GoliathBorder
   - 
   - 
   - 

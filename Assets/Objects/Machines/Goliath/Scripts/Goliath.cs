@@ -18,6 +18,7 @@ public class Goliath : Enemy
     [SerializeField] public Transform bulletPosition;
     [SerializeField] public GoliathHead head;
     [SerializeField] public Saw saw;
+    [SerializeField] public GoliathElbow elbow;
     [SerializeField] public int springyBulletRate;
     [SerializeField] public float fireRate;
 
@@ -173,7 +174,12 @@ public class Goliath : Enemy
             Destroy(smallFlyerDestroyingCopy.gameObject, 100f);
 
             foreach (var explosionPoint in explosionPoints)
-                StartCoroutine(CreateExplosion(explosionPoint.position, tempRotation));
+            {
+                var goliathExplosion = Instantiate(explosion, explosionPoint.position, tempRotation);
+                goliathExplosion.force = 15f;
+                goliathExplosion.explosionScale = 1.95f;
+                goliathExplosion.Explode();
+            }
 
             _platformerLes.GetTriggerSignal(-1, true);
         }
@@ -181,15 +187,6 @@ public class Goliath : Enemy
             CurDestructionTime -= Time.deltaTime;
     }
 
-    private IEnumerator CreateExplosion(Vector3 position, Quaternion rotation)
-    {
-        var smallFlyerExplosion = Instantiate(explosion, position, rotation);
-        smallFlyerExplosion.force = 1500000f;
-        smallFlyerExplosion.explosionScale = 1.95f;
-        smallFlyerExplosion.Explode();
-        yield return new WaitForSeconds(0.25f);
-    }
-    
     public override void GetDamage(int inputDamage, Transform attackVector)
     {
         if (inputDamage >= 20)

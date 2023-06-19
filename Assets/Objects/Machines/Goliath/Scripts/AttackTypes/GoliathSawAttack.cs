@@ -36,7 +36,8 @@ public class GoliathSawAttack : AttackType
 
     private void Swing()
     {
-        _goliath.saw.attacks = true;
+        _goliath.saw.attacks = false;
+        _goliath.elbow.attacks = false;
 
         _goliath.ArmRotationSpeed = 1;
         _goliath.HandRotationSpeed = 1;
@@ -51,9 +52,10 @@ public class GoliathSawAttack : AttackType
     private void Kick()
     {
         _goliath.saw.attacks = true;
+        _goliath.elbow.attacks = true;
 
-        _goliath.ArmRotationSpeed = 3;
-        _goliath.HandRotationSpeed = 3;
+        _goliath.ArmRotationSpeed = 4;
+        _goliath.HandRotationSpeed = 4;
 
         _goliath.targetArmAngle = GoliathStatics.KickArmAngle;
         _goliath.targetHandAngle = GoliathStatics.KickHandAngle;
@@ -65,6 +67,7 @@ public class GoliathSawAttack : AttackType
     private void Idle()
     {
         _goliath.saw.attacks = false;
+        _goliath.elbow.attacks = false;
 
         _goliath.HandRotationSpeed = 0.25f;
         _goliath.ArmRotationSpeed = 0.25f;

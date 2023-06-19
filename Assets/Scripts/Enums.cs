@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public enum Side
 {
     Left = -1,
@@ -70,4 +72,6 @@ public static class GoliathStatics
 
     public const float KickArmAngle = -30;
     public const float KickHandAngle = 10;
+
+    public static readonly Vector3 HeadOffset = new(0, -3.5f);
 }

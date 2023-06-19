@@ -27,8 +27,17 @@ public class GoliathSpawnEnemiesAttack : AttackType
 
     private void SpawnEnemies()
     {
-        Debug.Log("spawn enemies");
-        foreach (var spawnpoint in _goliath.spawnPoints)
+        var spawnpoint1Index = Random.Range(0, _goliath.spawnPoints.Length - 1);
+        var spawnpoint2Index = (Random.Range(1, _goliath.spawnPoints.Length - 1) + spawnpoint1Index)
+                               % _goliath.spawnPoints.Length;
+
+        var spawnpoints = new[]
+        {
+            _goliath.spawnPoints[spawnpoint1Index],
+            _goliath.spawnPoints[spawnpoint2Index]
+        };
+        
+        foreach (var spawnpoint in spawnpoints)
         {
             var randomEnemyPrefab = _goliath.enemyPrefabs[Random.Range(0, _goliath.enemyPrefabs.Length)];
             Object.Instantiate(randomEnemyPrefab, spawnpoint.position, _goliath.transform.rotation);
@@ -41,7 +50,7 @@ public class GoliathSpawnEnemiesAttack : AttackType
     {
         _attackStatus = 0;
     }
-    
+
     private void Sleep(float seconds)
     {
         _timer += Time.fixedDeltaTime;

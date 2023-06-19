@@ -4559,6 +4559,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &295689655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 295689656}
+  m_Layer: 0
+  m_Name: SpawnPoint1 (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &295689656
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 295689655}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -23, y: -3.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2090583942}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &310401082
 GameObject:
   m_ObjectHideFlags: 0
@@ -8680,7 +8711,7 @@ GameObject:
   - component: {fileID: 636835587}
   - component: {fileID: 636835586}
   - component: {fileID: 636835585}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathFistR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9507,7 +9538,7 @@ GameObject:
   - component: {fileID: 708481924}
   - component: {fileID: 708481923}
   - component: {fileID: 708481922}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathHand1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10824,6 +10855,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &810925276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 810925277}
+  m_Layer: 0
+  m_Name: SpawnPoint1 (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &810925277
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810925276}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.8, y: 3.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2090583942}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &820689181
 GameObject:
   m_ObjectHideFlags: 0
@@ -17338,7 +17400,7 @@ GameObject:
   - component: {fileID: 1383949666}
   - component: {fileID: 1383949665}
   - component: {fileID: 1383949664}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathSaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17618,7 +17680,7 @@ GameObject:
   - component: {fileID: 1397702910}
   - component: {fileID: 1397702909}
   - component: {fileID: 1397702908}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathHand2 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18032,7 +18094,7 @@ GameObject:
   - component: {fileID: 1430979926}
   - component: {fileID: 1430979928}
   - component: {fileID: 1430979927}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathDestroying
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -18095,6 +18157,37 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1 &1448166172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1448166173}
+  m_Layer: 0
+  m_Name: SpawnPoint1 (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1448166173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448166172}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -18.7, y: 4.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2090583942}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1449518262
 GameObject:
   m_ObjectHideFlags: 0
@@ -19120,7 +19213,7 @@ GameObject:
   - component: {fileID: 1529706326}
   - component: {fileID: 1529706325}
   - component: {fileID: 1529706324}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathSaw (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20261,6 +20354,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1624312237}
   m_CullTransparentMesh: 1
+--- !u!1 &1630800851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1630800852}
+  m_Layer: 0
+  m_Name: SpawnPoint1 (5)
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1630800852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630800851}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.3, y: -3.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2090583942}
+  m_RootOrder: 18
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1637988571
 GameObject:
   m_ObjectHideFlags: 0
@@ -21277,7 +21401,7 @@ GameObject:
   - component: {fileID: 1701603665}
   - component: {fileID: 1701603664}
   - component: {fileID: 1701603663}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22254,7 +22378,7 @@ GameObject:
   - component: {fileID: 1780586588}
   - component: {fileID: 1780586587}
   - component: {fileID: 1780586586}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25727,7 +25851,7 @@ GameObject:
   - component: {fileID: 2023628431}
   - component: {fileID: 2023628430}
   - component: {fileID: 2023628429}
-  m_Layer: 14
+  m_Layer: 17
   m_Name: GoliathHand2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26749,6 +26873,10 @@ Transform:
   - {fileID: 510478062}
   - {fileID: 1601002971}
   - {fileID: 1047570890}
+  - {fileID: 1448166173}
+  - {fileID: 810925277}
+  - {fileID: 295689656}
+  - {fileID: 1630800852}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26793,13 +26921,16 @@ MonoBehaviour:
   - {fileID: 1601002971}
   - {fileID: 1047570890}
   enemyPrefabs:
-  - {fileID: 474409896}
   - {fileID: 1141272886}
   - {fileID: 1197633407}
   - {fileID: 1073207248}
   spawnPoints:
   - {fileID: 895128596}
   - {fileID: 1020678702}
+  - {fileID: 1448166173}
+  - {fileID: 810925277}
+  - {fileID: 295689656}
+  - {fileID: 1630800852}
   bulletPrefab: {fileID: 311161224}
   starPrefab: {fileID: 1735295200}
   springyBulletPrefab: {fileID: 384345948}
@@ -26808,7 +26939,7 @@ MonoBehaviour:
   saw: {fileID: 903081469}
   springyBulletRate: 4
   fireRate: 2
-  speed: 0.1
+  speed: 0.05
   platformLevels:
   - {fileID: 1044294561}
   - {fileID: 1820416854}

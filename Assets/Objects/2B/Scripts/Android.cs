@@ -8,13 +8,13 @@ public class Android : Player
     private Animator _animator;
     private string _currentAnimation;
 
-    [Header("Swords")] 
+    [Header("Swords")]
     [SerializeField] private LightSword lightSword;
     [SerializeField] private HeavySword heavySword;
     [SerializeField] private SpinningSword spinningSword;
-    
+
     [Header("References")]
-    [SerializeField] private Transform swingSwordCollider; 
+    [SerializeField] private Transform swingSwordCollider;
     [SerializeField] private Transform fallSwordCollider;
     [SerializeField] private Transform fallEndSwordCollider;
     [SerializeField] private LayerMask ground;
@@ -22,7 +22,7 @@ public class Android : Player
     [SerializeField] private LayerMask enemyBullet;
     [SerializeField] private LayerMask checkpoints;
 
-    [Header("Step Climb Settings")] 
+    [Header("Step Climb Settings")]
     [SerializeField] private GameObject stayRayUpper;
     [SerializeField] private GameObject stayRayLower;
     [SerializeField] private float stepHeight;
@@ -37,12 +37,12 @@ public class Android : Player
     private bool _climb;
     private bool _canMove = true;
 
-    [Header("Delay")] 
+    [Header("Delay")]
     [SerializeField] private float attackDelay1;
     [SerializeField] private float attackDelay2;
     [SerializeField] private float attackDelay3;
 
-    [Header("Other Settings")] 
+    [Header("Other Settings")]
     [SerializeField] private float speed = 12;
 
     [SerializeField] private float jumpForce = 1200;
@@ -52,22 +52,22 @@ public class Android : Player
     [SerializeField] private int lightAttackDamage = 20;
     [SerializeField] private int heavyAttackDamage = 60;
     [SerializeField] private Side faceOrientation;
-    
+
     private List<Collider2D> _hitEnemies;
-    
+
     // A variable used to give the animator a frame to update animations called outside the Update method
     private bool _changeAnimFrameWait;
 
     private static readonly Vector3 RightLocalScale = new(1, 1);
     private static readonly Vector3 LeftLocalScale = new(-1, 1);
-    
+
     public Sounds sounds;
 
     private static float MovementAxis => Input.GetAxis("Horizontal");
 
     private bool CheckGroundCollision(Collision2D collision) => collision.gameObject.CompareTag("Platform")
-                                                     || collision.gameObject.CompareTag("Stairs")
-                                                     || collision.gameObject.CompareTag("Enemy");
+                                                                || collision.gameObject.CompareTag("Stairs")
+                                                                || collision.gameObject.CompareTag("Enemy");
 
     public override void Start()
     {
@@ -83,6 +83,7 @@ public class Android : Player
             ChangeAnimation(Animation.Idle);
             return;
         }
+
         if (Preprocessing()) return;
         StepClimb();
         if (Climb()) return;
@@ -95,7 +96,7 @@ public class Android : Player
     }
 
     #region Preprocessing
-    
+
     private bool Preprocessing()
     {
         if (_changeAnimFrameWait || Animation.GetDamagedAnimations.Contains(_currentAnimation) && AnimPlaying())
@@ -106,7 +107,7 @@ public class Android : Player
 
         return false;
     }
-    
+
     #endregion
 
     #region StepClimb
@@ -140,6 +141,7 @@ public class Android : Player
             {
                 ChangeAnimation(Animation.Climb);
             }
+
             var velocity = Rb.velocity;
             Rb.velocity = new Vector2(velocity.x, Math.Max(0.2f, velocity.y));
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
@@ -206,7 +208,7 @@ public class Android : Player
             lightSword.DrawSword();
             return true;
         }
-        
+
         return false;
     }
 
@@ -266,7 +268,6 @@ public class Android : Player
     {
         if (Input.GetMouseButtonDown(0) && _onFoot)
         {
-            
             if (_currentAnimation == Animation.Attack1 && CheckAnimTime(0.5f))
             {
                 sounds.AllSounds["AttackLightSword2B"].PlaySound();
@@ -331,25 +332,29 @@ public class Android : Player
             }
         }
 
-        if (_currentAnimation is Animation.Attack3 or Animation.AttackInAir3 && AnimPlaying() && !spinningSword.isActiveAndEnabled)
+        if (_currentAnimation is Animation.Attack3 or Animation.AttackInAir3 && AnimPlaying() &&
+            !spinningSword.isActiveAndEnabled)
         {
             ChangeAnimation(_currentAnimation is Animation.Attack3 ? Animation.Attack3End : Animation.AttackInAir3End);
             return true;
         }
-        
-        if (_currentAnimation is Animation.Attack3 or Animation.AttackInAir3 && AnimCompleted() && spinningSword.isActiveAndEnabled)
+
+        if (_currentAnimation is Animation.Attack3 or Animation.AttackInAir3 && AnimCompleted() &&
+            spinningSword.isActiveAndEnabled)
         {
             ChangeAnimation(_currentAnimation is Animation.Attack3 ? Animation.Attack3End : Animation.AttackInAir3End);
             spinningSword.Destroy();
             return true;
         }
 
-        if (_currentAnimation is Animation.Attack1 or Animation.Attack2 or Animation.Attack3 or Animation.Attack3End && AnimPlaying())
+        if (_currentAnimation is Animation.Attack1 or Animation.Attack2 or Animation.Attack3 or Animation.Attack3End &&
+            AnimPlaying())
         {
             return true;
         }
 
-        if (_currentAnimation is Animation.AttackInAir1 or Animation.AttackInAir2 or Animation.AttackInAir3 or Animation.AttackInAir3End &&
+        if (_currentAnimation is Animation.AttackInAir1 or Animation.AttackInAir2 or Animation.AttackInAir3
+                or Animation.AttackInAir3End &&
             AnimPlaying())
         {
             Rb.velocity = new Vector2(Rb.velocity.x, 0.5f);
@@ -395,7 +400,8 @@ public class Android : Player
             return true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && _doubleJump && _currentAnimation is Animation.Jump && CheckAnimTime(0.5f))
+        if (Input.GetKeyDown(KeyCode.Space) && _doubleJump && _currentAnimation is Animation.Jump &&
+            CheckAnimTime(0.5f))
         {
             _doubleJump = false;
             Rb.velocity = new Vector2(Rb.velocity.x, 0);
@@ -450,13 +456,16 @@ public class Android : Player
     }
 
     #endregion
-    
+
     private void Damage(int damage, float attackRadius)
     {
         var hitEnemies = Physics2D.OverlapCircleAll(swingSwordCollider.position, attackRadius, enemies);
         foreach (var enemy in hitEnemies)
         {
-            enemy.GetComponent<Enemy>().GetDamage(damage, transform);
+            if (enemy.GetComponent<Enemy>() is null)
+                enemy.GetComponentInParent<Enemy>().GetDamage(damage, transform);
+            else
+                enemy.GetComponent<Enemy>().GetDamage(damage, transform);
         }
 
         var hitBullets = Physics2D.OverlapCircleAll(swingSwordCollider.position, attackRadius, enemyBullet);
@@ -473,7 +482,10 @@ public class Android : Player
         {
             if (_hitEnemies.Contains(enemy))
                 continue;
-            enemy.GetComponent<Enemy>().GetDamage(damage, transform);
+            if (enemy.GetComponent<Enemy>() is null) 
+                enemy.GetComponentInParent<Enemy>().GetDamage(damage, transform);
+            else
+                enemy.GetComponent<Enemy>().GetDamage(damage, transform);
             _hitEnemies.Add(enemy);
         }
 
@@ -490,14 +502,15 @@ public class Android : Player
         health -= inputDamage;
         var damageVector = (transform.position - attackVector.position).x >= 0 ? -1 : 1;
         spinningSword.Destroy();
-        
+
         if (_climb)
             ChangeAnimation(Animation.GetDamagedClimb);
-        else if (damageVector == 1 && faceOrientation is Side.Right || damageVector == -1 && faceOrientation is Side.Left)
+        else if (damageVector == 1 && faceOrientation is Side.Right ||
+                 damageVector == -1 && faceOrientation is Side.Left)
             ChangeAnimation(_onFoot ? Animation.GetDamagedFromFront : Animation.GetDamagedInAirFromFront);
         else
             ChangeAnimation(_onFoot ? Animation.GetDamagedFromBehind : Animation.GetDamagedInAirFromBehind);
-        
+
         _changeAnimFrameWait = true;
         Rb.velocity -= new Vector2(Math.Min(inputDamage / 5, 10) * damageVector, 0);
     }

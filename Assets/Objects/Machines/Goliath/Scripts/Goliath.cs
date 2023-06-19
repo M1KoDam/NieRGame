@@ -108,7 +108,8 @@ public class Goliath : Enemy
             return;
 
         var position = transform.position;
-        position.y += vectorToTarget.Value.y * speed;
+        if (Mathf.Abs(vectorToTarget.Value.y) > speed)
+            position.y += speed * Mathf.Sign(vectorToTarget.Value.y);
         transform.position = position;
     }
 
@@ -116,6 +117,11 @@ public class Goliath : Enemy
     {
         State.Execute(this);
 
+        if (Mathf.Abs(head.transform.position.y - player.transform.position.y) > 6f)
+            Chase();
+        else if (Mathf.Abs(head.transform.position.y - player.transform.position.y) < 0.5f)
+            _targetPosition = null;
+        
         HandleMovement();
         HandleHandMovement();
     }
@@ -127,7 +133,7 @@ public class Goliath : Enemy
 
     public override void Chase()
     {
-        throw new NotImplementedException();
+        _targetPosition = player.transform.position + GoliathStatics.HeadOffset;
     }
 
     public override void Patrol()
@@ -182,5 +188,17 @@ public class Goliath : Enemy
         smallFlyerExplosion.explosionScale = 1.85f;
         smallFlyerExplosion.Explode();
         yield return new WaitForSeconds(0.25f);
+    }
+    
+    public override void GetDamage(int inputDamage, Transform attackVector)
+    {
+        if (inputDamage >= 20)
+        {
+            CanAttack = false;
+            CancelInvoke(nameof(WaitForAttack));
+            Invoke(nameof(WaitForAttack), 1);
+        }
+        
+        hp -= inputDamage;
     }
 }

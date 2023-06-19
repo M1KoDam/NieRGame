@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Goliath : Enemy
 {
+    public float maxHp = 100;
     [SerializeField] public Sounds sounds;
     [SerializeField] public Transform[] explosionPoints;
     
@@ -200,5 +201,10 @@ public class Goliath : Enemy
         }
         
         hp -= inputDamage;
+    }
+
+    public float GetHealth()
+    {
+        return Math.Max(0, Math.Min(hp / maxHp, 1));
     }
 }

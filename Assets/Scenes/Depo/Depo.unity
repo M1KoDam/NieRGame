@@ -10103,7 +10103,7 @@ MonoBehaviour:
   heavyAttackRange: 2.5
   fallAttackRange: {x: 4.2, y: 2.2}
   lightAttackDamage: 20
-  heavyAttackDamage: 60
+  heavyAttackDamage: 40
   faceOrientation: 1
   sounds: {fileID: 670960474}
 --- !u!95 &231469659

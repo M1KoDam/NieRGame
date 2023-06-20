@@ -10,6 +10,7 @@ public class FlightSideLES : FlightLES
     {
         if (CurrentEvent == 0 && EventCompleted)
         {
+            Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerLayer, true);
             dialogueEventIsHappening = true;
             StartNextDialogue();
         }
@@ -68,6 +69,7 @@ public class FlightSideLES : FlightLES
         }
         else if (CurrentEvent == 6 && EventCompleted)
         {
+            Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerLayer, false);
             NextLevel();
         }
     }

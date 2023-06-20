@@ -15,9 +15,6 @@ public class SmallFlyer : Enemy
     [SerializeField] protected Transform gun;
     [SerializeField] private int springyBulletRate = 4;
 
-    protected const int EnemyLayer = 7;
-    protected const int PlayerLayer = 11;
-
     protected float Angle;
     protected bool IsUlt;
 

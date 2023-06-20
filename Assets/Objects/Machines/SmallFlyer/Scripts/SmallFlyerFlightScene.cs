@@ -9,7 +9,6 @@ public abstract class SmallFlyerFlightScene : SmallFlyer
     {
         base.Start();
         OnFlightScene = false;
-        Physics2D.IgnoreLayerCollision(EnemyLayer, PlayerLayer, true);
     }
 
     public override void DoIdle()

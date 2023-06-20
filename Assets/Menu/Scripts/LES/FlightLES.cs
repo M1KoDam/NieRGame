@@ -9,6 +9,9 @@ public class FlightLES : GameLES
     [Header("Spots")]
     [SerializeField] protected Transform[] moveSpots;
     [SerializeField] protected Transform[] spawnSpots;
+    
+    protected const int EnemyLayer = 7;
+    protected const int PlayerLayer = 11;
 
     protected int CurrentEvent;
     public bool dialogueEventIsHappening;

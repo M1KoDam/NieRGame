@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BigFlyerTop: SmallFlyerTop
 {
-    private int _maxHp;
+    private float _maxHp;
     private int _stageTime;
     [SerializeField] private Transform[] supportingGuns;
     [SerializeField] private Transform[] supportingGunsStart;
@@ -184,5 +184,10 @@ public class BigFlyerTop: SmallFlyerTop
     public override void GetDamage(int inputDamage, Transform attackVector)
     {
         hp -= inputDamage;
+    }
+    
+    public float GetHealth()
+    {
+        return Math.Max(0, Math.Min(hp / _maxHp, 1));
     }
 }

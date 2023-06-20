@@ -8,10 +8,6 @@ using UnityEngine.UI;
 
 public class Sounds : MonoBehaviour
 {
-    [SerializeField] private Slider _soundSlider;
-    
-    private static float _soundVolume = 1;
-
     [SerializeField] public AudioClip explosionSound;
     [SerializeField] public AudioClip flightUnitShotSound;
     [SerializeField] public AudioClip backGroundFlightSound;
@@ -57,15 +53,6 @@ public class Sounds : MonoBehaviour
             { "GetDamage2B", new Sound("GetDamage2B", 0.2f, getDamage2B) },
             { "PodShot", new Sound("PodShot", 0.2f, podShot) },
         };*/
-    }
-
-    private void Update()
-    {
-        if (Math.Abs(_soundVolume - _soundSlider.value) > 0.01f)
-        {
-            _soundVolume = _soundSlider.value;
-            ChangedVolume(_soundVolume);
-        }
     }
 
     public void ChangedVolume(float soundVolume)

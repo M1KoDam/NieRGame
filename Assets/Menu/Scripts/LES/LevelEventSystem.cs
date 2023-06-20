@@ -26,6 +26,7 @@ public class LevelEventSystem : MonoBehaviour
 
     protected void Start()
     {
+        Screen.SetResolution(1920, 1080, true);
         sounds.ChangedVolume(_soundVolume);
         musics.ChangedVolume(_musicVolume);
         soundSlider.value = _soundVolume;

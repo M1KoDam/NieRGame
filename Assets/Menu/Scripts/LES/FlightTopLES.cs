@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class FlightTopLES : FlightLES
 {
-    [Header("Boss Spots")]
+    [Header("Boss")]
     [SerializeField] private Transform bigFlyerSpot;
     [SerializeField] private Transform spawnSpot;
+    [SerializeField] private Animator bigFlyerHealthBarAnimator;
+    [SerializeField] private BigFlyerHealthBar bigFlyerHealthBar;
 
     [Header("Control")] 
     [SerializeField] private Animator controlAnimator;
@@ -86,13 +89,15 @@ public class FlightTopLES : FlightLES
         }
         else if (CurrentEvent == 6 && EventCompleted)
         {
-            SpawnFlyer(bigFlyer, spawnSpots[7], new[] { moveSpots[2] });
+            SpawnBigFlyer(bigFlyer, spawnSpots[7], new[] { moveSpots[2] });
+            bigFlyerHealthBarAnimator.SetBool("IsHide", false);
             SpawnFlyer(smallFlyerSupport, spawnSpots[6], new[] { moveSpots[1],  moveSpots[0] });
             SpawnFlyer(smallFlyerSupport, spawnSpots[8], new[] { moveSpots[3],  moveSpots[4] });
             AttackEventIsHappening = true;
         }
         else if (CurrentEvent == 7 && EventCompleted)
         {
+            bigFlyerHealthBarAnimator.SetBool("IsHide", true);
             dialogueEventIsHappening = true;
             StartNextDialogue();
         }
@@ -100,6 +105,18 @@ public class FlightTopLES : FlightLES
         {
             NextLevel();
         }
+    }
+    
+    private void SpawnBigFlyer(SmallFlyerFlightScene flyerType, Transform spawnPosition, IEnumerable<Transform> moveSpots)
+    {
+        var enemy = Instantiate(flyerType, spawnPosition.position, transform.rotation);
+        foreach (var moveSpot in moveSpots)
+        {
+            enemy.GiveMoveSpot(moveSpot);
+        }
+
+        bigFlyerHealthBar.bigFlyer = (BigFlyerTop)enemy;
+        SmallFlyers.Add(enemy);
     }
 
     private void CloseController()

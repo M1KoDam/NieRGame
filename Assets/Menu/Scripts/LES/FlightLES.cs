@@ -13,7 +13,7 @@ public class FlightLES : GameLES
     protected int CurrentEvent;
     public bool dialogueEventIsHappening;
     protected bool AttackEventIsHappening;
-    private List<SmallFlyer> _smallFlyers;
+    protected List<SmallFlyer> SmallFlyers;
     private Queue<DialogueTrigger> _dialogues;
     protected bool EventCompleted => !dialogueEventIsHappening && !AttackEventIsHappening;
     
@@ -24,7 +24,7 @@ public class FlightLES : GameLES
         foreach (var dialogueTrigger in dialogueTriggers)
             _dialogues.Enqueue(dialogueTrigger);
         CurrentEvent = -1;
-        _smallFlyers = new List<SmallFlyer>();
+        SmallFlyers = new List<SmallFlyer>();
     }
 
     protected override void UpdateLES()
@@ -41,8 +41,8 @@ public class FlightLES : GameLES
     
     private void UpdateEnemies()
     {
-        _smallFlyers = _smallFlyers.Where(c => !c.IsUnityNull()).ToList();
-        if (_smallFlyers.Count == 0)
+        SmallFlyers = SmallFlyers.Where(c => !c.IsUnityNull()).ToList();
+        if (SmallFlyers.Count == 0)
             AttackEventIsHappening = false;
     }
     
@@ -53,7 +53,7 @@ public class FlightLES : GameLES
         {
             enemy.GiveMoveSpot(moveSpot);
         }
-        _smallFlyers.Add(enemy);
+        SmallFlyers.Add(enemy);
     }
     
     protected void StartNextDialogue()

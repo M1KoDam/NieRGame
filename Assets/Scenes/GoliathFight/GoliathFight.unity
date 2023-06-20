@@ -10985,7 +10985,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 764992018}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4ffdbdfcef7884cab922cbceb23840cc, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -18189,7 +18189,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1348276222}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4ffdbdfcef7884cab922cbceb23840cc, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -28783,7 +28783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 231469658}
-  hp: 3000
+  hp: 2000
   brakingSpeed: 2
   patrolSpeed: 3
   chaseSpeed: 5
@@ -28800,7 +28800,7 @@ MonoBehaviour:
   layerGround:
     serializedVersion: 2
     m_Bits: 8
-  maxHp: 3000
+  maxHp: 2000
   sounds: {fileID: 1637988572}
   explosionPoints:
   - {fileID: 1503848338}

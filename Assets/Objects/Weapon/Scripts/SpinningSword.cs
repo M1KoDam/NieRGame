@@ -21,6 +21,7 @@ public class SpinningSword : MonoBehaviour
     private Vector2 TransformCoord => transform.position + new Vector3(0, 0.18f, 0);
 
     private float _startVelocityX;
+    private bool _enemiesClear = false;
 
     // Start is called before the first frame update
     void Start()
@@ -32,9 +33,10 @@ public class SpinningSword : MonoBehaviour
     
     void FixedUpdate()
     {
-        if (_rb.velocity.x * _startVelocityX < 0)
+        if (_rb.velocity.x * _startVelocityX < 0 && !_enemiesClear)
         {
             _hitEnemies.Clear();
+            _enemiesClear = true;
         }
         var _tempHitEnemies = Physics2D.OverlapBoxAll(TransformCoord, attackRadius, 0, enemies);
         foreach (var enemy in _tempHitEnemies)
@@ -74,6 +76,7 @@ public class SpinningSword : MonoBehaviour
     {
         gameObject.SetActive(false);
         _hitEnemies.Clear();
+        _enemiesClear = false;
     }
 
     void OnDrawGizmosSelected()

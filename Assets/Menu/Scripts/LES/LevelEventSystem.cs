@@ -34,7 +34,6 @@ public class LevelEventSystem : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_musicVolume);
         if (Math.Abs(_soundVolume - soundSlider.value) > 0.01f)
         {
             _soundVolume = soundSlider.value;

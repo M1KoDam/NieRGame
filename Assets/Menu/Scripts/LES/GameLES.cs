@@ -20,6 +20,7 @@ public class GameLES : LevelEventSystem
 
     private void Start()
     {
+        base.Start();
         StartLES();
     }
     

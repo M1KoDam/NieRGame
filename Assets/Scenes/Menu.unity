@@ -756,6 +756,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad56d7064c089bd4b8101c246479aef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musics: {fileID: 2042844826}
+  sounds: {fileID: 414172751}
+  soundSlider: {fileID: 1536802681}
+  musicSlider: {fileID: 1224024622}
   _animatorLR: {fileID: 66343105}
   _animatorRL: {fileID: 71152499}
 --- !u!1 &150581890
@@ -1260,7 +1264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d57b265d5d4e7846a3c6e7076df8dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundSlider: {fileID: 1536802681}
   explosionSound: {fileID: 8300000, guid: 1ab7722a820567346b7c03dac6afbf42, type: 3}
   flightUnitShotSound: {fileID: 8300000, guid: 252d100094f908b469dc0825ab0a8424, type: 3}
   backGroundFlightSound: {fileID: 8300000, guid: ca473af7586f82e4e87a199cea8b357a, type: 3}
@@ -4196,7 +4199,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f74527e62714e5fa24e76c90d3e1cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _musicSlider: {fileID: 1224024622}
   flightSideMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
   flightTopMusic: {fileID: 8300000, guid: c15e51dbeed14714a8788ab1da5d530a, type: 3}
   depoMusic: {fileID: 8300000, guid: e471cb5eef0fc4745af9b1acd6b2f6f4, type: 3}

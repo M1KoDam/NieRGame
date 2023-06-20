@@ -207,7 +207,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 137048744}
         m_TargetAssemblyTypeName: LevelEventSystem, Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1
